@@ -1,0 +1,39 @@
+{
+  "salas": [
+    {
+      "id": 1,
+      "nombre": "La Salita",
+      "caracteristicas": {
+        "cap_max": 20,
+        "tiene_proyector": true
+      },
+      "horarios": {
+        "reservas": [
+          {
+            "id": 1,
+            "sala": 1,
+            "hora": "2025-09-15T10:00:00.000Z",
+            "estado": "aceptada"
+          }
+        ]
+      }
+    }
+  ],
+  "reservas": [
+    {
+      "id": 1,
+      "sala": 1,
+      "hora": "2025-09-15T10:00:00.000Z",
+      "estado": "aceptada"
+    }
+  ],
+  "usuarios": [
+    {
+      "id": 12345678,
+      "nombre": "Juan",
+      "apellido": "Pérez",
+      "correo": "juan.perez@ejemplo.com",
+      "contraseña": "1234"
+    }
+  ]
+}
