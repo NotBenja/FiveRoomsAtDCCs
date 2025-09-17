@@ -2,17 +2,20 @@ import React, {useState} from "react";
 import {Slider, Button, ButtonGroup} from "@heroui/react";
 
 interface FilterProps {
-    onMaxCapacityChange: (maxCapacity: [number, number]) => void;
+    onMaxCapacityChange: (maxCapacity: number[]) => void;
     onProjectorSettingsChange: (value: boolean | null) => void;
 }
 
 const RoomFilterPanel: React.FC<FilterProps> = ({onMaxCapacityChange, onProjectorSettingsChange}) => {
-    const [maxCapacity, setMaxCapacity] = useState<[number, number]>([0, 100])
+    const [maxCapacity, setMaxCapacity] = useState<number[]>([0, 100])
     const [hasProjector, setHasProjector] = useState<boolean | null>(null)
 
-    const handleMaxCapacityChange = (maxCapacity: [number, number]) => {
-        setMaxCapacity(maxCapacity)
-        onMaxCapacityChange(maxCapacity)
+    const handleMaxCapacityChange = (maxCapacity: number | number[]) => {
+        if (Array.isArray(maxCapacity) && maxCapacity.length === 2) {
+            setMaxCapacity(maxCapacity)
+            onMaxCapacityChange(maxCapacity)
+        }
+
     }
     const handleProjectorSettingsChange = (value: boolean | null) => {
         setHasProjector(value)
