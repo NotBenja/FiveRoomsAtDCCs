@@ -34,4 +34,7 @@ export interface Usuario {
     contraseña: string;
 }
 
+export interface ReservaDetalle extends Reserva {
+    nombreSala?: string;
+    nombreUsuario?: string;
 }
