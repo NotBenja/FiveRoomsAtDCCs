@@ -1,224 +1,143 @@
 {
   "salas": [
     {
-      "id": "1",
+      "id": 1,
       "nombre": "Auditorio Ramón Picarte",
-      "caracteristicas": {
-        "cap_max": 120,
-        "tiene_proyector": true,
-        "tiene_pizarra": true,
+      "caracteristicas": { 
+        "cap_max": 120, 
+        "tiene_proyector": true, 
+        "tiene_pizarra": true, 
         "tiene_audio": true,
         "tiene_ventilacion": true
       },
       "horarios": {
         "reservas": [
-          {
-            "id": 1,
-            "sala": 1,
-            "usuario": 12345678,
-            "hora": "2025-09-15T10:00:00.000Z",
-            "estado": "aceptada"
-          },
-          {
-            "id": 7,
-            "sala": 1,
-            "usuario": 23456789,
-            "hora": "2025-09-15T14:00:00.000Z",
-            "estado": "aceptada"
-          }
+          { "id": 1, "sala": 1, "usuario": 12345678, "hora": "2025-09-15T10:00:00.000Z", "estado": "aceptada" },
+          { "id": 7, "sala": 1, "usuario": 23456789, "hora": "2025-09-15T14:00:00.000Z", "estado": "aceptada" }
         ]
       }
     },
     {
-      "id": "2",
+      "id": 2,
       "nombre": "Auditorio Philippe Flajolet",
-      "caracteristicas": {
-        "cap_max": 80,
-        "tiene_proyector": true,
-        "tiene_pizarra": false,
+      "caracteristicas": { 
+        "cap_max": 80, 
+        "tiene_proyector": true, 
+        "tiene_pizarra": false, 
         "tiene_audio": true,
         "tiene_ventilacion": true
       },
       "horarios": {
         "reservas": [
-          {
-            "id": 2,
-            "sala": 2,
-            "usuario": 34567890,
-            "hora": "2025-09-15T09:00:00.000Z",
-            "estado": "aceptada"
-          }
+          { "id": 2, "sala": 2, "usuario": 34567890, "hora": "2025-09-15T09:00:00.000Z", "estado": "aceptada" }
         ]
       }
     },
     {
-      "id": "3",
+      "id": 3,
       "nombre": "Ada Lovelace",
-      "caracteristicas": {
-        "cap_max": 20,
-        "tiene_proyector": true,
-        "tiene_pizarra": true,
+      "caracteristicas": { 
+        "cap_max": 20, 
+        "tiene_proyector": true, 
+        "tiene_pizarra": true, 
         "tiene_audio": false,
         "tiene_ventilacion": false
       },
       "horarios": {
         "reservas": [
-          {
-            "id": 3,
-            "sala": 3,
-            "usuario": 45678901,
-            "hora": "2025-09-15T11:00:00.000Z",
-            "estado": "aceptada"
-          }
+          { "id": 3, "sala": 3, "usuario": 45678901, "hora": "2025-09-15T11:00:00.000Z", "estado": "aceptada" }
         ]
       }
     },
     {
-      "id": "4",
+      "id": 4,
       "nombre": "Grace Hopper",
-      "caracteristicas": {
-        "cap_max": 20,
-        "tiene_proyector": true,
-        "tiene_pizarra": false,
+      "caracteristicas": { 
+        "cap_max": 20, 
+        "tiene_proyector": true, 
+        "tiene_pizarra": false, 
         "tiene_audio": false,
         "tiene_ventilacion": true
       },
       "horarios": {
         "reservas": [
-          {
-            "id": 4,
-            "sala": 4,
-            "usuario": 56789012,
-            "hora": "2025-09-15T12:00:00.000Z",
-            "estado": "aceptada"
-          }
+          { "id": 4, "sala": 4, "usuario": 56789012, "hora": "2025-09-15T12:00:00.000Z", "estado": "aceptada" }
         ]
       }
     },
     {
-      "id": "5",
+      "id": 5,
       "nombre": "Fundadores",
-      "caracteristicas": {
-        "cap_max": 30,
-        "tiene_proyector": true,
-        "tiene_pizarra": true,
+      "caracteristicas": { 
+        "cap_max": 30, 
+        "tiene_proyector": true, 
+        "tiene_pizarra": true, 
         "tiene_audio": true,
         "tiene_ventilacion": true
       },
       "horarios": {
         "reservas": [
-          {
-            "id": 5,
-            "sala": 5,
-            "usuario": 23456789,
-            "hora": "2025-09-15T13:00:00.000Z",
-            "estado": "aceptada"
-          }
+          { "id": 5, "sala": 5, "usuario": 23456789, "hora": "2025-09-15T13:00:00.000Z", "estado": "aceptada" }
         ]
       }
     },
     {
-      "id": "6",
+      "id": 6,
       "nombre": "Efrain Friedmann",
-      "caracteristicas": {
-        "cap_max": 30,
-        "tiene_proyector": true,
-        "tiene_pizarra": false,
+      "caracteristicas": { 
+        "cap_max": 30, 
+        "tiene_proyector": true, 
+        "tiene_pizarra": false, 
         "tiene_audio": true,
         "tiene_ventilacion": false
       },
       "horarios": {
         "reservas": [
-          {
-            "id": 6,
-            "sala": 6,
-            "usuario": 12345678,
-            "hora": "2025-09-16T10:00:00.000Z",
-            "estado": "aceptada"
-          }
+          { "id": 6, "sala": 6, "usuario": 12345678, "hora": "2025-09-16T10:00:00.000Z", "estado": "aceptada" }
         ]
       }
     }
   ],
   "reservas": [
-    {
-      "estado": "rechazada",
-      "id": "1"
-    },
-    {
-      "id": "2",
-      "sala": 2,
-      "usuario": 34567890,
-      "hora": "2025-09-15T09:00:00.000Z",
-      "estado": "aceptada"
-    },
-    {
-      "id": "3",
-      "sala": 3,
-      "usuario": 45678901,
-      "hora": "2025-09-15T11:00:00.000Z",
-      "estado": "aceptada"
-    },
-    {
-      "id": "4",
-      "sala": 4,
-      "usuario": 56789012,
-      "hora": "2025-09-15T12:00:00.000Z",
-      "estado": "aceptada"
-    },
-    {
-      "id": "5",
-      "sala": 5,
-      "usuario": 23456789,
-      "hora": "2025-09-15T13:00:00.000Z",
-      "estado": "aceptada"
-    },
-    {
-      "id": "6",
-      "sala": 6,
-      "usuario": 12345678,
-      "hora": "2025-09-16T10:00:00.000Z",
-      "estado": "aceptada"
-    },
-    {
-      "id": "7",
-      "sala": 1,
-      "usuario": 23456789,
-      "hora": "2025-09-15T14:00:00.000Z",
-      "estado": "aceptada"
-    }
+    { "id": 1, "sala": 1, "usuario": 12345678, "hora": "2025-09-15T10:00:00.000Z", "estado": "aceptada" },
+    { "id": 2, "sala": 2, "usuario": 34567890, "hora": "2025-09-15T09:00:00.000Z", "estado": "aceptada" },
+    { "id": 3, "sala": 3, "usuario": 45678901, "hora": "2025-09-15T11:00:00.000Z", "estado": "aceptada" },
+    { "id": 4, "sala": 4, "usuario": 56789012, "hora": "2025-09-15T12:00:00.000Z", "estado": "aceptada" },
+    { "id": 5, "sala": 5, "usuario": 23456789, "hora": "2025-09-15T13:00:00.000Z", "estado": "aceptada" },
+    { "id": 6, "sala": 6, "usuario": 12345678, "hora": "2025-09-16T10:00:00.000Z", "estado": "aceptada" },
+    { "id": 7, "sala": 1, "usuario": 23456789, "hora": "2025-09-15T14:00:00.000Z", "estado": "aceptada" }
   ],
   "usuarios": [
     {
-      "id": "12345678",
+      "id": 12345678,
       "nombre": "Juan",
       "apellido": "Pérez",
       "correo": "juan.perez@ejemplo.com",
       "contraseña": "1234"
     },
     {
-      "id": "23456789",
+      "id": 23456789,
       "nombre": "María",
       "apellido": "González",
       "correo": "maria.gonzalez@ejemplo.com",
       "contraseña": "abcd"
     },
     {
-      "id": "34567890",
+      "id": 34567890,
       "nombre": "Luis",
       "apellido": "Rodríguez",
       "correo": "luis.rodriguez@ejemplo.com",
       "contraseña": "pass123"
     },
     {
-      "id": "45678901",
+      "id": 45678901,
       "nombre": "Ana",
       "apellido": "Martínez",
       "correo": "ana.martinez@ejemplo.com",
       "contraseña": "qwerty"
     },
     {
-      "id": "56789012",
+      "id": 56789012,
       "nombre": "Pedro",
       "apellido": "Soto",
       "correo": "pedro.soto@ejemplo.com",

@@ -17,7 +17,12 @@ const getUsuarios = () => {
 
 const updateReservationStatus = (reservationId: number, newStatus: "aceptada" | "pendiente" | "rechazada") => {
   return axios
-    .put(`${baseUrl}/reservas/${reservationId}`, { estado: newStatus })
+    .get(`${baseUrl}/reservas/${reservationId}`)
+    .then(response => {
+      // Get the full reservation object in order to clone it
+      const updatedReservation = { ...response.data, estado: newStatus };
+      return axios.put(`${baseUrl}/reservas/${reservationId}`, updatedReservation);
+    })
     .then(response => response.data);
 };
 
