@@ -12,7 +12,6 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-  Input,
 } from "@heroui/react";
 import reservationAPI from "../services/reservationAPI";
 import type { ReservaDetalle } from "../types/models";
@@ -22,8 +21,7 @@ export default function ReservationTable() {
   const [reservations, setReservations] = useState<ReservaDetalle[]>([]);
   const [loading, setLoading] = useState(true);
   
-  // Filtros
-  const [filter, setFilter] = useState("");
+  // Filters
   const [statusFilter, setStatusFilter] = useState<Selection>(new Set([]));
 
   useEffect(() => {
@@ -41,22 +39,10 @@ export default function ReservationTable() {
     fetchReservations();
   }, []);
 
-  // Filtrado de reservaciones
   const filteredReservations = useMemo(() => {
     let filtered = reservations;
 
-    // Filtro por texto (buscar en sala o usuario)
-    const searchTerm = filter.trim().toLowerCase();
-    if (searchTerm) {
-      filtered = filtered.filter((reservation) =>
-        (reservation.nombreSala?.toLowerCase().includes(searchTerm)) ||
-        (reservation.nombreUsuario?.toLowerCase().includes(searchTerm)) ||
-        reservation.sala.toString().includes(searchTerm) ||
-        reservation.usuario.toString().includes(searchTerm)
-      );
-    }
-
-    // Filtro por estado
+    // Status filter
     const selectedStatuses = statusFilter === "all" ? [] : Array.from(statusFilter) as string[];
     if (selectedStatuses.length > 0) {
       filtered = filtered.filter((reservation) =>
@@ -65,7 +51,7 @@ export default function ReservationTable() {
     }
 
     return filtered;
-  }, [reservations, filter, statusFilter]);
+  }, [reservations, statusFilter]);
 
   // This function allows changing the status of a reservation
   const handleStatusChange = async (
@@ -116,16 +102,6 @@ export default function ReservationTable() {
       {/* Filtros */}
       <div className="flex flex-col gap-4 mb-4">
         <div className="flex justify-between gap-3 items-end">
-          <Input
-            isClearable
-            classNames={{ base: "w-full sm:max-w-[44%]", inputWrapper: "border-1" }}
-            placeholder="Buscar por sala o usuario..."
-            size="sm"
-            value={filter}
-            variant="bordered"
-            onClear={() => setFilter("")}
-            onValueChange={setFilter}
-          />
           <div className="flex gap-3">
             <Dropdown>
               <DropdownTrigger>
@@ -169,8 +145,8 @@ export default function ReservationTable() {
           {filteredReservations.map((reservation) => (
             <TableRow key={reservation.id}>
               <TableCell>{reservation.id}</TableCell>
-              <TableCell>{reservation.nombreSala || `Sala ${reservation.sala}`}</TableCell>
-              <TableCell>{reservation.nombreUsuario || `Usuario ${reservation.usuario}`}</TableCell>
+              <TableCell>{reservation.nombreSala || "Sin nombre"}</TableCell>
+              <TableCell>{reservation.nombreUsuario || "Sin nombre"}</TableCell>
               <TableCell>{formatDate(reservation.hora)}</TableCell>
               <TableCell>
                 <Chip color={getStatusColor(reservation.estado)} variant="flat" size="sm">

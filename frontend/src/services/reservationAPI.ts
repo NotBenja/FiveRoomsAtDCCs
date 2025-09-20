@@ -33,8 +33,9 @@ const getReservationsWithDetails = () => {
     getUsuarios()
   ]).then(([reservations, rooms, users]) => {
     return reservations.map((reservation: Reserva) => {
-      const room = rooms.find((s: Sala) => s.id === reservation.sala);
-      const user = users.find((u: Usuario) => u.id === reservation.usuario);
+      // Convertir IDs a string para comparar correctamente
+      const room = rooms.find((s: Sala) => s.id.toString() === reservation.sala.toString());
+      const user = users.find((u: Usuario) => u.id.toString() === reservation.usuario.toString());
       
       return {
         ...reservation,
