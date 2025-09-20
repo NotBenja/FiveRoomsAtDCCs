@@ -23,7 +23,7 @@ const boolChip = (v: boolean) => (
   </Chip>
 );
 
-export default function RoomsTable() {
+function RoomsTable() {
   const [rooms, setRooms] = useState<Sala[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -282,3 +282,6 @@ export default function RoomsTable() {
     </>
   );
 }
+
+  
+export default RoomsTable;
