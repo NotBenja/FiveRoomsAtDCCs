@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Table,
   TableHeader,
@@ -12,13 +12,19 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  Input,
 } from "@heroui/react";
 import reservationAPI from "../services/reservationAPI";
 import type { ReservaDetalle } from "../types/models";
+import type {Selection} from "@react-types/shared";
 
 export default function ReservationTable() {
   const [reservations, setReservations] = useState<ReservaDetalle[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  // Filtros
+  const [filter, setFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState<Selection>(new Set([]));
 
   useEffect(() => {
     const fetchReservations = async () => {
@@ -34,6 +40,32 @@ export default function ReservationTable() {
 
     fetchReservations();
   }, []);
+
+  // Filtrado de reservaciones
+  const filteredReservations = useMemo(() => {
+    let filtered = reservations;
+
+    // Filtro por texto (buscar en sala o usuario)
+    const searchTerm = filter.trim().toLowerCase();
+    if (searchTerm) {
+      filtered = filtered.filter((reservation) =>
+        (reservation.nombreSala?.toLowerCase().includes(searchTerm)) ||
+        (reservation.nombreUsuario?.toLowerCase().includes(searchTerm)) ||
+        reservation.sala.toString().includes(searchTerm) ||
+        reservation.usuario.toString().includes(searchTerm)
+      );
+    }
+
+    // Filtro por estado
+    const selectedStatuses = statusFilter === "all" ? [] : Array.from(statusFilter) as string[];
+    if (selectedStatuses.length > 0) {
+      filtered = filtered.filter((reservation) =>
+        selectedStatuses.includes(reservation.estado)
+      );
+    }
+
+    return filtered;
+  }, [reservations, filter, statusFilter]);
 
   // This function allows changing the status of a reservation
   const handleStatusChange = async (
@@ -81,8 +113,49 @@ export default function ReservationTable() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Reservas de Salas</h1>
+      {/* Filtros */}
+      <div className="flex flex-col gap-4 mb-4">
+        <div className="flex justify-between gap-3 items-end">
+          <Input
+            isClearable
+            classNames={{ base: "w-full sm:max-w-[44%]", inputWrapper: "border-1" }}
+            placeholder="Buscar por sala o usuario..."
+            size="sm"
+            value={filter}
+            variant="bordered"
+            onClear={() => setFilter("")}
+            onValueChange={setFilter}
+          />
+          <div className="flex gap-3">
+            <Dropdown>
+              <DropdownTrigger>
+                <Button size="sm" variant="flat">
+                  Estado
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                aria-label="Filtrar por estado"
+                closeOnSelect={false}
+                selectionMode="multiple"
+                selectedKeys={statusFilter}
+                onSelectionChange={setStatusFilter}
+              >
+                <DropdownItem key="pendiente">Pendiente</DropdownItem>
+                <DropdownItem key="aceptada">Aceptada</DropdownItem>
+                <DropdownItem key="rechazada">Rechazada</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </div>
+        </div>
 
+        <div className="flex justify-between items-center">
+          <span className="text-default-400 text-small">
+            {filteredReservations.length} de {reservations.length} reservaciones
+          </span>
+        </div>
+      </div>
+
+      {/* Tabla */}
       <Table aria-label="Tabla de reservas">
         <TableHeader>
           <TableColumn>ID</TableColumn>
@@ -93,7 +166,7 @@ export default function ReservationTable() {
           <TableColumn>ACCIONES</TableColumn>
         </TableHeader>
         <TableBody>
-          {reservations.map((reservation) => (
+          {filteredReservations.map((reservation) => (
             <TableRow key={reservation.id}>
               <TableCell>{reservation.id}</TableCell>
               <TableCell>{reservation.nombreSala || `Sala ${reservation.sala}`}</TableCell>
