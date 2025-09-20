@@ -12,6 +12,7 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  Pagination,
 } from "@heroui/react";
 import reservationAPI from "../services/reservationAPI";
 import type { ReservaDetalle } from "../types/models";
@@ -23,6 +24,7 @@ export default function ReservationTable() {
   
   // Filters
   const [statusFilter, setStatusFilter] = useState<Selection>(new Set([]));
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     const fetchReservations = async () => {
@@ -52,6 +54,12 @@ export default function ReservationTable() {
 
     return filtered;
   }, [reservations, statusFilter]);
+
+  const pages = Math.max(1, Math.ceil(filteredReservations.length / 5));
+  const pageItems = useMemo(() => {
+    const start = (page - 1) * 5;
+    return filteredReservations.slice(start, start + 5);
+  }, [filteredReservations, page]);
 
   // This function allows changing the status of a reservation
   const handleStatusChange = async (
@@ -130,8 +138,7 @@ export default function ReservationTable() {
           </span>
         </div>
       </div>
-
-      {/* Tabla */}
+    
       <Table aria-label="Tabla de reservas">
         <TableHeader>
           <TableColumn>ID</TableColumn>
@@ -142,7 +149,7 @@ export default function ReservationTable() {
           <TableColumn>ACCIONES</TableColumn>
         </TableHeader>
         <TableBody>
-          {filteredReservations.map((reservation) => (
+          {pageItems.map((reservation) => (
             <TableRow key={reservation.id}>
               <TableCell>{reservation.id}</TableCell>
               <TableCell>{reservation.nombreSala || "Sin nombre"}</TableCell>
@@ -194,6 +201,21 @@ export default function ReservationTable() {
           ))}
         </TableBody>
       </Table>
+
+      <div className="py-2 px-2 flex justify-between items-center">
+        <Pagination
+          showControls
+          classNames={{ cursor: "bg-foreground text-background" }}
+          color="default"
+          page={page}
+          total={pages}
+          variant="light"
+          onChange={setPage}
+        />
+        <span className="text-small text-default-400">
+          Página {page} de {pages}
+        </span>
+      </div>
     </div>
   );
 }
