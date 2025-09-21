@@ -12,10 +12,23 @@ export interface Room {
     features: RoomFeatures;
 }
 
-export interface Reservation {
+export interface Reserva {
     id: number;
-    salaId: number;
-    userId: number;
+    sala: number;
+    usuario: number;
     hora: string;
     estado: "aceptada" | "pendiente" | "rechazada";
+}
+
+export interface Usuario {
+    id: number;
+    nombre: string;
+    apellido: string;
+    correo: string;
+    contraseña: string;
+}
+
+export interface ReservaDetalle extends Reserva {
+    nombreSala?: string;
+    nombreUsuario?: string;
 }
