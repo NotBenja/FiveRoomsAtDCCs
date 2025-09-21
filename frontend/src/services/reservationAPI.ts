@@ -1,9 +1,23 @@
 import axios from "axios";
+
 import type { Reserva, Sala, Usuario, ReservaDetalle } from "../types/models";
 
 const baseUrl = "http://localhost:3001";
 
 const getReservas = () => {
+
+const getWeekReservations = async (weekStart: string, weekEnd: string, roomId: number) => {
+    const reservations = await getReservas()
+    const salaIdNum = Number(roomId);
+    return reservations.filter((r: Reservation) => {
+        return (Number(r.salaId) === salaIdNum && r.hora >= weekStart && r.hora < weekEnd);
+    })
+    // NO FUNCIONÓ
+    //const startISO = weekStart.toISOString();
+    //const endISO = weekEnd.toISOString();
+    //return axios.get(`${baseUrl}/reservas?hora_gte=${startISO}&hora_lt=${endISO}&salaId=${salaId}`)
+    //    .then(response => response.data);
+}
   return axios.get(`${baseUrl}/reservas`).then(response => response.data);
 };
 

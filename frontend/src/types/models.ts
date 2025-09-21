@@ -1,21 +1,15 @@
 export interface RoomFeatures {
     maxCapacity: number;
     hasProjector: boolean;
+    hasWhiteboard: boolean;
+    hasAudio: boolean;
+    hasVentilation: boolean;
 }
 
-export interface Sala {
+export interface Room {
     id: number;
-    nombre: string;
-    caracteristicas: {
-        cap_max: number;
-        tiene_proyector: boolean;
-        tiene_pizarra: boolean;
-        tiene_audio: boolean;
-        tiene_ventilacion: boolean;
-    };
-    horarios: {
-        reservas: Reserva[];
-    };
+    name: string;
+    features: RoomFeatures;
 }
 
 export interface Reserva {
