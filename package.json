@@ -1,0 +1,15 @@
+{
+  "name": "app",
+  "private": true,
+  "version": "0.0.0",
+  "workspaces": ["frontend", "backend"],
+  "scripts": {
+    "dev": "concurrently -k -n BACK,FRONT -c magenta,cyan \"npm -w backend run dev\" \"npm -w frontend run dev\"",
+    "build": "npm -w frontend run build",
+    "preview": "npm -w frontend run preview",
+    "install:all": "npm -w frontend install && npm -w backend install"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}

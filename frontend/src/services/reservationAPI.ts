@@ -1,16 +1,55 @@
 import axios from "axios";
-
-import type { Reserva, Sala, Usuario, ReservaDetalle } from "../types/models";
+import type { Reservation, Room, User, ReservationDetails } from "../types/models";
 
 const baseUrl = "http://localhost:3001";
 
-const getReservas = () => {
+export const getReservations = () => {
+    return axios.get(`${baseUrl}/reservations`).then(response => response.data);
+};
 
-const getWeekReservations = async (weekStart: string, weekEnd: string, roomId: number) => {
-    const reservations = await getReservas()
+export const getRooms = () => {
+    return axios.get(`${baseUrl}/rooms`).then(response => response.data);
+};
+
+export const getUsers = () => {
+    return axios.get(`${baseUrl}/users`).then(response => response.data);
+};
+
+export const updateReservationStatus = (reservationId: number, newStatus: "aceptada" | "pendiente" | "rechazada") => {
+  return axios
+    .get(`${baseUrl}/reservations/${reservationId}`)
+    .then(response => {
+      // Get the full reservation object in order to clone it
+      const updatedReservation = { ...response.data, estado: newStatus };
+      return axios.put(`${baseUrl}/reservations/${reservationId}`, updatedReservation);
+    })
+    .then(response => response.data);
+};
+
+export const getReservationsWithDetails = () => {
+  return Promise.all([
+    getReservations(),
+    getRooms(),
+    getUsers()
+  ]).then(([reservations, rooms, users]) => {
+    return reservations.map((reservation: Reservation) => {
+      const room = rooms.find((s: Room) => s.id === reservation.roomID);
+      const user = users.find((u: User) => u.id === reservation.userID);
+      
+      return {
+        ...reservation,
+        room_name: room?.nombre,
+        user_name: user ? `${user.nombre} ${user.apellido}` : undefined
+      } as ReservationDetails;
+    });
+  });
+};
+
+export const getWeekReservations = async (weekStart: string, weekEnd: string, roomId: number) => {
+    const reservations = await getReservations()
     const salaIdNum = Number(roomId);
     return reservations.filter((r: Reservation) => {
-        return (Number(r.salaId) === salaIdNum && r.hora >= weekStart && r.hora < weekEnd);
+        return (Number(r.roomID) === salaIdNum && r.time >= weekStart && r.time < weekEnd);
     })
     // NO FUNCIONÓ
     //const startISO = weekStart.toISOString();
@@ -18,52 +57,11 @@ const getWeekReservations = async (weekStart: string, weekEnd: string, roomId: n
     //return axios.get(`${baseUrl}/reservas?hora_gte=${startISO}&hora_lt=${endISO}&salaId=${salaId}`)
     //    .then(response => response.data);
 }
-  return axios.get(`${baseUrl}/reservas`).then(response => response.data);
-};
-
-const getSalas = () => {
-  return axios.get(`${baseUrl}/salas`).then(response => response.data);
-};
-
-const getUsuarios = () => {
-  return axios.get(`${baseUrl}/usuarios`).then(response => response.data);
-};
-
-const updateReservationStatus = (reservationId: number, newStatus: "aceptada" | "pendiente" | "rechazada") => {
-  return axios
-    .get(`${baseUrl}/reservas/${reservationId}`)
-    .then(response => {
-      // Get the full reservation object in order to clone it
-      const updatedReservation = { ...response.data, estado: newStatus };
-      return axios.put(`${baseUrl}/reservas/${reservationId}`, updatedReservation);
-    })
-    .then(response => response.data);
-};
-
-const getReservationsWithDetails = () => {
-  return Promise.all([
-    getReservas(),
-    getSalas(),
-    getUsuarios()
-  ]).then(([reservations, rooms, users]) => {
-    return reservations.map((reservation: Reserva) => {
-      // Convertir IDs a string para comparar correctamente
-      const room = rooms.find((s: Sala) => s.id.toString() === reservation.sala.toString());
-      const user = users.find((u: Usuario) => u.id.toString() === reservation.usuario.toString());
-      
-      return {
-        ...reservation,
-        nombreSala: room?.nombre,
-        nombreUsuario: user ? `${user.nombre} ${user.apellido}` : undefined
-      } as ReservaDetalle;
-    });
-  });
-};
 
 export default {
-  getReservas,
-  getSalas,
-  getUsuarios,
-  updateReservationStatus,
-  getReservationsWithDetails,
+    getReservations,
+    getRooms,
+    getUsers,
+    updateReservationStatus,
+    getReservationsWithDetails,
 };

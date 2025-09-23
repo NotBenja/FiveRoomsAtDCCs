@@ -1,4 +1,4 @@
-import {addToast, Card, CardHeader} from "@heroui/react";
+import { addToast, Card, CardHeader } from "@heroui/react";
 import React from "react";
 
 interface ScheduleBlockProps {

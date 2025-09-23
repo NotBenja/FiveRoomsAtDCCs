@@ -15,13 +15,13 @@ import {
   Pagination,
 } from "@heroui/react";
 import reservationAPI from "../services/reservationAPI";
-import type { ReservaDetalle } from "../types/models";
+import type { ReservationDetails } from "../types/models";
 import type {Selection} from "@react-types/shared";
 
 export default function ReservationTable() {
-  const [reservations, setReservations] = useState<ReservaDetalle[]>([]);
+  const [reservations, setReservations] = useState<ReservationDetails[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   // Filters
   const [statusFilter, setStatusFilter] = useState<Selection>(new Set([]));
   const [page, setPage] = useState(1);
@@ -48,7 +48,7 @@ export default function ReservationTable() {
     const selectedStatuses = statusFilter === "all" ? [] : Array.from(statusFilter) as string[];
     if (selectedStatuses.length > 0) {
       filtered = filtered.filter((reservation) =>
-        selectedStatuses.includes(reservation.estado)
+        selectedStatuses.includes(reservation.status)
       );
     }
 
@@ -71,7 +71,7 @@ export default function ReservationTable() {
       
       setReservations((prev) =>
         prev.map((reservation) =>
-          reservation.id === reservationId ? { ...reservation, estado: newStatus } : reservation
+          reservation.id === reservationId ? { ...reservation, status: newStatus } : reservation
         )
       );
     } catch (err) {
@@ -138,7 +138,7 @@ export default function ReservationTable() {
           </span>
         </div>
       </div>
-    
+
       <Table aria-label="Tabla de reservas">
         <TableHeader>
           <TableColumn>ID</TableColumn>
@@ -152,12 +152,12 @@ export default function ReservationTable() {
           {pageItems.map((reservation) => (
             <TableRow key={reservation.id}>
               <TableCell>{reservation.id}</TableCell>
-              <TableCell>{reservation.nombreSala || "Sin nombre"}</TableCell>
-              <TableCell>{reservation.nombreUsuario || "Sin nombre"}</TableCell>
-              <TableCell>{formatDate(reservation.hora)}</TableCell>
+              <TableCell>{reservation.room_name || `Sala ${reservation.roomID}`}</TableCell>
+              <TableCell>{reservation.user_name || `Usuario ${reservation.userID}`}</TableCell>
+              <TableCell>{formatDate(reservation.time)}</TableCell>
               <TableCell>
-                <Chip color={getStatusColor(reservation.estado)} variant="flat" size="sm">
-                  {reservation.estado}
+                <Chip color={getStatusColor(reservation.status)} variant="flat" size="sm">
+                  {reservation.status}
                 </Chip>
               </TableCell>
               <TableCell>
@@ -176,21 +176,21 @@ export default function ReservationTable() {
                     <DropdownItem
                       key="aceptada"
                       color="success"
-                      className={reservation.estado === "aceptada" ? "opacity-50" : ""}
+                      className={reservation.status === "aceptada" ? "opacity-50" : ""}
                     >
                       Aceptar
                     </DropdownItem>
                     <DropdownItem
                       key="pendiente"
                       color="warning"
-                      className={reservation.estado === "pendiente" ? "opacity-50" : ""}
+                      className={reservation.status === "pendiente" ? "opacity-50" : ""}
                     >
                       Dejar Pendiente
                     </DropdownItem>
                     <DropdownItem
                       key="rechazada"
                       color="danger"
-                      className={reservation.estado === "rechazada" ? "opacity-50" : ""}
+                      className={reservation.status === "rechazada" ? "opacity-50" : ""}
                     >
                       Rechazar
                     </DropdownItem>

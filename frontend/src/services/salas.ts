@@ -1,27 +1,27 @@
 import axios from "axios";
-import type { Sala } from "../types/models";
+import type { Room } from "../types/models";
 
 const baseUrl = "http://localhost:3001";
 
-const getSalas = () => {
-  return axios.get<Sala[]>(`${baseUrl}/salas`).then(response => response.data);
+export const getRooms = () => {
+  return axios.get<Room[]>(`${baseUrl}/rooms`).then(response => response.data);
 };
 
-const createSala = (nueva: Omit<Sala, "id">) => {
-  return axios.post<Sala>(`${baseUrl}/salas`, nueva).then(response => response.data);
+export const createRoom = (nueva: Omit<Room, "id">) => {
+  return axios.post<Room>(`${baseUrl}/rooms`, nueva).then(response => response.data);
 };
 
-const updateSala = (sala: Sala) => {
-  return axios.put<Sala>(`${baseUrl}/salas/${sala.id}`, sala).then(response => response.data);
+export const updateRoom = (sala: Room) => {
+  return axios.put<Room>(`${baseUrl}/rooms/${sala.id}`, sala).then(response => response.data);
 };
 
-const deleteSala = (id: number) => {
-  return axios.delete(`${baseUrl}/salas/${id}`).then(response => response.data);
+export const deleteRoom = (id: number) => {
+  return axios.delete(`${baseUrl}/rooms/${id}`).then(response => response.data);
 };
 
-export default { 
-  getSalas, 
-  createSala, 
-  updateSala, 
-  deleteSala 
+export default {
+    getRooms,
+    createRoom,
+    updateRoom,
+    deleteRoom,
 };

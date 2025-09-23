@@ -1,8 +1,8 @@
 import type {Reservation, Room} from "../types/models.ts";
 import React, {useEffect, useState} from "react";
 import ScheduleBlock from "./ScheduleBlock.tsx";
-import reservationAPI from "../services/reservationAPI.ts";
-import {Button} from "@heroui/react";
+import { getWeekReservations } from "../services/reservationAPI.ts";
+import { Button } from "@heroui/react";
 
 interface ScheduleProps {
     onClickBlock: (blockID: string) => void;
@@ -54,18 +54,18 @@ const RoomSchedule: React.FC<ScheduleProps> = ({ onClickBlock, room }) => {
     const [currentWeekStart, setWeekStart] = useState<Date>(getWeekStart(new Date()));
     const [reservations, setReservations] = useState<Reservation[]>([]);
     useEffect(() => {
-        if(room.id){
-            reservationAPI.getWeekReservations(currentWeekStart.toISOString(), getWeekEnd(currentWeekStart).toISOString(), room.id).then((data) => {
+        if (room.id){
+            getWeekReservations(currentWeekStart.toISOString(), getWeekEnd(currentWeekStart).toISOString(), room.id).then((data) => {
                 setReservations(data);
             }); 
         }
         
-    }, [currentWeekStart, reservations, room.id])
+    }, [currentWeekStart, room.id])
 
     const isReserved = (blockId: string) => {
         return reservations.some((reservation: Reservation) => {
             console.log(blockId);
-            return reservation.hora === blockId && reservation.estado==="aceptada";
+            return reservation.time === blockId && reservation.status==="aceptada";
         })
     }
     const getPrevWeekDate = () => {
@@ -79,7 +79,7 @@ const RoomSchedule: React.FC<ScheduleProps> = ({ onClickBlock, room }) => {
             <div className="table-head w-full flex items-center justify-between mb-6">
                 <Button onPress={() => setWeekStart(getWeekStart(getPrevWeekDate()))}>Semana anterior</Button>
                 <div className="flex flex-col items-center">
-                    <h2 className="text-xl font-bold mb-1" >Sala: {room.name}</h2>
+                    <h2 className="text-xl font-bold mb-1" >Sala: {room.room_name}</h2>
                     <h3 className="text-lg font-semibold">Semana del {currentWeekStart.toLocaleDateString('es-CL', {
                         day: '2-digit',
                         month: '2-digit',

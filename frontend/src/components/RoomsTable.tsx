@@ -4,15 +4,15 @@ import {
   Input, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem,
   Chip, Pagination, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Checkbox
 } from "@heroui/react";
-import salasAPI from "../services/salas";
-import type { Sala } from "../types/models";
+import salas from "../services/salas";
+import type { Room } from "../types/models";
 import type {Selection} from "@react-types/shared";
 
 const FEATURE_FIELDS = [
-  { key: "proyector",   label: "Proyector",   get: (s: Sala) => s.caracteristicas.tiene_proyector },
-  { key: "pizarra",     label: "Pizarra",     get: (s: Sala) => s.caracteristicas.tiene_pizarra },
-  { key: "audio",       label: "Audio",       get: (s: Sala) => s.caracteristicas.tiene_audio },
-  { key: "ventilacion", label: "Ventilación", get: (s: Sala) => s.caracteristicas.tiene_ventilacion },
+  { key: "proyector",   label: "Proyector",   get: (s: Room) => s.features.hasProjector },
+  { key: "pizarra",     label: "Pizarra",     get: (s: Room) => s.features.hasWhiteboard },
+  { key: "audio",       label: "Audio",       get: (s: Room) => s.features.hasAudio },
+  { key: "ventilacion", label: "Ventilación", get: (s: Room) => s.features.hasVentilation },
 ] as const;
 
 type FeatureKey = typeof FEATURE_FIELDS[number]["key"];
@@ -24,7 +24,7 @@ const boolChip = (v: boolean) => (
 );
 
 function RoomsTable() {
-  const [rooms, setRooms] = useState<Sala[]>([]);
+  const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
 
   // toolbar
@@ -34,7 +34,7 @@ function RoomsTable() {
 
   // modal (crear / editar)
   const [open, setOpen] = useState(false);
-  const [editing, setEditing] = useState<Sala | null>(null);
+  const [editing, setEditing] = useState<Room | null>(null);
   const [formName, setFormName] = useState("");
   const [formCap, setFormCap] = useState<number>(10);
   const [formProj, setFormProj] = useState(true);
@@ -45,7 +45,7 @@ function RoomsTable() {
   useEffect(() => {
     const fetchSalas = async () => {
       try {
-        const data = await salasAPI.getSalas();
+        const data = await salas.getRooms();
         setRooms(data);
       } catch (err) {
         console.error("Error cargando salas:", err);
@@ -58,11 +58,11 @@ function RoomsTable() {
   }, []);
 
   // filtrado
-  const filtered = useMemo<Sala[]>(() => {
+  const filtered = useMemo<Room[]>(() => {
     let list = rooms;
 
     const q = filter.trim().toLowerCase();
-    if (q) list = list.filter((s) => s.nombre.toLowerCase().includes(q));
+    if (q) list = list.filter((s) => s.room_name.toLowerCase().includes(q));
 
     const selected = features === "all" ? [] : (Array.from(features) as FeatureKey[]);
     if (selected.length) {
@@ -74,7 +74,7 @@ function RoomsTable() {
   }, [rooms, filter, features]);
 
   const pages = Math.max(1, Math.ceil(filtered.length / 5));
-  const pageItems = useMemo<Sala[]>(() => {
+  const pageItems = useMemo<Room[]>(() => {
     const start = (page - 1) * 5;
     return filtered.slice(start, start + 5);
   }, [filtered, page]);
@@ -91,14 +91,14 @@ function RoomsTable() {
     setOpen(true);
   };
 
-  const openEdit = (s: Sala) => {
+  const openEdit = (s: Room) => {
     setEditing(s);
-    setFormName(s.nombre);
-    setFormCap(s.caracteristicas.cap_max);
-    setFormProj(s.caracteristicas.tiene_proyector);
-    setFormBoard(s.caracteristicas.tiene_pizarra);
-    setFormAudio(s.caracteristicas.tiene_audio);
-    setFormVent(s.caracteristicas.tiene_ventilacion);
+    setFormName(s.room_name);
+    setFormCap(s.features.maxCapacity);
+    setFormProj(s.features.hasProjector);
+    setFormBoard(s.features.hasWhiteboard);
+    setFormAudio(s.features.hasAudio);
+    setFormVent(s.features.hasVentilation);
     setOpen(true);
   };
 
@@ -107,20 +107,19 @@ function RoomsTable() {
 
     if (editing) {
       // editar
-      const updated: Sala = {
+      const updated: Room = {
         ...editing,
-        nombre: formName.trim(),
-        caracteristicas: {
-          cap_max: formCap,
-          tiene_proyector: formProj,
-          tiene_pizarra: formBoard,
-          tiene_audio: formAudio,
-          tiene_ventilacion: formVent,
-        },
-        horarios: editing.horarios,
+        room_name: formName.trim(),
+        features: {
+            maxCapacity: formCap,
+            hasProjector: formProj,
+            hasWhiteboard: formBoard,
+            hasAudio: formAudio,
+            hasVentilation: formVent,
+        }
       };
       try {
-        const saved = await salasAPI.updateSala(updated);
+        const saved = await salas.updateRoom(updated);
         setRooms((prev) => prev.map((s) => (s.id === saved.id ? saved : s)));
         setOpen(false);
       } catch (e) {
@@ -128,26 +127,25 @@ function RoomsTable() {
       }
     } else {
       // crear
-      const nueva: Omit<Sala, "id"> = {
-        nombre: formName.trim(),
-        caracteristicas: {
-          cap_max: formCap,
-          tiene_proyector: formProj,
-          tiene_pizarra: formBoard,
-          tiene_audio: formAudio,
-          tiene_ventilacion: formVent,
+      const nueva: Omit<Room, "id"> = {
+      room_name: formName.trim(),
+        features: {
+          maxCapacity: formCap,
+          hasProjector: formProj,
+          hasWhiteboard: formBoard,
+          hasAudio: formAudio,
+          hasVentilation: formVent,
         },
-        horarios: { reservas: [] },
       };
 
-      const creada = await salasAPI.createSala(nueva);
+      const creada = await salas.createRoom(nueva);
       setRooms((prev) => [...prev, creada]);
       setOpen(false);
     }
   };
 
   const handleDelete = async (id: number) => {
-    await salasAPI.deleteSala(id);
+    await salas.deleteRoom(id);
     setRooms((prev) => prev.filter((s) => s.id !== id));
   };
 
@@ -210,12 +208,12 @@ function RoomsTable() {
         <TableBody emptyContent={"No se encontraron salas."}>
           {pageItems.map((s) => (
             <TableRow key={s.id}>
-              <TableCell className="font-medium">{s.nombre}</TableCell>
-              <TableCell className="tabular-nums">{s.caracteristicas.cap_max}</TableCell>
-              <TableCell>{boolChip(s.caracteristicas.tiene_proyector)}</TableCell>
-              <TableCell>{boolChip(s.caracteristicas.tiene_pizarra)}</TableCell>
-              <TableCell>{boolChip(s.caracteristicas.tiene_audio)}</TableCell>
-              <TableCell>{boolChip(s.caracteristicas.tiene_ventilacion)}</TableCell>
+              <TableCell className="font-medium">{s.room_name}</TableCell>
+              <TableCell className="tabular-nums">{s.features.maxCapacity}</TableCell>
+              <TableCell>{boolChip(s.features.hasProjector)}</TableCell>
+              <TableCell>{boolChip(s.features.hasWhiteboard)}</TableCell>
+              <TableCell>{boolChip(s.features.hasAudio)}</TableCell>
+              <TableCell>{boolChip(s.features.hasVentilation)}</TableCell>
               <TableCell>
                 <Dropdown>
                   <DropdownTrigger>
@@ -283,5 +281,5 @@ function RoomsTable() {
   );
 }
 
-  
+
 export default RoomsTable;

@@ -1,42 +1,120 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+@import "tailwindcss";
+@plugin './hero.ts';
+@source '../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
+@custom-variant dark (&:is(.dark *));
+
+.bg-content1 { background-color: #ffffff; }
+.dark .bg-content1 { background-color: #0b1220; }
+
+.room-list,
+.room-filter-panel {
+    width: 100%;
+    max-width: 42rem;
+    margin-inline: auto;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+.room-filter-panel {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px 24px;
+    align-items: center;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+.room-capacity-slider { min-width: 0; }
+.room-capacity-slider .max-w-md { max-width: none !important; width: 100% !important; }
+.projector-selector { justify-self: end; white-space: nowrap; }
+
+.room-card {
+    border-radius: 24px;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background:
+            radial-gradient(circle at 20% 10%, rgba(14,165,233,0.04), transparent 40%),
+            radial-gradient(circle at 80% 30%, rgba(99,102,241,0.045), transparent 45%),
+            linear-gradient(180deg, rgba(2,6,23,0.015), rgba(2,6,23,0.03));
+    transition: transform 140ms ease, box-shadow 140ms ease;
 }
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.room-card:hover { transform: translateY(-1px); }
+
+.room-accent {
+    position: absolute;
+    left: 8px;
+    top: 14px;
+    bottom: 14px;
+    width: 6px;
+    border-radius: 9999px;
+    opacity: 0.85;
+    filter: saturate(1.05);
+    pointer-events: none;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.title-conf {
+    color: #0f172a;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+}
+.subtitle-conf {
+    color: #1d2d53;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+
+.room-title {
+    color: #0f172a;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
 }
 
-.card {
-  padding: 2em;
+.room-thumb {
+    width: 72px;
+    height: 72px;
+    box-shadow: 0 1px 2px rgba(2, 6, 23, 0.05);
+    background: #f7f9fc;
+    border-color: rgba(15, 23, 42, 0.08);
 }
 
-.read-the-docs {
-  color: #888;
+.room-skeleton-card {
+    border-radius: 24px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: #ffffff;
+}
+
+/* ===== Dark mode ===== */
+:root.dark,
+
+.dark html,
+.dark body {
+    background-color: #0b1220;
+}
+
+.dark {
+    background-color: #0b1220;
+    color: #e5e7eb;
+}
+
+.dark .room-card {
+    border-color: rgba(255, 255, 255, 0.08);
+    background:
+            radial-gradient(circle at 20% 10%, rgba(14,165,233,0.06), transparent 40%),
+            radial-gradient(circle at 80% 30%, rgba(99,102,241,0.07), transparent 45%),
+            linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.035));
+}
+.dark .title-conf { color: #e5e7eb; }
+.dark .subtitle-conf { color: #bbbdbf; }
+
+
+.dark .room-title { color: #e5e7eb; }
+.dark .room-thumb { background: #0f172a20; }
+
+.dark .room-skeleton-card {
+    border-color: rgba(255, 255, 255, 0.08);
+    background: #0f172a;
+}
+
+@media (max-width: 640px) {
+    .room-list { padding-inline: 0.25rem; }
+    .room-filter-panel { grid-template-columns: 1fr; }
+    .projector-selector { justify-self: start; }
 }

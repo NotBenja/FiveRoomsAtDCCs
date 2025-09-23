@@ -1,6 +1,6 @@
 import { Tabs, Tab } from "@heroui/react";
-import ReservationTable from "./ReservationTable";
-import RoomsTable from "./RoomsTable";
+import ReservationTable from "../components/ReservationTable.tsx";
+import RoomsTable from "../components/RoomsTable.tsx";
 
 export default function AdminPage() {
   return (

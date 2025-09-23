@@ -8,27 +8,35 @@ export interface RoomFeatures {
 
 export interface Room {
     id: number;
-    name: string;
+    room_name: string;
     features: RoomFeatures;
 }
 
-export interface Reserva {
+export interface Reservation {
     id: number;
-    sala: number;
-    usuario: number;
-    hora: string;
-    estado: "aceptada" | "pendiente" | "rechazada";
+    roomID: number;
+    userID: number;
+    time: string;
+    status: "aceptada" | "pendiente" | "rechazada";
 }
 
-export interface Usuario {
+export interface User {
     id: number;
-    nombre: string;
-    apellido: string;
-    correo: string;
-    contraseña: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    password: string;
 }
 
-export interface ReservaDetalle extends Reserva {
-    nombreSala?: string;
-    nombreUsuario?: string;
+export interface ReservationDetails extends Reservation {
+    room_name?: string;
+    user_name?: string;
+}
+
+export type RoomFilters = {
+    capacityRange: [number, number];
+    hasProjector: boolean | null;
+    hasWhiteboard: boolean | null;
+    hasAudio: boolean | null;
+    hasVentilation: boolean | null;
 }

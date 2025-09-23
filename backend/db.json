@@ -1,147 +1,468 @@
 {
-  "salas": [
+  "rooms": [
     {
       "id": 1,
-      "nombre": "Auditorio Ramón Picarte",
-      "caracteristicas": { 
-        "cap_max": 120, 
-        "tiene_proyector": true, 
-        "tiene_pizarra": true, 
-        "tiene_audio": true,
-        "tiene_ventilacion": true
-      },
-      "horarios": {
-        "reservas": [
-          { "id": 1, "sala": 1, "usuario": 12345678, "hora": "2025-09-15T10:00:00.000Z", "estado": "aceptada" },
-          { "id": 7, "sala": 1, "usuario": 23456789, "hora": "2025-09-15T14:00:00.000Z", "estado": "aceptada" }
-        ]
+      "room_name": "La Salita",
+      "features": {
+        "maxCapacity": 18,
+        "hasProjector": true,
+        "hasWhiteboard": false,
+        "hasAudio": true,
+        "hasVentilation": false
       }
     },
     {
       "id": 2,
-      "nombre": "Auditorio Philippe Flajolet",
-      "caracteristicas": { 
-        "cap_max": 80, 
-        "tiene_proyector": true, 
-        "tiene_pizarra": false, 
-        "tiene_audio": true,
-        "tiene_ventilacion": true
-      },
-      "horarios": {
-        "reservas": [
-          { "id": 2, "sala": 2, "usuario": 34567890, "hora": "2025-09-15T09:00:00.000Z", "estado": "aceptada" }
-        ]
+      "room_name": "Ofisalita",
+      "features": {
+        "maxCapacity": 25,
+        "hasProjector": false,
+        "hasWhiteboard": true,
+        "hasAudio": true,
+        "hasVentilation": true
       }
     },
     {
       "id": 3,
-      "nombre": "Ada Lovelace",
-      "caracteristicas": { 
-        "cap_max": 20, 
-        "tiene_proyector": true, 
-        "tiene_pizarra": true, 
-        "tiene_audio": false,
-        "tiene_ventilacion": false
-      },
-      "horarios": {
-        "reservas": [
-          { "id": 3, "sala": 3, "usuario": 45678901, "hora": "2025-09-15T11:00:00.000Z", "estado": "aceptada" }
-        ]
+      "room_name": "Dirección",
+      "features": {
+        "maxCapacity": 12,
+        "hasProjector": true,
+        "hasWhiteboard": true,
+        "hasAudio": false,
+        "hasVentilation": true
       }
     },
     {
       "id": 4,
-      "nombre": "Grace Hopper",
-      "caracteristicas": { 
-        "cap_max": 20, 
-        "tiene_proyector": true, 
-        "tiene_pizarra": false, 
-        "tiene_audio": false,
-        "tiene_ventilacion": true
-      },
-      "horarios": {
-        "reservas": [
-          { "id": 4, "sala": 4, "usuario": 56789012, "hora": "2025-09-15T12:00:00.000Z", "estado": "aceptada" }
-        ]
+      "room_name": "Laboratorio Lorenzo",
+      "features": {
+        "maxCapacity": 30,
+        "hasProjector": true,
+        "hasWhiteboard": true,
+        "hasAudio": true,
+        "hasVentilation": false
       }
     },
     {
       "id": 5,
-      "nombre": "Fundadores",
-      "caracteristicas": { 
-        "cap_max": 30, 
-        "tiene_proyector": true, 
-        "tiene_pizarra": true, 
-        "tiene_audio": true,
-        "tiene_ventilacion": true
-      },
-      "horarios": {
-        "reservas": [
-          { "id": 5, "sala": 5, "usuario": 23456789, "hora": "2025-09-15T13:00:00.000Z", "estado": "aceptada" }
-        ]
+      "room_name": "Laboratorio Dichato",
+      "features": {
+        "maxCapacity": 15,
+        "hasProjector": false,
+        "hasWhiteboard": true,
+        "hasAudio": false,
+        "hasVentilation": true
       }
     },
     {
       "id": 6,
-      "nombre": "Efrain Friedmann",
-      "caracteristicas": { 
-        "cap_max": 30, 
-        "tiene_proyector": true, 
-        "tiene_pizarra": false, 
-        "tiene_audio": true,
-        "tiene_ventilacion": false
-      },
-      "horarios": {
-        "reservas": [
-          { "id": 6, "sala": 6, "usuario": 12345678, "hora": "2025-09-16T10:00:00.000Z", "estado": "aceptada" }
-        ]
+      "room_name": "Sala Fundadores",
+      "features": {
+        "maxCapacity": 40,
+        "hasProjector": true,
+        "hasWhiteboard": true,
+        "hasAudio": true,
+        "hasVentilation": true
+      }
+    },
+    {
+      "id": 7,
+      "room_name": "Sala de Reuniones",
+      "features": {
+        "maxCapacity": 10,
+        "hasProjector": false,
+        "hasWhiteboard": false,
+        "hasAudio": true,
+        "hasVentilation": false
+      }
+    },
+    {
+      "id": 8,
+      "room_name": "Baño de Hombres",
+      "features": {
+        "maxCapacity": 5,
+        "hasProjector": false,
+        "hasWhiteboard": false,
+        "hasAudio": false,
+        "hasVentilation": true
+      }
+    },
+    {
+      "id": 9,
+      "room_name": "Entrada",
+      "features": {
+        "maxCapacity": 50,
+        "hasProjector": false,
+        "hasWhiteboard": true,
+        "hasAudio": false,
+        "hasVentilation": true
+      }
+    },
+    {
+      "id": 10,
+      "room_name": "Cocina",
+      "features": {
+        "maxCapacity": 8,
+        "hasProjector": false,
+        "hasWhiteboard": false,
+        "hasAudio": false,
+        "hasVentilation": true
+      }
+    },
+    {
+      "id": 11,
+      "room_name": "Baño de Mujeres",
+      "features": {
+        "maxCapacity": 5,
+        "hasProjector": false,
+        "hasWhiteboard": false,
+        "hasAudio": false,
+        "hasVentilation": true
+      }
+    },
+    {
+      "id": 12,
+      "room_name": "Auditorio Ramón Picarte",
+      "features": {
+        "maxCapacity": 120,
+        "hasProjector": true,
+        "hasWhiteboard": true,
+        "hasAudio": true,
+        "hasVentilation": true
+      }
+    },
+    {
+      "id": 303,
+      "room_name": "Oficina 303",
+      "features": {
+        "maxCapacity": 12,
+        "hasProjector": false,
+        "hasWhiteboard": true,
+        "hasAudio": false,
+        "hasVentilation": true
+      }
+    },
+    {
+      "id": 304,
+      "room_name": "Oficina 304",
+      "features": {
+        "maxCapacity": 18,
+        "hasProjector": true,
+        "hasWhiteboard": true,
+        "hasAudio": false,
+        "hasVentilation": false
+      }
+    },
+    {
+      "id": 305,
+      "room_name": "Oficina 305",
+      "features": {
+        "maxCapacity": 14,
+        "hasProjector": false,
+        "hasWhiteboard": true,
+        "hasAudio": true,
+        "hasVentilation": true
+      }
+    },
+    {
+      "id": 306,
+      "room_name": "Oficina 306",
+      "features": {
+        "maxCapacity": 20,
+        "hasProjector": true,
+        "hasWhiteboard": false,
+        "hasAudio": true,
+        "hasVentilation": false
+      }
+    },
+    {
+      "id": 307,
+      "room_name": "Oficina 307",
+      "features": {
+        "maxCapacity": 22,
+        "hasProjector": true,
+        "hasWhiteboard": false,
+        "hasAudio": true,
+        "hasVentilation": true
+      }
+    },
+    {
+      "id": 308,
+      "room_name": "Oficina 308",
+      "features": {
+        "maxCapacity": 16,
+        "hasProjector": true,
+        "hasWhiteboard": true,
+        "hasAudio": false,
+        "hasVentilation": false
+      }
+    },
+    {
+      "id": 309,
+      "room_name": "Oficina 309",
+      "features": {
+        "maxCapacity": 10,
+        "hasProjector": false,
+        "hasWhiteboard": false,
+        "hasAudio": true,
+        "hasVentilation": true
+      }
+    },
+    {
+      "id": 310,
+      "room_name": "Oficina 310",
+      "features": {
+        "maxCapacity": 14,
+        "hasProjector": true,
+        "hasWhiteboard": false,
+        "hasAudio": true,
+        "hasVentilation": true
+      }
+    },
+    {
+      "id": 311,
+      "room_name": "Oficina 311",
+      "features": {
+        "maxCapacity": 22,
+        "hasProjector": false,
+        "hasWhiteboard": true,
+        "hasAudio": true,
+        "hasVentilation": false
+      }
+    },
+    {
+      "id": 312,
+      "room_name": "Oficina 312",
+      "features": {
+        "maxCapacity": 18,
+        "hasProjector": true,
+        "hasWhiteboard": true,
+        "hasAudio": false,
+        "hasVentilation": true
+      }
+    },
+    {
+      "id": 313,
+      "room_name": "Oficina 313",
+      "features": {
+        "maxCapacity": 12,
+        "hasProjector": false,
+        "hasWhiteboard": false,
+        "hasAudio": false,
+        "hasVentilation": true
+      }
+    },
+    {
+      "id": 314,
+      "room_name": "Oficina 314",
+      "features": {
+        "maxCapacity": 20,
+        "hasProjector": true,
+        "hasWhiteboard": true,
+        "hasAudio": true,
+        "hasVentilation": false
+      }
+    },
+    {
+      "id": 315,
+      "room_name": "Oficina 315",
+      "features": {
+        "maxCapacity": 8,
+        "hasProjector": false,
+        "hasWhiteboard": true,
+        "hasAudio": false,
+        "hasVentilation": true
+      }
+    },
+    {
+      "id": 316,
+      "room_name": "Oficina 316",
+      "features": {
+        "maxCapacity": 25,
+        "hasProjector": true,
+        "hasWhiteboard": false,
+        "hasAudio": true,
+        "hasVentilation": true
+      }
+    },
+    {
+      "id": 317,
+      "room_name": "Oficina 317",
+      "features": {
+        "maxCapacity": 10,
+        "hasProjector": false,
+        "hasWhiteboard": true,
+        "hasAudio": false,
+        "hasVentilation": true
+      }
+    },
+    {
+      "id": 318,
+      "room_name": "Oficina 318",
+      "features": {
+        "maxCapacity": 20,
+        "hasProjector": true,
+        "hasWhiteboard": false,
+        "hasAudio": true,
+        "hasVentilation": false
+      }
+    },
+    {
+      "id": 322,
+      "room_name": "Oficina 322",
+      "features": {
+        "maxCapacity": 16,
+        "hasProjector": false,
+        "hasWhiteboard": true,
+        "hasAudio": true,
+        "hasVentilation": true
+      }
+    },
+    {
+      "id": 323,
+      "room_name": "Oficina 323",
+      "features": {
+        "maxCapacity": 14,
+        "hasProjector": true,
+        "hasWhiteboard": false,
+        "hasAudio": false,
+        "hasVentilation": true
+      }
+    },
+    {
+      "id": 324,
+      "room_name": "Oficina 324",
+      "features": {
+        "maxCapacity": 12,
+        "hasProjector": true,
+        "hasWhiteboard": true,
+        "hasAudio": true,
+        "hasVentilation": false
+      }
+    },
+    {
+      "id": 325,
+      "room_name": "Oficina 325",
+      "features": {
+        "maxCapacity": 15,
+        "hasProjector": false,
+        "hasWhiteboard": false,
+        "hasAudio": true,
+        "hasVentilation": true
+      }
+    },
+    {
+      "id": 326,
+      "room_name": "Oficina 326",
+      "features": {
+        "maxCapacity": 20,
+        "hasProjector": true,
+        "hasWhiteboard": true,
+        "hasAudio": false,
+        "hasVentilation": true
+      }
+    },
+    {
+      "id": 327,
+      "room_name": "Oficina 327",
+      "features": {
+        "maxCapacity": 28,
+        "hasProjector": true,
+        "hasWhiteboard": false,
+        "hasAudio": true,
+        "hasVentilation": false
+      }
+    },
+    {
+      "id": 328,
+      "room_name": "Oficina 328",
+      "features": {
+        "maxCapacity": 22,
+        "hasProjector": false,
+        "hasWhiteboard": true,
+        "hasAudio": true,
+        "hasVentilation": true
+      }
+    },
+    {
+      "id": 329,
+      "room_name": "Oficina 329",
+      "features": {
+        "maxCapacity": 30,
+        "hasProjector": true,
+        "hasWhiteboard": false,
+        "hasAudio": false,
+        "hasVentilation": true
+      }
+    },
+    {
+      "id": 330,
+      "room_name": "Oficina 330",
+      "features": {
+        "maxCapacity": 10,
+        "hasProjector": false,
+        "hasWhiteboard": true,
+        "hasAudio": false,
+        "hasVentilation": false
+      }
+    },
+    {
+      "id": 331,
+      "room_name": "Oficina 331",
+      "features": {
+        "maxCapacity": 18,
+        "hasProjector": true,
+        "hasWhiteboard": true,
+        "hasAudio": true,
+        "hasVentilation": true
       }
     }
   ],
-  "reservas": [
-    { "id": 1, "sala": 1, "usuario": 12345678, "hora": "2025-09-15T10:00:00.000Z", "estado": "aceptada" },
-    { "id": 2, "sala": 2, "usuario": 34567890, "hora": "2025-09-15T09:00:00.000Z", "estado": "aceptada" },
-    { "id": 3, "sala": 3, "usuario": 45678901, "hora": "2025-09-15T11:00:00.000Z", "estado": "aceptada" },
-    { "id": 4, "sala": 4, "usuario": 56789012, "hora": "2025-09-15T12:00:00.000Z", "estado": "aceptada" },
-    { "id": 5, "sala": 5, "usuario": 23456789, "hora": "2025-09-15T13:00:00.000Z", "estado": "aceptada" },
-    { "id": 6, "sala": 6, "usuario": 12345678, "hora": "2025-09-16T10:00:00.000Z", "estado": "aceptada" },
-    { "id": 7, "sala": 1, "usuario": 23456789, "hora": "2025-09-15T14:00:00.000Z", "estado": "aceptada" }
-  ],
-  "usuarios": [
-    {
-      "id": 12345678,
-      "nombre": "Juan",
-      "apellido": "Pérez",
-      "correo": "juan.perez@ejemplo.com",
-      "contraseña": "1234"
-    },
-    {
-      "id": 23456789,
-      "nombre": "María",
-      "apellido": "González",
-      "correo": "maria.gonzalez@ejemplo.com",
-      "contraseña": "abcd"
-    },
-    {
-      "id": 34567890,
-      "nombre": "Luis",
-      "apellido": "Rodríguez",
-      "correo": "luis.rodriguez@ejemplo.com",
-      "contraseña": "pass123"
-    },
-    {
-      "id": 45678901,
-      "nombre": "Ana",
-      "apellido": "Martínez",
-      "correo": "ana.martinez@ejemplo.com",
-      "contraseña": "qwerty"
-    },
-    {
-      "id": 56789012,
-      "nombre": "Pedro",
-      "apellido": "Soto",
-      "correo": "pedro.soto@ejemplo.com",
-      "contraseña": "9876"
-    }
-  ]
-}
+  "reservations": [
+      { "id": 1, "roomID": 1, "userID": 12345678, "time": "2025-09-15T10:00:00.000Z", "status": "aceptada" },
+      { "id": 2, "roomID": 2, "userID": 34567890, "time": "2025-09-15T09:00:00.000Z", "status": "aceptada" },
+      { "id": 3, "roomID": 3, "userID": 45678901, "time": "2025-09-15T11:00:00.000Z", "status": "aceptada" },
+      { "id": 4, "roomID": 4, "userID": 56789012, "time": "2025-09-15T12:00:00.000Z", "status": "aceptada" },
+      { "id": 5, "roomID": 5, "userID": 23456789, "time": "2025-09-15T13:00:00.000Z", "status": "aceptada" },
+      { "id": 6, "roomID": 6, "userID": 12345678, "time": "2025-09-16T10:00:00.000Z", "status": "aceptada" },
+      { "id": 7, "roomID": 1, "userID": 23456789, "time": "2025-09-15T14:00:00.000Z", "status": "aceptada" }
+    ],
+    "users": [
+      {
+        "id": 12345678,
+        "first_name": "Juan",
+        "last_name": "Pérez",
+        "email": "juan.perez@ejemplo.com",
+        "password": "1234"
+      },
+      {
+        "id": 23456789,
+        "first_name": "María",
+        "last_name": "González",
+        "email": "maria.gonzalez@ejemplo.com",
+        "password": "abcd"
+      },
+      {
+        "id": 34567890,
+        "first_name": "Luis",
+        "last_name": "Rodríguez",
+        "email": "luis.rodriguez@ejemplo.com",
+        "password": "pass123"
+      },
+      {
+        "id": 45678901,
+        "first_name": "Ana",
+        "last_name": "Martínez",
+        "email": "ana.martinez@ejemplo.com",
+        "password": "qwerty"
+      },
+      {
+        "id": 56789012,
+        "first_name": "Pedro",
+        "last_name": "Soto",
+        "email": "pedro.soto@ejemplo.com",
+        "password": "9876"
+      }
+    ]
+  }
