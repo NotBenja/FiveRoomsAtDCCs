@@ -1,4 +1,5 @@
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useState} from "react";
+import type React from "react";
 import {
   Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
   Input, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem,
@@ -59,34 +60,31 @@ function RoomsTable() {
   }, []);
 
   // filtrado
-  const filtered = useMemo<Room[]>(() => {
-    let list = rooms;
+  let filtered: Room[] = rooms;
 
-    const q = filter.trim().toLowerCase();
-    if (q) list = list.filter((s) => s.room_name.toLowerCase().includes(q));
+  const q = filter.trim().toLowerCase();
+  if (q) {
+    filtered = filtered.filter((s) => s.room_name.toLowerCase().includes(q));
+  }
 
-    const selected = features === "all" ? [] : (Array.from(features) as FeatureKey[]);
-    if (selected.length) {
-      list = list.filter((s) =>
-        selected.every((k) => FEATURE_FIELDS.find(f => f.key === k)!.get(s))
-      );
-    }
-    return list;
-  }, [rooms, filter, features]);
+  const selected = features === "all" ? [] : (Array.from(features) as FeatureKey[]);
+  if (selected.length) {
+    filtered = filtered.filter((s) =>
+      selected.every((k) => FEATURE_FIELDS.find(f => f.key === k)!.get(s))
+    );
+  }
 
   const pages = Math.max(1, Math.ceil(filtered.length / 5));
-  const pageItems = useMemo<Room[]>(() => {
-    const start = (page - 1) * 5;
-    return filtered.slice(start, start + 5);
-  }, [filtered, page]);
+  const start = (page - 1) * 5;
+  const pageItems: Room[] = filtered.slice(start, start + 5);
 
   // acciones
   const openCreate = () => {
     setEditing(null);
     setFormName("");
-    setFormCap(10);
-    setFormProj(true);
-    setFormBoard(true);
+    setFormCap(0);
+    setFormProj(false);
+    setFormBoard(false);
     setFormAudio(false);
     setFormVent(true);
     setOpen(true);
@@ -129,7 +127,7 @@ function RoomsTable() {
     } else {
       // crear
       const nueva: Omit<Room, "id"> = {
-      room_name: formName.trim(),
+        room_name: formName.trim(),
         features: {
           maxCapacity: formCap,
           hasProjector: formProj,
@@ -163,8 +161,8 @@ function RoomsTable() {
             size="sm"
             value={filter}
             variant="bordered"
-            onClear={() => setFilter("")}
-            onValueChange={(v) => { setFilter(v); setPage(1); }}
+            onClear={() => { setFilter(""); setPage(1); }}
+            onValueChange={(v: string) => { setFilter(v); setPage(1); }}
           />
           <div className="flex gap-3">
             <Dropdown>
@@ -176,7 +174,7 @@ function RoomsTable() {
                 closeOnSelect={false}
                 selectionMode="multiple"
                 selectedKeys={features}
-                onSelectionChange={setFeatures}
+                onSelectionChange={(sel: Selection) => { setFeatures(sel); setPage(1); }}
               >
                 {FEATURE_FIELDS.map(f => (
                   <DropdownItem key={f.key}>{f.label}</DropdownItem>
@@ -222,11 +220,13 @@ function RoomsTable() {
                   </DropdownTrigger>
                   <DropdownMenu
                     aria-label="Acciones de sala"
-                    onAction={(action) => {
-                      if (action === "edit") openEdit(s);
+                    onAction={(key) => {
+                      const action = String(key);
+                      if (action === "edit")  openEdit(s);
                       if (action === "delete") handleDelete(s.id);
                     }}
                   >
+
                     <DropdownItem key="edit">Editar</DropdownItem>
                     <DropdownItem key="delete" className="text-danger">Borrar</DropdownItem>
                   </DropdownMenu>
@@ -252,16 +252,16 @@ function RoomsTable() {
         </span>
       </div>
 
-      {/* modal crear y editar */}
+
       <Modal 
-      isOpen={open} 
-      onOpenChange={setOpen}
-      backdrop="blur"
-      placement="center"
-      classNames={{
-          base: "dark text-foreground bg-background",
-          backdrop: "dark"
-        }}
+        isOpen={open} 
+        onOpenChange={setOpen}
+        backdrop="blur"
+        placement="center"
+        classNames={{
+            base: "dark text-foreground bg-background",
+            backdrop: "dark"
+          }}
       >
         <ModalContent>
           {(onClose) => (
@@ -269,7 +269,13 @@ function RoomsTable() {
               <ModalHeader>{editing ? "Editar Sala" : "Nueva Sala"}</ModalHeader>
               <ModalBody>
                 <Input label="Nombre" value={formName} onValueChange={setFormName} />
-                <Input label="Capacidad" type="number" min={1} value={String(formCap)} onChange={(e) => setFormCap(Number(e.target.value))} />
+                <Input
+                  label="Capacidad"
+                  type="number"
+                  min={1}
+                  value={String(formCap)}
+                  onChange={(c: React.ChangeEvent<HTMLInputElement>) => setFormCap(Number(c.target.value))}
+                />
                 <div className="grid grid-cols-2 gap-3 pt-2">
                   <Checkbox isSelected={formProj} onValueChange={setFormProj}>Proyector</Checkbox>
                   <Checkbox isSelected={formBoard} onValueChange={setFormBoard}>Pizarra</Checkbox>

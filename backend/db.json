@@ -2,11 +2,11 @@
   "rooms": [
     {
       "id": 1,
-      "room_name": "La Salita",
+      "room_name": "La Salitaaaaaaa",
       "features": {
-        "maxCapacity": 18,
+        "maxCapacity": 20,
         "hasProjector": true,
-        "hasWhiteboard": false,
+        "hasWhiteboard": true,
         "hasAudio": true,
         "hasVentilation": false
       }

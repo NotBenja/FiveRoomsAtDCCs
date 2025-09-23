@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import {
   Table,
   TableHeader,
@@ -16,14 +16,13 @@ import {
 } from "@heroui/react";
 import reservationAPI from "../services/reservationAPI";
 import type { ReservationDetails } from "../types/models";
-import type {Selection} from "@react-types/shared";
 
 export default function ReservationTable() {
   const [reservations, setReservations] = useState<ReservationDetails[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Filters
-  const [statusFilter, setStatusFilter] = useState<Selection>(new Set([]));
+  const [statusFilter, setStatusFilter] = useState<string[]>([]);
   const [page, setPage] = useState(1);
 
   useEffect(() => {
@@ -41,25 +40,28 @@ export default function ReservationTable() {
     fetchReservations();
   }, []);
 
-  const filteredReservations = useMemo(() => {
+  const getFilteredReservations = () => {
     let filtered = reservations;
 
     // Status filter
-    const selectedStatuses = statusFilter === "all" ? [] : Array.from(statusFilter) as string[];
-    if (selectedStatuses.length > 0) {
+    if (statusFilter.length > 0) {
       filtered = filtered.filter((reservation) =>
-        selectedStatuses.includes(reservation.status)
+        statusFilter.includes(reservation.status)
       );
     }
 
     return filtered;
-  }, [reservations, statusFilter]);
+  };
 
+  const filteredReservations = getFilteredReservations();
   const pages = Math.max(1, Math.ceil(filteredReservations.length / 5));
-  const pageItems = useMemo(() => {
+  
+  const getPageItems = () => {
     const start = (page - 1) * 5;
     return filteredReservations.slice(start, start + 5);
-  }, [filteredReservations, page]);
+  };
+  
+  const pageItems = getPageItems();
 
   // This function allows changing the status of a reservation
   const handleStatusChange = async (
@@ -121,8 +123,14 @@ export default function ReservationTable() {
                 aria-label="Filtrar por estado"
                 closeOnSelect={false}
                 selectionMode="multiple"
-                selectedKeys={statusFilter}
-                onSelectionChange={setStatusFilter}
+                selectedKeys={new Set(statusFilter)}
+                onSelectionChange={(keys) => {
+                  if (keys === "all") {
+                    setStatusFilter([]);
+                  } else {
+                    setStatusFilter(Array.from(keys) as string[]);
+                  }
+                }}
               >
                 <DropdownItem key="pendiente">Pendiente</DropdownItem>
                 <DropdownItem key="aceptada">Aceptada</DropdownItem>
