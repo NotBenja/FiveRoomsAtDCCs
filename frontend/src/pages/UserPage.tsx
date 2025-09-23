@@ -1,16 +1,22 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import RoomFilterPanel from "../components/RoomFilterPanel.tsx";
 import RoomListing from "../components/RoomListing.tsx";
 import RoomCardSkeleton from "../components/RoomCardSkeleton.tsx";
+import ReservationForm from "../components/ReservationForm.tsx";
 import type { Room, Reservation, RoomFilters } from "../types/models.ts";
 import { getRooms, getReservations } from "../services/reservationAPI.ts";
 import "../App.css";
+import RoomSchedule from "../components/RoomSchedule.tsx";
+import {Button, Modal, ModalContent, ModalFooter} from "@heroui/react";
 
 export default function UserPage() {
     const [rooms, setRooms] = useState<Room[]>([]);
     const [reservations, setReservations] = useState<Reservation[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [currentRoom, setCurrentRoom] = useState<Room | null>(null);
+    const [currentHourBlock, setHourBlock] = useState<string | null>(null)
+    const [open, setOpen] = useState<boolean>(false)
 
     const caps = rooms
         .map(r => r.features?.maxCapacity)
@@ -25,6 +31,13 @@ export default function UserPage() {
         hasAudio: null,
         hasVentilation: null,
     });
+
+    const showForm = (blockId: string) => {
+        console.log(blockId);
+        setOpen(true);
+        console.log(open)
+    };
+
 
     useEffect(() => {
         (async () => {
@@ -94,7 +107,32 @@ export default function UserPage() {
                         ))}
                     </div>
                 ) : (
-                    <RoomListing rooms={filteredRooms} reservations={reservations} showReservationsCount />
+                    <RoomListing rooms={filteredRooms} reservations={reservations} onReservePress={setCurrentRoom} showReservationsCount />
+                )}
+
+                {currentRoom && (
+                    <div>
+                        {/* Aquí debería ir el form */}
+                        <Modal
+                            isOpen={true}
+                            backdrop="blur"
+                            placement="center"
+                            onClose={() => setCurrentRoom(null)}
+                            size={"5xl"}
+                        >
+                            <ModalContent>
+                                <RoomSchedule onClickBlock={setHourBlock} room={currentRoom}></RoomSchedule>
+                            </ModalContent>
+                            <ModalFooter>
+                                <Button variant="flat" onPress={() => setCurrentRoom(null)}>
+                                    Cancelar
+                                </Button>
+                                <Button color="primary" onPress={() => showForm}>
+                                    Escoger bloque
+                                </Button>
+                            </ModalFooter>
+                        </Modal>
+                    </div>
                 )}
             </div>
         </div>

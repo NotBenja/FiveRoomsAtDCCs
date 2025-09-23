@@ -8,9 +8,10 @@ export type SalaListProps = {
     onRoomPress?: (id: number | string) => void;
     className?: string;
     showReservationsCount?: boolean;
+    onReservePress: (room: Room) => void;
 };
 
-export default function SalaList({ rooms, reservations, onRoomPress, className, showReservationsCount}: SalaListProps) {
+export default function SalaList({ rooms, reservations, onRoomPress, className, showReservationsCount, onReservePress}: SalaListProps) {
     if (!rooms?.length) {
         return (
             <div className={["room-list", className].filter(Boolean).join(" ")}>
@@ -28,6 +29,7 @@ export default function SalaList({ rooms, reservations, onRoomPress, className, 
                     room={s}
                     onPress={onRoomPress}
                     showReservasCount={showReservationsCount}
+                    handleReservePress={onReservePress}
                 />
             ))}
         </div>
