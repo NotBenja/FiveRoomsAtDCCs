@@ -2,11 +2,11 @@
   "rooms": [
     {
       "id": 1,
-      "room_name": "La Salita",
+      "room_name": "La Salitaaaaaaa",
       "features": {
-        "maxCapacity": 18,
+        "maxCapacity": 20,
         "hasProjector": true,
-        "hasWhiteboard": false,
+        "hasWhiteboard": true,
         "hasAudio": true,
         "hasVentilation": false
       }
@@ -420,49 +420,94 @@
     }
   ],
   "reservations": [
-      { "id": 1, "roomID": 1, "userID": 12345678, "time": "2025-09-15T10:00:00.000Z", "status": "aceptada" },
-      { "id": 2, "roomID": 2, "userID": 34567890, "time": "2025-09-15T09:00:00.000Z", "status": "aceptada" },
-      { "id": 3, "roomID": 3, "userID": 45678901, "time": "2025-09-15T11:00:00.000Z", "status": "aceptada" },
-      { "id": 4, "roomID": 4, "userID": 56789012, "time": "2025-09-15T12:00:00.000Z", "status": "aceptada" },
-      { "id": 5, "roomID": 5, "userID": 23456789, "time": "2025-09-15T13:00:00.000Z", "status": "aceptada" },
-      { "id": 6, "roomID": 6, "userID": 12345678, "time": "2025-09-16T10:00:00.000Z", "status": "aceptada" },
-      { "id": 7, "roomID": 1, "userID": 23456789, "time": "2025-09-15T14:00:00.000Z", "status": "aceptada" }
-    ],
-    "users": [
-      {
-        "id": 12345678,
-        "first_name": "Juan",
-        "last_name": "Pérez",
-        "email": "juan.perez@ejemplo.com",
-        "password": "1234"
-      },
-      {
-        "id": 23456789,
-        "first_name": "María",
-        "last_name": "González",
-        "email": "maria.gonzalez@ejemplo.com",
-        "password": "abcd"
-      },
-      {
-        "id": 34567890,
-        "first_name": "Luis",
-        "last_name": "Rodríguez",
-        "email": "luis.rodriguez@ejemplo.com",
-        "password": "pass123"
-      },
-      {
-        "id": 45678901,
-        "first_name": "Ana",
-        "last_name": "Martínez",
-        "email": "ana.martinez@ejemplo.com",
-        "password": "qwerty"
-      },
-      {
-        "id": 56789012,
-        "first_name": "Pedro",
-        "last_name": "Soto",
-        "email": "pedro.soto@ejemplo.com",
-        "password": "9876"
-      }
-    ]
-  }
+    {
+      "id": 1,
+      "roomID": 1,
+      "userID": 12345678,
+      "time": "2025-09-15T10:00:00.000Z",
+      "status": "pendiente",
+      "estado": "pendiente"
+    },
+    {
+      "id": 2,
+      "roomID": 2,
+      "userID": 34567890,
+      "time": "2025-09-15T09:00:00.000Z",
+      "status": "rechazada",
+      "estado": "pendiente"
+    },
+    {
+      "id": 3,
+      "roomID": 3,
+      "userID": 45678901,
+      "time": "2025-09-15T11:00:00.000Z",
+      "status": "aceptada"
+    },
+    {
+      "id": 4,
+      "roomID": 4,
+      "userID": 56789012,
+      "time": "2025-09-15T12:00:00.000Z",
+      "status": "aceptada"
+    },
+    {
+      "id": 5,
+      "roomID": 5,
+      "userID": 23456789,
+      "time": "2025-09-15T13:00:00.000Z",
+      "status": "aceptada"
+    },
+    {
+      "id": 6,
+      "roomID": 6,
+      "userID": 12345678,
+      "time": "2025-09-16T10:00:00.000Z",
+      "status": "aceptada",
+      "estado": "rechazada"
+    },
+    {
+      "id": 7,
+      "roomID": 1,
+      "userID": 23456789,
+      "time": "2025-09-15T14:00:00.000Z",
+      "status": "aceptada"
+    }
+  ],
+  "users": [
+    {
+      "id": 12345678,
+      "first_name": "Juan",
+      "last_name": "Pérez",
+      "email": "juan.perez@ejemplo.com",
+      "password": "1234"
+    },
+    {
+      "id": 23456789,
+      "first_name": "María",
+      "last_name": "González",
+      "email": "maria.gonzalez@ejemplo.com",
+      "password": "abcd"
+    },
+    {
+      "id": 34567890,
+      "first_name": "Luis",
+      "last_name": "Rodríguez",
+      "email": "luis.rodriguez@ejemplo.com",
+      "password": "pass123"
+    },
+    {
+      "id": 45678901,
+      "first_name": "Ana",
+      "last_name": "Martínez",
+      "email": "ana.martinez@ejemplo.com",
+      "password": "qwerty"
+    },
+    {
+      "id": 56789012,
+      "first_name": "Pedro",
+      "last_name": "Soto",
+      "email": "pedro.soto@ejemplo.com",
+      "password": "9876"
+    }
+  ]
+}
