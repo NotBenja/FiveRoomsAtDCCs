@@ -25,11 +25,6 @@ export default function ReserveRoomDialog({
                                           }: ReserveRoomDialogProps) {
     const [submitting, setSubmitting] = useState(false);
 
-    const portalContainer =
-        typeof document !== "undefined"
-            ? document.getElementById("app-root") ?? document.body
-            : undefined;
-
     const handleClose = () => {
         if (!submitting) onOpenChange(false);
     };
@@ -60,7 +55,10 @@ export default function ReserveRoomDialog({
             onOpenChange={onOpenChange}
             backdrop="blur"
             placement="center"
-            portalContainer={portalContainer}
+            classNames={{
+                base: "dark text-foreground bg-background",
+                backdrop: "dark"
+            }}
         >
             <ModalContent>
                 {() => (

@@ -7,6 +7,7 @@ import {
 import salas from "../services/salas";
 import type { Room } from "../types/models";
 import type {Selection} from "@react-types/shared";
+import '../App.css';
 
 const FEATURE_FIELDS = [
   { key: "proyector",   label: "Proyector",   get: (s: Room) => s.features.hasProjector },
@@ -252,7 +253,16 @@ function RoomsTable() {
       </div>
 
       {/* modal crear y editar */}
-      <Modal isOpen={open} onOpenChange={setOpen}>
+      <Modal 
+      isOpen={open} 
+      onOpenChange={setOpen}
+      backdrop="blur"
+      placement="center"
+      classNames={{
+          base: "dark text-foreground bg-background",
+          backdrop: "dark"
+        }}
+      >
         <ModalContent>
           {(onClose) => (
             <>

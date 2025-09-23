@@ -35,7 +35,7 @@ export default function SalaCard({ room, reservations, onPress, className, accen
         console.log("Reserva enviada:", { sala: s.id, ...data });
     };
 
-    console.log(room)
+    //console.log(room)
     return (
         <>
             <Card

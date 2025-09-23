@@ -20,7 +20,7 @@ export const updateReservationStatus = (reservationId: number, newStatus: "acept
     .get(`${baseUrl}/reservations/${reservationId}`)
     .then(response => {
       // Get the full reservation object in order to clone it
-      const updatedReservation = { ...response.data, estado: newStatus };
+      const updatedReservation = { ...response.data, status: newStatus };
       return axios.put(`${baseUrl}/reservations/${reservationId}`, updatedReservation);
     })
     .then(response => response.data);
@@ -35,11 +35,10 @@ export const getReservationsWithDetails = () => {
     return reservations.map((reservation: Reservation) => {
       const room = rooms.find((s: Room) => s.id === reservation.roomID);
       const user = users.find((u: User) => u.id === reservation.userID);
-      
       return {
         ...reservation,
-        room_name: room?.nombre,
-        user_name: user ? `${user.nombre} ${user.apellido}` : undefined
+        room_name: room?.room_name,
+        user_name: user ? `${user.first_name} ${user.last_name}` : undefined
       } as ReservationDetails;
     });
   });
