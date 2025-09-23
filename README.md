@@ -28,3 +28,8 @@ npm run dev
 Esta instrucción va a habilitar el cliente y el servidor en las siguientes urls:
 - [Cliente (Puerto 5173)](http://localhost:5173)
 - [Servidor (Puerto 3001)](http://localhost:3001)
+
+## Rutas principales
+- Home: ["/"](http://localhost:5173)
+- Portal de reservas: ["/reservar"](http://localhost:5173/reservar)
+- Portal de administración: ["/admin"](http://localhost:5173/admin)
