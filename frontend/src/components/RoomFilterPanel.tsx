@@ -76,9 +76,7 @@ function RoomFilterPanel({ value, onChange, minCapacity = 0, maxCapacity = 1000 
 
             <CardBody className="flex flex-col">
                 <Accordion selectionMode="multiple" defaultExpandedKeys={[]} variant="splitted" className="w-full">
-                    <AccordionItem
-                        key="filtros"
-                        aria-label="Mostrar filtros"
+                    <AccordionItem key="filtros" aria-label="Mostrar filtros"
                         title={
                             <div className="flex items-center gap-2">
                                 <span className="font-medium">Mostrar filtros</span>

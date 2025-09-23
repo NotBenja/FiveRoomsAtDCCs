@@ -3,6 +3,7 @@ import React, {useEffect, useState} from "react";
 import ScheduleBlock from "./ScheduleBlock.tsx";
 import { getWeekReservations } from "../services/reservationAPI.ts";
 import { Button } from "@heroui/react";
+import "../App.css";
 
 interface ScheduleProps {
     onClickBlock: (blockID: string) => void;
@@ -88,18 +89,18 @@ const RoomSchedule: React.FC<ScheduleProps> = ({ onClickBlock, room }) => {
                 </div>
                 <Button onPress={() => setWeekStart(getWeekEnd(currentWeekStart))}>Semana siguiente</Button>
             </div>
-            <table className="table-auto border-separate border-spacing-1 shadow-sm rounded-xl bg-white w-full">
+            <table className="table-fixed border-separate border-spacing-0 shadow-sm rounded-xl main-color w-full">
                 <thead>
-                <tr>
-                    <th className="px-4 py-3 font-bold text-lg text-gray-800">Horas</th>
-                    {DAYS.map((d: string, index: number) => {
-                        const currentDayDate = new Date(currentWeekStart)
-                        currentDayDate.setUTCDate(currentWeekStart.getUTCDate() + index);
-                        const currentDayNumber = currentDayDate.getUTCDate();
-                        return (
-                        <th key={index} className="px-4 py-3 font-bold text-lg text-gray-800">{d} {currentDayNumber}</th>
-                    )})}
-                </tr>
+                    <tr>
+                        <th className="px-4 py-3 font-bold text-lg subtitle-conf">Horas</th>
+                        {DAYS.map((d: string, index: number) => {
+                            const currentDayDate = new Date(currentWeekStart)
+                            currentDayDate.setUTCDate(currentWeekStart.getUTCDate() + index);
+                            const currentDayNumber = currentDayDate.getUTCDate();
+                            return (
+                            <th key={index} className="px-4 py-3 font-bold text-lg subtitle-conf">{d} {currentDayNumber}</th>
+                        )})}
+                    </tr>
                 </thead>
                 <tbody>
                 {HOURS.map((h, i) => (

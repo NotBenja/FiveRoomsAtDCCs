@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input, Form } from "@heroui/react";
+import { Button, Input, Form } from "@heroui/react";
 import type { Room } from "../types/models";
 import "../App.css";
 
@@ -8,30 +8,27 @@ export type ReserveFormValues = {
     email: string;
 };
 
-export type ReserveRoomDialogProps = {
-    open: boolean;
-    onOpenChange: (open: boolean) => void;
+export type ReservationFormProps = {
     room: Room;
-    onSubmit?: (data: ReserveFormValues, room: Room) => Promise<void> | void;
+    selectedBlock?: string;
+    onSubmit?: (data: ReserveFormValues, room: Room, selectedBlock?: string) => Promise<void> | void;
+    onCancel?: () => void;
+    submitLabel?: string;
     submittingText?: string;
 };
 
-export default function ReserveRoomDialog({
-                                              open,
-                                              onOpenChange,
-                                              room,
-                                              onSubmit,
-                                              submittingText = "Enviando...",
-                                          }: ReserveRoomDialogProps) {
+export default function ReservationForm({
+                                            room,
+                                            selectedBlock,
+                                            onSubmit,
+                                            onCancel,
+                                            submitLabel = "Confirmar reserva",
+                                            submittingText = "Enviando...",
+                                        }: ReservationFormProps) {
     const [submitting, setSubmitting] = useState(false);
 
-    const handleClose = () => {
-        if (!submitting) onOpenChange(false);
-    };
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
         const fd = new FormData(e.currentTarget);
         const payload: ReserveFormValues = {
             fullName: String(fd.get("fullName") || "").trim(),
@@ -39,54 +36,41 @@ export default function ReserveRoomDialog({
         };
 
         setSubmitting(true);
-
-        const p = Promise.resolve().then(() => onSubmit?.(payload, room));
-
-        p.then(() => {
-            onOpenChange(false);
-        }).finally(() => {
+        try {
+            await onSubmit?.(payload, room, selectedBlock);
+        } finally {
             setSubmitting(false);
-        });
+        }
     };
 
     return (
-        <Modal
-            isOpen={open}
-            onOpenChange={onOpenChange}
-            backdrop="blur"
-            placement="center"
-            classNames={{
-                base: "dark text-foreground bg-background",
-                backdrop: "dark"
-            }}
-        >
-            <ModalContent>
-                {() => (
-                    <>
-                        <ModalHeader className="flex flex-col gap-1">Reservar: {room?.room_name}</ModalHeader>
-                        <ModalBody>
-                            <Form
-                                id="reserve-form"
-                                className="flex flex-col gap-4"
-                                validationBehavior="native"
-                                onSubmit={handleSubmit}
-                            >
-                                <Input name="fullName" label="Nombre completo" placeholder="Nombre y apellido" autoFocus isRequired />
-                                <Input name="email" label="Correo" type="email" placeholder="example@email.com" isRequired />
-                                <input type="submit" hidden />
-                            </Form>
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button variant="flat" onPress={handleClose} isDisabled={submitting}>
-                                Cancelar
-                            </Button>
-                            <Button color="primary" type="submit" form="reserve-form" isLoading={submitting}>
-                                {submitting ? submittingText : "Confirmar reserva"}
-                            </Button>
-                        </ModalFooter>
-                    </>
+        <div>
+            <div className="flex flex-col gap-1 mb-2">
+                <h3 className="text-lg font-semibold">Reservar: {room?.room_name}</h3>
+                {selectedBlock && (
+                    <p className="text-sm text-foreground-500">
+                        Bloque seleccionado: {new Date(selectedBlock).toLocaleString("es-CL")}
+                    </p>
                 )}
-            </ModalContent>
-        </Modal>
+            </div>
+
+            <Form id="reserve-form" className="flex flex-col gap-4" validationBehavior="native" onSubmit={handleSubmit}>
+                <Input name="fullName" label="Nombre completo" placeholder="Nombre y apellido" autoFocus isRequired />
+                <Input name="email" label="Correo" type="email" placeholder="example@email.com" isRequired />
+
+                <div className="flex justify-end gap-2">
+                    {onCancel && (
+                        <Button variant="flat" onPress={onCancel} isDisabled={submitting}>
+                            Volver
+                        </Button>
+                    )}
+                    <Button color="primary" type="submit" isLoading={submitting}>
+                        {submitting ? submittingText : submitLabel}
+                    </Button>
+                </div>
+
+                <input type="submit" hidden />
+            </Form>
+        </div>
     );
 }

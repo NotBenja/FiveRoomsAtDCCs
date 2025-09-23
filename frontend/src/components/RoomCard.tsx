@@ -28,14 +28,7 @@ export default function SalaCard({ room, reservations, onPress, className, accen
                 isPressable={!!onPress}
                 onPress={() => onPress?.(id)}
                 radius="lg"
-                className={[
-                    "room-card",
-                    "border",
-                    "bg-content1",
-                    "shadow-sm",
-                    "hover:shadow-md",
-                    className,
-                ]
+                className={["room-card", "border", "bg-content1", "shadow-sm", "hover:shadow-md", className]
                     .filter(Boolean)
                     .join(" ")}
                 style={{
