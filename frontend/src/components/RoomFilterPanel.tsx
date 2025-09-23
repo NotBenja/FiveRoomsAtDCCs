@@ -1,53 +1,138 @@
-import React, {useState} from "react";
-import {Slider, Button, ButtonGroup} from "@heroui/react";
+import { Slider, Button, ButtonGroup, Card, CardHeader, Chip, CardBody, Accordion, AccordionItem, Tooltip } from "@heroui/react";
+import type { RoomFilters } from "../types/models.ts";
 
 interface FilterProps {
-    onMaxCapacityChange: (maxCapacity: number[]) => void;
-    onProjectorSettingsChange: (value: boolean | null) => void;
+    value: RoomFilters;
+    onChange: (next: RoomFilters) => void;
+    minCapacity?: number;
+    maxCapacity?: number;
 }
 
-const RoomFilterPanel: React.FC<FilterProps> = ({onMaxCapacityChange, onProjectorSettingsChange}) => {
-    const [maxCapacity, setMaxCapacity] = useState<number[]>([0, 1000])
-    const [hasProjector, setHasProjector] = useState<boolean | null>(null)
+const feats: { key: keyof RoomFilters; label: string }[] = [
+    { key: "hasProjector",  label: "Proyector" },
+    { key: "hasWhiteboard", label: "Pizarra" },
+    { key: "hasAudio",   label: "Parlantes" },
+    { key: "hasVentilation",label: "Ventilación" },
+];
 
-    const handleMaxCapacityChange = (maxCapacity: number | number[]) => {
-        if (Array.isArray(maxCapacity) && maxCapacity.length === 2) {
-            setMaxCapacity(maxCapacity)
-            onMaxCapacityChange(maxCapacity)
-        }
+function RoomFilterPanel({ value, onChange, minCapacity = 0, maxCapacity = 1000 }: FilterProps) {
+    const { capacityRange } = value;
 
-    }
-    const handleProjectorSettingsChange = (value: boolean | null) => {
-        setHasProjector(value)
-        onProjectorSettingsChange(value)
-    }
-    return (
-        <div className="room-filter-panel flex items-center gap-8 w-full max-w-2xl">
-            <div className="room-capacity-slider flex-1">
-                <div className="flex flex-col gap-2 w-full h-full max-w-md items-start justify-center">
-                    <Slider
-                        className="max-w-md"
-                        label="Select the room max capacity"
-                        maxValue={1000}
-                        minValue={0}
-                        step={10}
-                        value={maxCapacity}
-                        onChange={handleMaxCapacityChange}
-                    />
-                    <p className="text-default-500 font-medium text-small">
-                        Selected capacity: {Array.isArray(maxCapacity) && maxCapacity.map((b) => `${b}`).join(" – ")}
-                    </p>
-                </div>
-            </div>
-            <div className="projector-selector flex items-center flex-0">
-                <ButtonGroup radius="full">
-                    <Button color={hasProjector === null ? "primary" : "default"} onPress={() => handleProjectorSettingsChange(null)}>All</Button>
-                    <Button color={hasProjector === true ? "success" : "default"} onPress={() => handleProjectorSettingsChange(true)}>Yes</Button>
-                    <Button color={hasProjector === false ? "danger" : "default"} onPress={() => handleProjectorSettingsChange(false)}>No</Button>
-                </ButtonGroup>
-            </div>
+    const activeCount =
+        (capacityRange[0] !== minCapacity || capacityRange[1] !== maxCapacity ? 1 : 0) +
+        (feats as { key: keyof RoomFilters }[]).filter(({ key }) => value[key] !== null).length;
+
+    const resetFilters = () =>
+        onChange({
+            capacityRange: [minCapacity, maxCapacity],
+            hasProjector: null,
+            hasWhiteboard: null,
+            hasAudio: null,
+            hasVentilation: null,
+        });
+
+    // Tri-estado: true/false/null (clic en el mismo estado vuelve a null)
+    const setFeature = (key: keyof RoomFilters, desired: boolean) => {
+        const current = value[key] as boolean | null;
+        const next = current === desired ? null : desired;
+        onChange({ ...value, [key]: next });
+    };
+
+    const Group = ({
+                       label,
+                       current,
+                       onYes,
+                       onNo,
+                   }: {
+        label: string;
+        current: boolean | null;
+        onYes: () => void;
+        onNo: () => void;
+    }) => (
+        <div className="flex items-center justify-between gap-3">
+            <span className="font-medium">{label}</span>
+            <ButtonGroup radius="full" size="sm" variant="flat">
+                <Button color={current === true ? "success" : "default"} onPress={onYes}>Sí</Button>
+                <Button color={current === false ? "danger" : "default"} onPress={onNo}>No</Button>
+            </ButtonGroup>
         </div>
-    )
+    );
+
+    return (
+        <Card className="w-full">
+            <CardHeader className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                    <h3 className="text-lg font-semibold">Filtros</h3>
+                    {activeCount > 0 && (
+                        <Chip size="sm" color="primary" variant="flat">
+                            {activeCount} activo{activeCount === 1 ? "" : "s"}
+                        </Chip>
+                    )}
+                </div>
+                <Button size="sm" variant="flat" onPress={resetFilters}>
+                    Limpiar
+                </Button>
+            </CardHeader>
+
+            <CardBody className="flex flex-col">
+                <Accordion selectionMode="multiple" defaultExpandedKeys={[]} variant="splitted" className="w-full">
+                    <AccordionItem
+                        key="filtros"
+                        aria-label="Mostrar filtros"
+                        title={
+                            <div className="flex items-center gap-2">
+                                <span className="font-medium">Mostrar filtros</span>
+                                <Tooltip content="Ajusta capacidad y características" placement="top" showArrow>
+                                    <span className="text-default-400 text-small cursor-help">ⓘ</span>
+                                </Tooltip>
+                            </div>
+                        }
+                        subtitle={
+                            <span className="text-default-500 text-small">
+                Capacidad: {capacityRange[0]} – {capacityRange[1]}
+              </span>
+                        }
+                    >
+                        <div className="flex flex-col gap-6">
+                            <div className="flex flex-col gap-2">
+                                <div className="flex items-center justify-between">
+                                    <span className="font-medium">Capacidad</span>
+                                    <span className="text-default-500 text-small">
+                    {capacityRange[0]} – {capacityRange[1]}
+                  </span>
+                                </div>
+                                <Slider
+                                    aria-label="Capacidad máxima de la sala"
+                                    minValue={minCapacity}
+                                    maxValue={maxCapacity}
+                                    step={1}
+                                    value={capacityRange}
+                                    className="max-w-full"
+                                    onChange={(v) => {
+                                        if (Array.isArray(v) && v.length === 2) {
+                                            onChange({ ...value, capacityRange: v as [number, number] });
+                                        }
+                                    }}
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {feats.map(({ key, label }) => (
+                                    <Group
+                                        key={String(key)}
+                                        label={label}
+                                        current={value[key] as boolean | null}
+                                        onYes={() => setFeature(key, true)}
+                                        onNo={() => setFeature(key, false)}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    </AccordionItem>
+                </Accordion>
+            </CardBody>
+        </Card>
+    );
 }
 
-export default RoomFilterPanel
+export default RoomFilterPanel;
