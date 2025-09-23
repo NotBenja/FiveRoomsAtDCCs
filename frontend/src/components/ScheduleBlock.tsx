@@ -17,7 +17,7 @@ const ScheduleBlock: React.FC<ScheduleBlockProps> = ({ onClickBlock, block, rese
                 ? "block-color text-white"
                 : "text-block-color hover:scale-[1.02] hover:shadow-lg transition-all duration-200 ease-in-out")}}
                   isPressable={true}
-                  onPress={() => reserved === true ? addToast({title: "This block is already reserved" }) : onClickBlock()}>
+                  onPress={() => reserved ? addToast({title: "This block is already reserved" }) : onClickBlock()}>
                 <CardHeader className="pb-0 pt-2 px-4 flex-col items-center justify-center">
                     <p className="text-tiny uppercase font-bold">{block}</p>
                     <h4 className="font-bold text-large">{reserved}</h4>

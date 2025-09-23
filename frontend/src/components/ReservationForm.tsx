@@ -4,7 +4,8 @@ import type { Room } from "../types/models";
 import "../App.css";
 
 export type ReserveFormValues = {
-    fullName: string;
+    firstName: string;
+    lastName: string;
     email: string;
 };
 
@@ -31,7 +32,8 @@ export default function ReservationForm({
         e.preventDefault();
         const fd = new FormData(e.currentTarget);
         const payload: ReserveFormValues = {
-            fullName: String(fd.get("fullName") || "").trim(),
+            firstName: String(fd.get("first_name") || "").trim(),
+            lastName: String(fd.get("last_name") || "").trim(),
             email: String(fd.get("email") || "").trim(),
         };
 
@@ -55,7 +57,8 @@ export default function ReservationForm({
             </div>
 
             <Form id="reserve-form" className="flex flex-col gap-4" validationBehavior="native" onSubmit={handleSubmit}>
-                <Input name="fullName" label="Nombre completo" placeholder="Nombre y apellido" autoFocus isRequired />
+                <Input name="first_name" label="Nombre" placeholder="Nombre" autoFocus isRequired />
+                <Input name="last_name" label="Apellido" placeholder="Apellido" autoFocus isRequired />
                 <Input name="email" label="Correo" type="email" placeholder="example@email.com" isRequired />
 
                 <div className="flex justify-end gap-2">

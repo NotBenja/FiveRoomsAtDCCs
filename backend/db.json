@@ -496,6 +496,13 @@
       "time": "2025-09-25T13:00:00.000Z",
       "status": "pendiente",
       "id": 11
+    },
+    {
+      "roomID": 1,
+      "userID": 56789015,
+      "time": "2025-09-25T12:00:00.000Z",
+      "status": "pendiente",
+      "id": 14
     }
   ],
   "users": [
@@ -533,6 +540,13 @@
       "last_name": "Soto",
       "email": "pedro.soto@ejemplo.com",
       "password": "9876"
+    },
+    {
+      "id": 56789015,
+      "first_name": "Peppa",
+      "last_name": "Git",
+      "email": "peppa@lacerda.cl",
+      "password": "defaultPassword123"
     }
   ]
 }

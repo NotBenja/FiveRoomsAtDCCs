@@ -4,7 +4,7 @@ import RoomListing from "../components/RoomListing.tsx";
 import RoomCardSkeleton from "../components/RoomCardSkeleton.tsx";
 import RoomFilterPanelSkeleton from "../components/RoomFilterPanelSkeleton.tsx";
 import ReservationForm, { type ReserveFormValues } from "../components/ReservationForm.tsx";
-import { getRooms, getReservations, createReservation, getUsers } from "../services/reservationAPI.ts";
+import { getRooms, getReservations, createReservation, getUsers, createUser } from "../services/reservationAPI.ts";
 import RoomSchedule from "../components/RoomSchedule.tsx";
 import { Button, Modal, ModalContent, ModalFooter, addToast } from "@heroui/react";
 import type {Room, Reservation, RoomFilters, User} from "../types/models.ts";
@@ -79,10 +79,18 @@ export default function UserPage() {
     const handleReservationSubmit = async (data: ReserveFormValues, room: Room, block?: string) => {
         if (!block) return;
 
-        console.log(data);
-
         const userData: User[] = await getUsers();
         const newUserID = userData.length > 0 ? Math.max(...userData.map(u => u.id)) + 1 : 1;
+
+        const newUser: User = {
+            id: newUserID,
+            first_name: data.firstName,
+            last_name: data.lastName,
+            email: data.email,
+            password: "defaultPassword123"
+        }
+        console.log(data)
+        console.log(newUser);
 
         const newReservation: Omit<Reservation, "id"> = {
             roomID: room.id,
@@ -92,11 +100,15 @@ export default function UserPage() {
         };
 
         try {
+            await createUser(newUser);
             const created = await createReservation(newReservation);
-            console.log("Reserva creada:", created);
             setReservations((prev) => [...prev, created]);
             handleCloseModal();
-            addToast({ title: "Reserva creada con éxito", description: `ID de reserva: ${created.id}`, color: "success" });
+            addToast({
+                title: "Reserva creada con éxito",
+                description: `Reserva #${created.id} • Usuario #${newUserID}: ${data.firstName} ${data.lastName}`,
+                color: "success",
+            });
         } catch (err) {
             console.error("Error creando reserva", err);
             addToast({ title: "Error creando la reserva", color: "danger" });
@@ -174,7 +186,8 @@ export default function UserPage() {
                                         <div><span className="font-semibold">Bloque:</span> {formatBlock(selectedBlock)}</div>
                                         {formData && (
                                             <>
-                                                <div><span className="font-semibold">Nombre:</span> {formData.fullName}</div>
+                                                <div><span className="font-semibold">Nombre:</span> {formData.firstName}</div>
+                                                <div><span className="font-semibold">Apellido:</span> {formData.lastName}</div>
                                                 <div><span className="font-semibold">Correo:</span> {formData.email}</div>
                                             </>
                                         )}
@@ -204,7 +217,8 @@ export default function UserPage() {
                                             <div className="rounded-lg border p-4 space-y-2">
                                                 <div><span className="font-semibold">Sala:</span> {currentRoom.room_name}</div>
                                                 <div><span className="font-semibold">Horario:</span> {formatDate(selectedBlock)} • {formatBlock(selectedBlock)}</div>
-                                                <div><span className="font-semibold">Nombre:</span> {formData?.fullName}</div>
+                                                <div><span className="font-semibold">Nombre:</span> {formData?.firstName}</div>
+                                                <div><span className="font-semibold">Apellido:</span> {formData?.lastName}</div>
                                                 <div><span className="font-semibold">Correo:</span> {formData?.email}</div>
                                             </div>
                                             <p className="text-sm text-foreground-500">

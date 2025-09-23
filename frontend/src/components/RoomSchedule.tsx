@@ -65,7 +65,6 @@ const RoomSchedule: React.FC<ScheduleProps> = ({ onClickBlock, room }) => {
 
     const isReserved = (blockId: string) => {
         return reservations.some((reservation: Reservation) => {
-            console.log(blockId);
             return reservation.time === blockId && reservation.status==="aceptada";
         })
     }
