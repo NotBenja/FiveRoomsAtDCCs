@@ -1,8 +1,5 @@
-import { useState } from "react";
 import { Card, CardBody, Chip, Button } from "@heroui/react";
-import type { PressEvent } from "@react-aria/interactions";
 import type { Room, Reservation } from "../types/models";
-import ReservationForm, { type ReserveFormValues } from "./ReservationForm.tsx";
 import "../App.css";
 
 export type SalaCardProps = {
@@ -12,6 +9,7 @@ export type SalaCardProps = {
     className?: string;
     accentColor?: string;
     showReservasCount?: boolean;
+    handleReservePress: (room: Room) => void;
 };
 
 function pickAccentFromId(id: number): string {
@@ -19,37 +17,18 @@ function pickAccentFromId(id: number): string {
     return `hsl(${hue} 80% 85%)`;
 }
 
-export default function SalaCard({ room, reservations, onPress, className, accentColor, showReservasCount = false }: SalaCardProps) {
-    const [open, setOpen] = useState(false);
-
+export default function SalaCard({ room, reservations, onPress, className, accentColor, showReservasCount = false, handleReservePress }: SalaCardProps) {
     const { id, room_name, features } = room;
     const accent = accentColor ?? pickAccentFromId(id);
     const reservasCount = Array.isArray(reservations) ? reservations.length : 0;
 
-    const handleReservePress = (e: PressEvent) => {
-        if (typeof (e as unknown as Event).stopPropagation === "function") (e as unknown as Event).stopPropagation();
-        setOpen(true);
-    };
-
-    const handleSubmit = async (data: ReserveFormValues, s: Room) => {
-        console.log("Reserva enviada:", { sala: s.id, ...data });
-    };
-
-    //console.log(room)
     return (
         <>
             <Card
                 isPressable={!!onPress}
                 onPress={() => onPress?.(id)}
                 radius="lg"
-                className={[
-                    "room-card",
-                    "border",
-                    "bg-content1",
-                    "shadow-sm",
-                    "hover:shadow-md",
-                    className,
-                ]
+                className={["room-card", "border", "bg-content1", "shadow-sm", "hover:shadow-md", className]
                     .filter(Boolean)
                     .join(" ")}
                 style={{
@@ -82,7 +61,7 @@ export default function SalaCard({ room, reservations, onPress, className, accen
                                     radius="full"
                                     size="sm"
                                     variant="solid"
-                                    onPress={handleReservePress}
+                                    onPress={() => handleReservePress(room)}
                                 >
                                     Reservar
                                 </Button>
@@ -127,13 +106,6 @@ export default function SalaCard({ room, reservations, onPress, className, accen
                     </div>
                 </CardBody>
             </Card>
-
-            <ReservationForm
-                open={open}
-                onOpenChange={setOpen}
-                room={room}
-                onSubmit={handleSubmit}
-            />
         </>
     );
 }

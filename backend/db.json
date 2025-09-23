@@ -425,16 +425,14 @@
       "roomID": 1,
       "userID": 12345678,
       "time": "2025-09-15T10:00:00.000Z",
-      "status": "pendiente",
-      "estado": "pendiente"
+      "status": "aceptada"
     },
     {
       "id": 2,
       "roomID": 2,
       "userID": 34567890,
       "time": "2025-09-15T09:00:00.000Z",
-      "status": "rechazada",
-      "estado": "pendiente"
+      "status": "aceptada"
     },
     {
       "id": 3,
@@ -462,8 +460,7 @@
       "roomID": 6,
       "userID": 12345678,
       "time": "2025-09-16T10:00:00.000Z",
-      "status": "aceptada",
-      "estado": "rechazada"
+      "status": "aceptada"
     },
     {
       "id": 7,
@@ -471,6 +468,41 @@
       "userID": 23456789,
       "time": "2025-09-15T14:00:00.000Z",
       "status": "aceptada"
+    },
+    {
+      "roomID": 1,
+      "userID": 56789013,
+      "time": "2025-09-25T11:00:00.000Z",
+      "status": "pendiente",
+      "id": 8
+    },
+    {
+      "roomID": 1,
+      "userID": 56789013,
+      "time": "2025-09-24T12:00:00.000Z",
+      "status": "pendiente",
+      "id": 9
+    },
+    {
+      "roomID": 1,
+      "userID": 56789013,
+      "time": "2025-09-25T14:00:00.000Z",
+      "status": "pendiente",
+      "id": 10
+    },
+    {
+      "roomID": 1,
+      "userID": 56789013,
+      "time": "2025-09-25T13:00:00.000Z",
+      "status": "pendiente",
+      "id": 11
+    },
+    {
+      "roomID": 1,
+      "userID": 56789015,
+      "time": "2025-09-25T12:00:00.000Z",
+      "status": "pendiente",
+      "id": 14
     }
   ],
   "users": [
@@ -508,6 +540,13 @@
       "last_name": "Soto",
       "email": "pedro.soto@ejemplo.com",
       "password": "9876"
+    },
+    {
+      "id": 56789015,
+      "first_name": "Peppa",
+      "last_name": "Git",
+      "email": "peppa@lacerda.cl",
+      "password": "defaultPassword123"
     }
   ]
 }

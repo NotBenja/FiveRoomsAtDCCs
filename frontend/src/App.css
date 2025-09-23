@@ -6,10 +6,34 @@
 .bg-content1 { background-color: #ffffff; }
 .dark .bg-content1 { background-color: #0b1220; }
 
+.main-color {
+    color: #989a9e
+}
+
+.dark .main-color {
+    color: #1c2845
+}
+
+.block-color {
+    color: #c6c6c6
+}
+
+.dark .block-color {
+    color: #303030
+}
+
+.text-block-color {
+    color: #2c2c2c
+}
+
+.dark .text-block-color {
+    color: #a6a6a6
+}
+
+
 .room-list,
 .room-filter-panel {
     width: 100%;
-    max-width: 42rem;
     margin-inline: auto;
 }
 
@@ -55,7 +79,7 @@
     line-height: 1.25;
 }
 .subtitle-conf {
-    color: #1d2d53;
+    color: #2f4067;
     letter-spacing: -0.01em;
     line-height: 1.25;
 }
@@ -101,8 +125,8 @@
             radial-gradient(circle at 80% 30%, rgba(99,102,241,0.07), transparent 45%),
             linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.035));
 }
-.dark .title-conf { color: #e5e7eb; }
-.dark .subtitle-conf { color: #bbbdbf; }
+.dark .title-conf { color: #aaaaac; }
+.dark .subtitle-conf { color: #747575; }
 
 
 .dark .room-title { color: #e5e7eb; }

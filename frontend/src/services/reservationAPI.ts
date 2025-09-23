@@ -57,10 +57,20 @@ export const getWeekReservations = async (weekStart: string, weekEnd: string, ro
     //    .then(response => response.data);
 }
 
+export const createReservation = (newReservation: Omit<Reservation, "id">) => {
+    return axios.post<Reservation>(`${baseUrl}/reservations`, newReservation).then(response => response.data);
+}
+
+export const createUser = (newUser: User) => {
+    return axios.post<User>(`${baseUrl}/users`, newUser).then(res => res.data);
+};
+
 export default {
     getReservations,
     getRooms,
     getUsers,
     updateReservationStatus,
     getReservationsWithDetails,
+    createReservation,
+    createUser
 };
