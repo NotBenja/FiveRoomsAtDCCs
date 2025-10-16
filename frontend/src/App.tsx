@@ -1,7 +1,12 @@
+import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { Button } from "@heroui/react";
-import UserPage from "./pages/UserPage.tsx";
-import AdminPage from "./pages/AdminPage.tsx";
+import UserPage from "./pages/UserPage";
+import AdminPage from "./pages/AdminPage";
+import ProtectedRoute from "./components/ProtectedRoute";
+import LoginPage from "./components/Login";
+import Navbar from "./components/NavBar";
+import { restoreLogin } from "./services/login";
 import "./App.css";
 
 function Home() {
@@ -39,12 +44,48 @@ function Home() {
 }
 
 export default function App() {
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    useEffect(() => {
+        const initAuth = async () => {
+            const restoredUser = await restoreLogin();
+            if (restoredUser) {
+                setIsAuthenticated(true);
+                localStorage.setItem("token", restoredUser.token || "");
+                localStorage.setItem("user", JSON.stringify(restoredUser));
+            } else {
+                setIsAuthenticated(false);
+            }
+        };
+        initAuth();
+
+        const handler = async () => {
+            const restoredUser = await restoreLogin();
+            if (restoredUser) {
+                setIsAuthenticated(true);
+            } else {
+                setIsAuthenticated(false);
+            }
+        };
+
+        window.addEventListener("authChanged", handler);
+        return () => window.removeEventListener("authChanged", handler);
+    }, []);
+
     return (
         <BrowserRouter>
+            <Navbar />
             <Routes>
                 <Route index element={<Home />} />
-                <Route path="/reservar" element={<UserPage />} />
-                <Route path="/admin" element={<AdminPage />} />
+                <Route
+                    path="/reservar"
+                    element={<ProtectedRoute element={<UserPage />} isAuthenticated={isAuthenticated} />}
+                />
+                <Route
+                    path="/admin"
+                    element={<ProtectedRoute element={<AdminPage />} isAuthenticated={isAuthenticated} />}
+                />
+                <Route path="/login" element={<LoginPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
         </BrowserRouter>
