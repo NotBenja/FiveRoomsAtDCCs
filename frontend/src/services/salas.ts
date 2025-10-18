@@ -1,7 +1,19 @@
 import axios from "axios";
 import type { Room } from "../types/models";
 
-const baseUrl = "http://localhost:3001";
+const baseUrl = "http://localhost:3001/api";
+
+// Configurar axios para enviar cookies y token
+axios.defaults.withCredentials = true;
+
+// Interceptor para agregar token a todas las peticiones
+axios.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 export const getRooms = () => {
   return axios.get<Room[]>(`${baseUrl}/rooms`).then(response => response.data);

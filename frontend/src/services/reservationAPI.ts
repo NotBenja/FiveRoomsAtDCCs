@@ -1,7 +1,19 @@
 import axios from "axios";
 import type { Reservation, Room, User, ReservationDetails } from "../types/models";
 
-const baseUrl = "http://localhost:3001";
+const baseUrl = "http://localhost:3001/api";
+
+// Configurar axios para enviar cookies y token
+axios.defaults.withCredentials = true;
+
+// Interceptor para agregar token a todas las peticiones
+axios.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 export const getReservations = () => {
     return axios.get(`${baseUrl}/reservations`).then(response => response.data);
@@ -50,11 +62,6 @@ export const getWeekReservations = async (weekStart: string, weekEnd: string, ro
     return reservations.filter((r: Reservation) => {
         return (Number(r.roomID) === salaIdNum && r.time >= weekStart && r.time < weekEnd);
     })
-    // NO FUNCIONÓ
-    //const startISO = weekStart.toISOString();
-    //const endISO = weekEnd.toISOString();
-    //return axios.get(`${baseUrl}/reservas?hora_gte=${startISO}&hora_lt=${endISO}&salaId=${salaId}`)
-    //    .then(response => response.data);
 }
 
 export const createReservation = (newReservation: Omit<Reservation, "id">) => {
