@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import RoomFilterPanel from "../components/RoomFilterPanel.tsx";
-import RoomListing from "../components/RoomListing.tsx";
-import RoomCardSkeleton from "../components/RoomCardSkeleton.tsx";
-import RoomFilterPanelSkeleton from "../components/RoomFilterPanelSkeleton.tsx";
-import ReservationForm, { type ReserveFormValues } from "../components/ReservationForm.tsx";
+import RoomFilterPanel from "../components/rooms/RoomFilterPanel.tsx";
+import RoomListing from "../components/rooms/RoomListing.tsx";
+import RoomCardSkeleton from "../components/rooms/RoomCardSkeleton.tsx";
+import RoomFilterPanelSkeleton from "../components/rooms/RoomFilterPanelSkeleton.tsx";
+import ReservationForm, { type ReserveFormValues } from "../components/reservations/ReservationForm.tsx";
 import reservationAPI from "../services/reservationAPI.ts";
-import RoomSchedule from "../components/RoomSchedule.tsx";
+import RoomSchedule from "../components/rooms/RoomSchedule.tsx";
 import { Button, Modal, ModalContent, ModalFooter, addToast } from "@heroui/react";
 import type { Room, Reservation, RoomFilters, User } from "../types/models.ts";
 import "../App.css";
-import UserReservationDashboard from "../components/UserReservationDashboard";
+import UserReservationDashboard from "../components/reservations/UserReservationDashboard";
 
 type Step = "schedule" | "form" | "confirm";
 
@@ -201,7 +201,7 @@ export default function UserPage() {
                                 <main className="flex-1 p-4 md:p-6">
                                     {step === "schedule" && (
                                         <div className="flex-1 h-[65vh] overflow-auto">
-                                            <RoomSchedule onClickBlock={(blockId) => { setSelectedBlock(blockId); }} room={currentRoom} />
+                                            <RoomSchedule onClickBlock={(blockId: string) => { setSelectedBlock(blockId); }} room={currentRoom} />
                                         </div>
                                     )}
                                     {step === "form" && (

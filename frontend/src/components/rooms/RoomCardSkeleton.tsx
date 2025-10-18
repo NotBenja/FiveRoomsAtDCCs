@@ -1,5 +1,5 @@
-import {Card, CardBody, Skeleton} from "@heroui/react";
-import "../App.css";
+import { Card, CardBody, Skeleton } from "@heroui/react";
+import "../../App.css";
 
 export default function RoomCardSkeleton() {
     return (

@@ -3,9 +3,9 @@ import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-route
 import { Button } from "@heroui/react";
 import UserPage from "./pages/UserPage";
 import AdminPage from "./pages/AdminPage";
-import ProtectedRoute from "./components/ProtectedRoute";
-import LoginPage from "./components/Login";
-import Navbar from "./components/NavBar";
+import ProtectedRoute from "./components/common/ProtectedRoute";
+import LoginPage from "./components/auth/Login";
+import Navbar from "./components/common/NavBar";
 import { restoreLogin } from "./services/login";
 import "./App.css";
 

@@ -1,5 +1,6 @@
-import {addToast, Card, CardBody, CardHeader} from "@heroui/react";
+import { addToast, Card, CardBody, CardHeader } from "@heroui/react";
 import React from "react";
+import '../../App.css';
 
 interface ScheduleBlockProps {
     onClickBlock: () => void;
@@ -11,13 +12,15 @@ interface ScheduleBlockProps {
 const ScheduleBlock: React.FC<ScheduleBlockProps> = ({ onClickBlock, block, reserved, selected }) => {
     return (
         <div className="schedule-block w-full h-full">
-            <Card className="w-full h-full" classNames={{base : reserved===true
-                ? "bg-red-500 text-white"
-                : (selected
-                ? "block-color text-white"
-                : "text-block-color hover:scale-[1.02] hover:shadow-lg transition-all duration-200 ease-in-out")}}
-                  isPressable={true}
-                  onPress={() => reserved ? addToast({title: "This block is already reserved" }) : onClickBlock()}>
+            <Card className="w-full h-full" classNames={{
+                base: reserved === true
+                    ? "bg-red-500 text-white"
+                    : (selected
+                        ? "block-color text-white"
+                        : "text-block-color hover:scale-[1.02] hover:shadow-lg transition-all duration-200 ease-in-out")
+            }}
+                isPressable={true}
+                onPress={() => reserved ? addToast({ title: "This block is already reserved" }) : onClickBlock()}>
                 <CardHeader className="pb-0 pt-2 px-4 flex-col items-center justify-center">
                     <p className="text-tiny uppercase font-bold">{block}</p>
                     <h4 className="font-bold text-large">{reserved}</h4>

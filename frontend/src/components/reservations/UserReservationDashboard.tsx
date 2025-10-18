@@ -15,8 +15,8 @@ import {
     ModalFooter,
     useDisclosure,
 } from "@heroui/react";
-import reservationAPI from "../services/reservationAPI";
-import type { ReservationDetails } from "../types/models";
+import reservationAPI from "../../services/reservationAPI";
+import type { ReservationDetails } from "../../types/models";
 
 export default function UserReservationDashboard() {
     const [reservations, setReservations] = useState<ReservationDetails[]>([]);

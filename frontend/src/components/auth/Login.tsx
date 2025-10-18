@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Input, Button, Card, CardBody, CardHeader } from "@heroui/react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { login } from "../services/login";
-import type { LoginCredentials } from "../types/users";
+import { login } from "../../services/login";
+import type { LoginCredentials } from "../../types/users";
 
 export default function LoginPage() {
     const navigate = useNavigate();

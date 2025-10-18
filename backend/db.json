@@ -517,6 +517,13 @@
       "time": "2025-09-23T14:00:00.000Z",
       "status": "pendiente",
       "id": 15
+    },
+    {
+      "roomID": 331,
+      "userID": 56789017,
+      "time": "2025-10-17T11:00:00.000Z",
+      "status": "pendiente",
+      "id": 16
     }
   ],
   "users": [
@@ -567,6 +574,13 @@
       "first_name": "Thomas",
       "last_name": "Jackson",
       "email": "t.jackson@gmail.com",
+      "password": "defaultPassword123"
+    },
+    {
+      "id": 56789017,
+      "first_name": "Benjamín",
+      "last_name": "Reyes Bravo",
+      "email": "benjamin.reyes.b@ug.uchile.cl",
       "password": "defaultPassword123"
     }
   ]

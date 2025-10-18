@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@heroui/react";
-import { logout } from "../services/login";
+import { logout } from "../../services/login";
 
 export default function Navbar() {
     const navigate = useNavigate();
