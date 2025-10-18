@@ -79,7 +79,7 @@ export default function App() {
                 <Route index element={<Home />} />
                 <Route
                     path="/reservar"
-                    element={<ProtectedRoute element={<UserPage />} isAuthenticated={isAuthenticated} />}
+                    element={<UserPage />}
                 />
                 <Route
                     path="/admin"

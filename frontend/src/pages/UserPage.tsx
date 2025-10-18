@@ -4,11 +4,12 @@ import RoomListing from "../components/RoomListing.tsx";
 import RoomCardSkeleton from "../components/RoomCardSkeleton.tsx";
 import RoomFilterPanelSkeleton from "../components/RoomFilterPanelSkeleton.tsx";
 import ReservationForm, { type ReserveFormValues } from "../components/ReservationForm.tsx";
-import { getRooms, getReservations, createReservation, getUsers, createUser } from "../services/reservationAPI.ts";
+import reservationAPI from "../services/reservationAPI.ts";
 import RoomSchedule from "../components/RoomSchedule.tsx";
 import { Button, Modal, ModalContent, ModalFooter, addToast } from "@heroui/react";
-import type {Room, Reservation, RoomFilters, User} from "../types/models.ts";
+import type { Room, Reservation, RoomFilters, User } from "../types/models.ts";
 import "../App.css";
+import UserReservationDashboard from "../components/UserReservationDashboard";
 
 type Step = "schedule" | "form" | "confirm";
 
@@ -29,7 +30,10 @@ export default function UserPage() {
     useEffect(() => {
         (async () => {
             setLoading(true);
-            const [roomsData, reservationsData] = await Promise.all([getRooms(), getReservations()]);
+            const [roomsData, reservationsData] = await Promise.all([
+                reservationAPI.getRooms(),
+                reservationAPI.getReservations()
+            ]);
             setRooms(roomsData);
             setReservations(reservationsData);
             setLoading(false);
@@ -79,7 +83,7 @@ export default function UserPage() {
     const handleReservationSubmit = async (data: ReserveFormValues, room: Room, block?: string) => {
         if (!block) return;
 
-        const userData: User[] = await getUsers();
+        const userData: User[] = await reservationAPI.getUsers();
         const newUserID = userData.length > 0 ? Math.max(...userData.map(u => u.id)) + 1 : 1;
 
         const newUser: User = {
@@ -100,8 +104,8 @@ export default function UserPage() {
         };
 
         try {
-            await createUser(newUser);
-            const created = await createReservation(newReservation);
+            await reservationAPI.createUser(newUser);
+            const created = await reservationAPI.createReservation(newReservation);
             setReservations((prev) => [...prev, created]);
             handleCloseModal();
             addToast({
@@ -156,15 +160,15 @@ export default function UserPage() {
                         ))}
                     </div>
                 ) : (
-                    <RoomListing rooms={filteredRooms} reservations={reservations} onReservePress={handleOpenReserve} showReservationsCount/>
+                    <RoomListing rooms={filteredRooms} reservations={reservations} onReservePress={handleOpenReserve} showReservationsCount />
                 )}
 
                 {currentRoom && (
                     <Modal isOpen={isModalOpen} backdrop="blur" placement="center" onClose={handleCloseModal} size="5xl"
-                    classNames={{
-                        base: "dark text-foreground bg-background",
-                        backdrop: "blur"
-                    }}>
+                        classNames={{
+                            base: "dark text-foreground bg-background",
+                            backdrop: "blur"
+                        }}>
                         <ModalContent>
                             <div className="flex flex-col md:flex-row min-h-[70vh]">
                                 <aside className="md:w-64 w-full md:border-r border-default-100 p-3 md:p-4">
@@ -197,7 +201,7 @@ export default function UserPage() {
                                 <main className="flex-1 p-4 md:p-6">
                                     {step === "schedule" && (
                                         <div className="flex-1 h-[65vh] overflow-auto">
-                                            <RoomSchedule onClickBlock={(blockId) => {setSelectedBlock(blockId); } } room={currentRoom} />
+                                            <RoomSchedule onClickBlock={(blockId) => { setSelectedBlock(blockId); }} room={currentRoom} />
                                         </div>
                                     )}
                                     {step === "form" && (
@@ -244,27 +248,29 @@ export default function UserPage() {
                                     </>
                                 )}
 
-                                {step === "confirm" &&  (
-                                        <>
-                                            <Button variant="flat" onPress={() => setStep("form")}>Atrás</Button>
-                                            <Button
-                                                color="primary"
-                                                onPress={() => {
-                                                    if (currentRoom && selectedBlock && formData) {
-                                                        void handleReservationSubmit(formData, currentRoom, selectedBlock);
-                                                    }
-                                                }}
-                                                isDisabled={!currentRoom || !selectedBlock || !formData}
-                                            >
-                                                Confirmar reserva
-                                            </Button>
-                                        </>
+                                {step === "confirm" && (
+                                    <>
+                                        <Button variant="flat" onPress={() => setStep("form")}>Atrás</Button>
+                                        <Button
+                                            color="primary"
+                                            onPress={() => {
+                                                if (currentRoom && selectedBlock && formData) {
+                                                    void handleReservationSubmit(formData, currentRoom, selectedBlock);
+                                                }
+                                            }}
+                                            isDisabled={!currentRoom || !selectedBlock || !formData}
+                                        >
+                                            Confirmar reserva
+                                        </Button>
+                                    </>
                                 )}
                             </ModalFooter>
                         </ModalContent>
                     </Modal>
                 )}
             </div>
+
+            <UserReservationDashboard />
         </div>
     );
 }
