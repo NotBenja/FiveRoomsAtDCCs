@@ -19,14 +19,8 @@ const updatePasswords = async () => {
             if (!user.password.startsWith('$2')) {
                 const plainPassword = user.password;
                 const salt = await bcrypt.genSalt(10);
-                const hashedPassword = await bcrypt.hash(plainPassword, salt);
-
-                // todo: No se si dejar un middleware para esto o hacerlo directo en el script.
-                // todo: Aquí lo hago directo en el script para que no pete.
-                await User.updateOne(
-                    { _id: (user as any)._id },
-                    { $set: { password: hashedPassword } }
-                );
+                user.password = await bcrypt.hash(plainPassword, salt);
+                await user.save();
 
                 console.log(`Password update for user with email: ${user.email} (password: ${plainPassword})`);
             } else {

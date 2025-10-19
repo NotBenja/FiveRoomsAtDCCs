@@ -150,7 +150,7 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
  */
 export const me = async (req: Request, res: Response): Promise<void> => {
     try {
-        const userId = (req as any).userId;
+        const userId = req.userId;
 
         const user = await User.findOne({ id: userId });
         if (!user) {

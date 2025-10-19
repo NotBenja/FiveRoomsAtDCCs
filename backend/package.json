@@ -8,8 +8,8 @@
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "seed": "ts-node src/scripts/seedDatabase.ts",
-    "update-passwords": "ts-node src/scripts/updatePasswords.ts"
+    "seed": "ts-node src/utils/seedDatabase.ts",
+    "update-passwords": "ts-node src/utils/updatePasswords.ts"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",

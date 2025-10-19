@@ -33,10 +33,9 @@ const RoomSchema = new Schema<IRoom>({
 {
     timestamps: true,
     toJSON: {
-        transform: (_doc, ret: any) => {
-            delete ret._id;
-            delete ret.__v;
-            return ret;
+        transform: (_doc, ret) => {
+            const { _id, __v, ...rest } = ret;
+            return rest;
         }
     }
 });

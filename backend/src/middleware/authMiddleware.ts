@@ -21,8 +21,8 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
 
         // todo: cambiar el any
         // Add the user information to the request object in order to access it in the next middlewares or route handlers
-        (req as any).userId = decoded.userId;
-        (req as any).userEmail = decoded.email;
+        req.userId = decoded.userId;
+        req.userEmail = decoded.email;
 
         next();
     } catch (error) {
