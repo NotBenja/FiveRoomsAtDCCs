@@ -15,14 +15,12 @@ const updatePasswords = async () => {
         console.log(`\nUpdating passwords of: ${users.length} users...`);
 
         for (const user of users) {
-            // Check if the password is already hashed. Bcrypt hashes start with '$2'.
+            // Check if the password is already hashed. Bcrypt hashes start with '$2'
             if (!user.password.startsWith('$2')) {
                 const plainPassword = user.password;
                 const salt = await bcrypt.genSalt(10);
-                user.password = await bcrypt.hash(plainPassword, salt);
-                await user.save();
-
-                console.log(`Password update for user with email: ${user.email} (password: ${plainPassword})`);
+                const newHash = await bcrypt.hash(plainPassword, salt);
+                await User.updateOne({ _id: user._id }, { $set: { password: newHash } });
             } else {
                 console.log(`Password is already hashed for user with email: ${user.email}`);
             }
