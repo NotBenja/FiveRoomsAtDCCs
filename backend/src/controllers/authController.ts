@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
+
 import User from '../models/User';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'jws_secret_key';  // jwt secret key, should be in env variables
@@ -27,13 +29,19 @@ export const register = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
+        const csrfToken = crypto.randomBytes(32).toString('hex');
+
         // creation of new user (the password is hashed in src/models/User.ts)
         const newUser = new User({ id, first_name, last_name, email, password });
         await newUser.save();
 
         // JWT management
         const token = jwt.sign(
-            { userId: newUser.id, email: newUser.email },
+            {
+                userId: newUser.id,
+                email: newUser.email,
+                csrf: csrfToken
+            },
             JWT_SECRET,
             { expiresIn: JWT_EXPIRES_IN }
         );
@@ -54,7 +62,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
                 last_name: newUser.last_name,
                 email: newUser.email
             },
-            token
+            csrfToken
         });
       } catch (error) {
             res.status(500).json({
@@ -93,11 +101,16 @@ export const login = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
+        const csrfToken = crypto.randomBytes(32).toString('hex');
         // JWT management
         const token = jwt.sign(
-            { userId: user.id, email: user.email },
-                JWT_SECRET,
-                { expiresIn: JWT_EXPIRES_IN }
+            {
+                userId: user.id,
+                email: user.email,
+                csrf: csrfToken
+            },
+            JWT_SECRET,
+            { expiresIn: JWT_EXPIRES_IN }
         );
 
         // Sets a cookie with the token
@@ -116,7 +129,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
                 last_name: user.last_name,
                 email: user.email
             },
-            token
+            csrfToken
         });
     } catch (error) {
         res.status(500).json({
@@ -134,7 +147,10 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 export const logout = async (req: Request, res: Response): Promise<void> => {
     try {
         res.clearCookie('token');           // the cookie is cleared in order to log out the user
-        res.status(200).json({ message: 'Successfully logged out' });
+        res.status(200).json({
+            message: 'Successfully logged out',
+            clearCSRF: true
+        });
     } catch (error) {
         res.status(500).json({
             error: 'Error on logout',
