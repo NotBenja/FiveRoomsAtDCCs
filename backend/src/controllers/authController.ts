@@ -62,6 +62,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
                 last_name: newUser.last_name,
                 email: newUser.email
             },
+            token,
             csrfToken
         });
     } catch (error) {

@@ -22,8 +22,8 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
     setError("");
 
     try {
-      const userResponse = await loginService.login({ email, password });
-      onLoginSuccess(userResponse.user);
+      const response = await loginService.login({ email, password });
+      onLoginSuccess(response.user);
 
       const state = location.state as { from?: { pathname?: string } } | null;
       const from = state?.from?.pathname;
@@ -89,6 +89,20 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
               Ingresar
             </Button>
           </form>
+
+          <div className="pt-2 border-t border-default-200">
+            <p className="text-sm text-center text-default-500 mb-2">
+              ¿No tienes cuenta?
+            </p>
+            <Button
+              variant="flat"
+              fullWidth
+              onPress={() => navigate("/register")}
+              isDisabled={loading}
+            >
+              Crear cuenta nueva
+            </Button>
+          </div>
 
           <div className="text-sm text-center text-default-500">
             <p>Usuario de prueba:</p>

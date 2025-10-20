@@ -38,22 +38,15 @@ export interface UserResponse {
   };
 }
 
-export const login = async (credentials: LoginCredentials): Promise<UserResponse> => {
+export const login = async (credentials: LoginCredentials): Promise<AuthResponse> => {
   const response = await axios.post<AuthResponse>(`${baseUrl}/auth/login`, credentials);
   localStorage.setItem('token', response.data.token);
   localStorage.setItem('user', JSON.stringify(response.data.user));
-  const user = {
-    id: response.data.user.id,
-    first_name: response.data.user.first_name,
-    last_name: response.data.user.last_name,
-    email: response.data.user.email
-  }
-  return { user };
+  return response.data;
 };
 
 export const register = async (data: RegisterData): Promise<AuthResponse> => {
   const response = await axios.post<AuthResponse>(`${baseUrl}/auth/register`, data);
-  // Guardar token en localStorage
   localStorage.setItem('token', response.data.token);
   localStorage.setItem('user', JSON.stringify(response.data.user));
   return response.data;
@@ -61,7 +54,6 @@ export const register = async (data: RegisterData): Promise<AuthResponse> => {
 
 export const logout = async (): Promise<void> => {
   await axios.post(`${baseUrl}/auth/logout`);
-  // Limpiar localStorage
   localStorage.removeItem('token');
   localStorage.removeItem('user');
 };

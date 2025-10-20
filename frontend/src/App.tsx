@@ -10,6 +10,7 @@ import AdminPage from "./pages/AdminPage";
 import type { StoredUser } from "./types/models";
 import { getCurrentUser, logout as authLogout } from "./services/authAPI";
 import "./App.css";
+import RegisterPage from "./pages/RegisterPage";
 
 function Home({ user, onLogout }: { user: StoredUser | null; onLogout: () => void }) {
     const navigate = useNavigate();
@@ -95,9 +96,12 @@ function AppContent() {
             <Routes>
                 <Route
                     path="/login"
-                    element={
-                        user ? <Navigate to="/" replace /> : <LoginPage onLoginSuccess={setUser} />
-                    }
+                    element={<LoginPage onLoginSuccess={setUser} />}
+                />
+
+                <Route
+                    path="/register"
+                    element={<RegisterPage onRegisterSuccess={setUser} />}
                 />
 
                 <Route
