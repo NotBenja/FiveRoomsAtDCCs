@@ -2,12 +2,18 @@
   "name": "app",
   "private": true,
   "version": "0.0.0",
-  "workspaces": ["frontend", "backend"],
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
   "scripts": {
     "dev": "concurrently -k -n BACK,FRONT -c magenta,cyan \"npm -w backend run dev\" \"npm -w frontend run dev\"",
     "build": "npm -w frontend run build",
     "preview": "npm -w frontend run preview",
-    "install:all": "npm -w frontend install && npm -w backend install"
+    "install:all": "npm -w frontend install && npm -w backend install",
+    "seed": "npm -w backend run seed",
+    "update-passwords": "npm -w backend run update-passwords",
+    "initdb": "npm run seed && npm run update-passwords"
   },
   "devDependencies": {
     "concurrently": "^9.0.0"

@@ -103,7 +103,7 @@ npm run install:all
 
 4. Poblar la base de datos (opcional):
 ```bash
-npm run seed
+npm run initdb
 ```
 
 5. Iniciar la aplicación:
