@@ -38,7 +38,6 @@ export default function UserReservationDashboard() {
         setError(null);
 
         try {
-            // Obtener usuario actual desde la autenticación
             const resp = await getCurrentUser();
             const currentUser = resp?.user ?? null;
 
@@ -49,17 +48,12 @@ export default function UserReservationDashboard() {
                 return;
             }
 
-            console.log("👤 Usuario actual:", currentUser);
-
-            // Obtener todas las reservas con detalles
             const allReservations = await reservationAPI.getReservationsWithDetails();
 
-            // Filtrar por el ID del usuario actual
             const userReservations = allReservations.filter(
                 (r: ReservationDetails) => r.userID === currentUser.id
             );
 
-            console.log("📋 Reservas del usuario:", userReservations);
             setReservations(userReservations);
         } catch (err) {
             console.error("Error loading reservations:", err);

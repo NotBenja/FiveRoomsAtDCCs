@@ -31,7 +31,7 @@ interface DbData {
         roomID: number;
         userID: number;
         time: string;
-        status: 'accepted' | 'pending' | 'rejected' | 'aceptada' | 'pendiente' | 'rechazada';
+        status: 'aceptada' | 'pendiente' | 'rechazada';
     }>;
 }
 

@@ -4,7 +4,7 @@ export interface IReservation extends Document {
     roomID: number;
     userID: number;
     time: string;
-    status: 'pending' | 'accepted' | 'rejected' | 'aceptada' | 'pendiente' | 'rechazada';
+    status: 'pendiente' | 'aceptada' | 'rechazada';
 }
 
 const ReservationSchema: Schema = new Schema({
@@ -13,8 +13,8 @@ const ReservationSchema: Schema = new Schema({
     time: { type: String, required: true },
     status: {
         type: String,
-        enum: ['accepted', 'pending', 'rejected', 'aceptada', 'pendiente', 'rechazada'],
-        default: 'pending'
+        enum: ['aceptada', 'pendiente', 'rechazada'],
+        default: 'pendiente'
     }
 }, {
     timestamps: true,

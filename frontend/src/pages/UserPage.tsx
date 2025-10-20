@@ -74,7 +74,7 @@ export default function UserPage() {
                 roomID: currentRoom.id,
                 userID: currentUser.id,
                 time: selectedBlock,
-                status: "pending"
+                status: "pendiente"
             };
 
             const created = await reservationAPI.createReservation(newReservation);

@@ -72,7 +72,7 @@ export const createReservation = (newReservation: {
   return axios.post<Reservation>(`${baseUrl}/reservations`, newReservation).then(response => response.data);
 }
 
-export const deleteReservation = (id: number) => {
+export const deleteReservation = (id: string) => {
   return axios.delete(`${baseUrl}/reservations/${id}`).then(response => response.data);
 }
 

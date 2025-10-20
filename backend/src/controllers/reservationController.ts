@@ -50,7 +50,7 @@ export const createReservation = async (req: Request, res: Response): Promise<vo
             roomID,
             userID,
             time,
-            status: status || 'pending'
+            status: status || 'pendiente'
         });
 
         await newReservation.save();
