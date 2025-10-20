@@ -8,7 +8,7 @@ const startServer = async (): Promise<void> => {
         await connectDB();
 
         mongoose.connection.on('error', (err) => {
-            console.error('❌ Error on MongoDB while setting up the database:', err);
+            console.error('Error on MongoDB while setting up the database:', err);
         });
 
         mongoose.connection.on('disconnected', () => {
@@ -17,15 +17,15 @@ const startServer = async (): Promise<void> => {
                 try {
                     await connectDB();
                 } catch (error) {
-                    console.error('❌ Reconnection attempt failed:', error);
+                    console.error('Reconnection attempt failed:', error);
                 }
             }, 5000);
         });
 
         app.listen(PORT, () => {
-        console.log(`Server running on port: ${PORT}`);
-        console.log(`Server running on environment: ${process.env.NODE_ENV || 'non defined environment'}`);
-        console.log(`URL: http://localhost:${PORT}`);
+            console.log(`Server running on port: ${PORT}`);
+            console.log(`Server running on environment: ${process.env.NODE_ENV || 'non defined environment'}`);
+            console.log(`URL: http://localhost:${PORT}`);
         });
     } catch (error) {
         console.error('Error on startServer, could not start the server::', error);

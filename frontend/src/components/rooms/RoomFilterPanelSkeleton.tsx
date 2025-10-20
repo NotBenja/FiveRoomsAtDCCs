@@ -8,6 +8,7 @@ import {
     Button,
     Tooltip
 } from "@heroui/react";
+import '../../App.css';
 
 export default function RoomFilterPanelSkeleton() {
     return (
@@ -24,20 +25,20 @@ export default function RoomFilterPanelSkeleton() {
             <CardBody className="flex flex-col">
                 <Accordion selectionMode="multiple" defaultExpandedKeys={[]} variant="splitted" className="w-full" isDisabled={true}>
                     <AccordionItem key="filtros" aria-label="Mostrar filtros" isDisabled
-                                   title={
-                                       <div className="flex items-center gap-2">
-                                           <span className="font-medium">Mostrar filtros</span>
-                                           <Tooltip content="Ajusta capacidad y características" placement="top" showArrow>
-                                               <span className="text-default-400 text-small cursor-help">ⓘ</span>
-                                           </Tooltip>
-                                       </div>
-                                   }
-                                   subtitle={
-                                        <div className="text-default-500 text-small inline-flex items-center gap-2">
-                                            <span>Capacidad:</span>
-                                            <Skeleton className="h-4 w-24 rounded" />
-                                        </div>
-                                   }>
+                        title={
+                            <div className="flex items-center gap-2">
+                                <span className="font-medium">Mostrar filtros</span>
+                                <Tooltip content="Ajusta capacidad y características" placement="top" showArrow>
+                                    <span className="text-default-400 text-small cursor-help">ⓘ</span>
+                                </Tooltip>
+                            </div>
+                        }
+                        subtitle={
+                            <div className="text-default-500 text-small inline-flex items-center gap-2">
+                                <span>Capacidad:</span>
+                                <Skeleton className="h-4 w-24 rounded" />
+                            </div>
+                        }>
                     </AccordionItem>
                 </Accordion>
             </CardBody>

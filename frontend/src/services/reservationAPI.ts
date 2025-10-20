@@ -16,22 +16,21 @@ axios.interceptors.request.use((config) => {
 });
 
 export const getReservations = () => {
-    return axios.get(`${baseUrl}/reservations`).then(response => response.data);
+  return axios.get(`${baseUrl}/reservations`).then(response => response.data);
 };
 
 export const getRooms = () => {
-    return axios.get(`${baseUrl}/rooms`).then(response => response.data);
+  return axios.get(`${baseUrl}/rooms`).then(response => response.data);
 };
 
 export const getUsers = () => {
-    return axios.get(`${baseUrl}/users`).then(response => response.data);
+  return axios.get(`${baseUrl}/users`).then(response => response.data);
 };
 
 export const updateReservationStatus = (reservationId: number, newStatus: "aceptada" | "pendiente" | "rechazada") => {
   return axios
     .get(`${baseUrl}/reservations/${reservationId}`)
     .then(response => {
-      // Get the full reservation object in order to clone it
       const updatedReservation = { ...response.data, status: newStatus };
       return axios.put(`${baseUrl}/reservations/${reservationId}`, updatedReservation);
     })
@@ -57,27 +56,33 @@ export const getReservationsWithDetails = () => {
 };
 
 export const getWeekReservations = async (weekStart: string, weekEnd: string, roomId: number) => {
-    const reservations = await getReservations()
-    const salaIdNum = Number(roomId);
-    return reservations.filter((r: Reservation) => {
-        return (Number(r.roomID) === salaIdNum && r.time >= weekStart && r.time < weekEnd);
-    })
+  const reservations = await getReservations()
+  const salaIdNum = Number(roomId);
+  return reservations.filter((r: Reservation) => {
+    return (Number(r.roomID) === salaIdNum && r.time >= weekStart && r.time < weekEnd);
+  })
 }
 
-export const createReservation = (newReservation: Omit<Reservation, "id">) => {
-    return axios.post<Reservation>(`${baseUrl}/reservations`, newReservation).then(response => response.data);
+export const createReservation = (newReservation: {
+  roomID: number;
+  userID: number;
+  time: string;
+  status: string;
+}) => {
+  return axios.post<Reservation>(`${baseUrl}/reservations`, newReservation).then(response => response.data);
 }
 
-export const createUser = (newUser: User) => {
-    return axios.post<User>(`${baseUrl}/users`, newUser).then(res => res.data);
-};
+export const deleteReservation = (id: number) => {
+  return axios.delete(`${baseUrl}/reservations/${id}`).then(response => response.data);
+}
 
 export default {
-    getReservations,
-    getRooms,
-    getUsers,
-    updateReservationStatus,
-    getReservationsWithDetails,
-    createReservation,
-    createUser
+  getReservations,
+  getRooms,
+  getUsers,
+  updateReservationStatus,
+  getReservationsWithDetails,
+  getWeekReservations,
+  createReservation,
+  deleteReservation
 };

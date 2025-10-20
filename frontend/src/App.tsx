@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { Button } from "@heroui/react";
 
-import Navbar from "./components/NavBar";
+import Navbar from "./components/common/NavBar";
 import LoginPage from "./pages/LoginPage";
 import UserPage from "./pages/UserPage";
 import AdminPage from "./pages/AdminPage";
@@ -21,7 +21,7 @@ function Home({ user, onLogout }: { user: StoredUser | null; onLogout: () => voi
                 <p className="subtitle-conf">Reserva salas del DCC online.</p>
                 {user && (
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Bienvenido, {user.name}
+                        Bienvenido, {user.first_name} {user.last_name}
                     </p>
                 )}
             </header>

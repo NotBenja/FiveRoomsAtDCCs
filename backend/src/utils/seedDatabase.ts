@@ -28,11 +28,10 @@ interface DbData {
         password: string;
     }>;
     reservations: Array<{
-        id: number;
         roomID: number;
         userID: number;
         time: string;
-        status: 'accepted' | 'pending' | 'rejected';
+        status: 'accepted' | 'pending' | 'rejected' | 'aceptada' | 'pendiente' | 'rechazada';
     }>;
 }
 

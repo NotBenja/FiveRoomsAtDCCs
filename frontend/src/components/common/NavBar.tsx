@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@heroui/react";
-import type { StoredUser } from "../types/models";
+import type { StoredUser } from "../../types/models";
 
 interface NavbarProps {
     user: StoredUser | null;
@@ -10,10 +10,7 @@ interface NavbarProps {
 export default function Navbar({ user, onLogout }: NavbarProps) {
     const navigate = useNavigate();
 
-    // Calcular nombre para mostrar e inicial segura
-    const displayName = user
-        ? (user.name ?? `${(user as any).first_name ?? ""} ${(user as any).last_name ?? ""}`).trim() || `Usuario ${user.id ?? ""}`
-        : null;
+    const displayName = user?.first_name + (user?.last_name ? ` ${user.last_name}` : "");
 
     const initial = displayName ? displayName.charAt(0).toUpperCase() : "?";
 

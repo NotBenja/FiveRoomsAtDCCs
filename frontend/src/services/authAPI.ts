@@ -32,7 +32,8 @@ export interface AuthResponse {
 export interface UserResponse {
   user: {
     id: number;
-    name: string;
+    first_name: string;
+    last_name: string;
     email: string;
   };
 }
@@ -43,7 +44,8 @@ export const login = async (credentials: LoginCredentials): Promise<UserResponse
   localStorage.setItem('user', JSON.stringify(response.data.user));
   const user = {
     id: response.data.user.id,
-    name: `${response.data.user.first_name} ${response.data.user.last_name}`,
+    first_name: response.data.user.first_name,
+    last_name: response.data.user.last_name,
     email: response.data.user.email
   }
   return { user };
