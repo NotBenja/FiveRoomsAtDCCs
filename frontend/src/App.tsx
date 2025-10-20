@@ -1,30 +1,18 @@
-// todo: Devolver esto a como estaba antes, supongo que el BenjaR hizo algo parecido
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
 import { Button } from "@heroui/react";
-import UserPage from "./pages/UserPage.tsx";
-import AdminPage from "./pages/AdminPage.tsx";
-import LoginPage from "./pages/LoginPage.tsx";
-import { isAuthenticated, logout, getStoredUser } from "./services/authAPI";
+
+import Navbar from "./components/NavBar";
+import LoginPage from "./pages/LoginPage";
+import UserPage from "./pages/UserPage";
+import AdminPage from "./pages/AdminPage";
+
+import type { StoredUser } from "./types/models";
+import { getCurrentUser, logout as authLogout } from "./services/authAPI";
 import "./App.css";
 
-function Home() {
+function Home({ user, onLogout }: { user: StoredUser | null; onLogout: () => void }) {
     const navigate = useNavigate();
-    const [user, setUser] = useState<any>(null);
-
-    useEffect(() => {
-        const storedUser = getStoredUser();
-        setUser(storedUser);
-    }, []);
-
-    const handleLogout = async () => {
-        try {
-            await logout();
-            window.location.href = '/login';
-        } catch (error) {
-            console.error('Error al cerrar sesión:', error);
-        }
-    };
 
     return (
         <div className="p-6 w-max min-w-full min-h-screen bg-content1 flex flex-col items-center justify-center gap-6">
@@ -33,7 +21,7 @@ function Home() {
                 <p className="subtitle-conf">Reserva salas del DCC online.</p>
                 {user && (
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Bienvenido, {user.first_name} {user.last_name}
+                        Bienvenido, {user.name}
                     </p>
                 )}
             </header>
@@ -64,7 +52,7 @@ function Home() {
                     color="danger"
                     variant="light"
                     className="mt-4"
-                    onPress={handleLogout}
+                    onPress={onLogout}
                 >
                     Cerrar Sesión
                 </Button>
@@ -73,57 +61,82 @@ function Home() {
     );
 }
 
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
-    if (!isAuthenticated()) {
-        return <Navigate to="/login" replace />;
-    }
+/**
+ * ProtectedRoute mantiene la lógica de protección: si no hay user -> /login
+ */
+function ProtectedRoute({ user, children }: { user: StoredUser | null; children: React.ReactNode }) {
+    if (!user) return <Navigate to="/login" replace />;
     return <>{children}</>;
 }
 
-export default function App() {
-    const [authenticated, setAuthenticated] = useState(isAuthenticated());
+function AppContent() {
+    const [user, setUser] = useState<StoredUser | null>(null);
+    const navigate = useNavigate();
 
-    const handleLoginSuccess = () => {
-        setAuthenticated(true);
+    useEffect(() => {
+        void (async () => {
+            const restored = await getCurrentUser();
+            setUser(restored.user ?? null);
+        })();
+    }, []);
+
+    const handleLogout = async () => {
+        try {
+            await authLogout();
+        } finally {
+            setUser(null);
+            navigate("/login");
+        }
     };
 
     return (
-        <BrowserRouter>
+        <>
+            <Navbar user={user} onLogout={handleLogout} />
             <Routes>
                 <Route
                     path="/login"
                     element={
-                        authenticated ?
-                            <Navigate to="/" replace /> :
-                            <LoginPage onLoginSuccess={handleLoginSuccess} />
+                        user ? <Navigate to="/" replace /> : <LoginPage onLoginSuccess={setUser} />
                     }
                 />
+
                 <Route
                     index
                     element={
-                        <ProtectedRoute>
-                            <Home />
+                        <ProtectedRoute user={user}>
+                            <Home user={user} onLogout={handleLogout} />
                         </ProtectedRoute>
                     }
                 />
+
                 <Route
                     path="/reservar"
                     element={
-                        <ProtectedRoute>
+                        <ProtectedRoute user={user}>
                             <UserPage />
                         </ProtectedRoute>
                     }
                 />
+
                 <Route
                     path="/admin"
                     element={
-                        <ProtectedRoute>
+                        <ProtectedRoute user={user}>
                             <AdminPage />
                         </ProtectedRoute>
                     }
                 />
+
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
+        </>
+    );
+}
+
+export default function App() {
+    return (
+        <BrowserRouter>
+            <AppContent />
         </BrowserRouter>
     );
 }

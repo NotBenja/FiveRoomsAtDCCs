@@ -11,6 +11,7 @@ interface JwtPayload {
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
+        const authReq = req;
         const token = req.cookies?.token;
 
         if (!token) {
@@ -18,16 +19,17 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
             return;
         }
 
-        const decoded = jwt.verify(
-            token,
-            JWT_SECRET
-        ) as JwtPayload;
+        const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
 
         const csrfToken = req.headers['x-csrf-token'];
 
-        if (!csrfToken || typeof csrfToken !== 'string' || decoded.csrf !== csrfToken) {
-            res.status(403).json({ error: 'Invalid CSRF token' });
-            return;
+        if (
+            typeof decoded === "object" &&
+            decoded.userId &&
+            decoded.csrf == csrfToken
+        ) {
+            res.status(401).json({ error: 'Invalid CSRF token' });
+            next();
         }
 
         // todo: cambiar el any

@@ -32,17 +32,21 @@ export interface AuthResponse {
 export interface UserResponse {
   user: {
     id: number;
-    first_name: string;
-    last_name: string;
+    name: string;
     email: string;
   };
 }
 
-export const login = async (credentials: LoginCredentials): Promise<AuthResponse> => {
+export const login = async (credentials: LoginCredentials): Promise<UserResponse> => {
   const response = await axios.post<AuthResponse>(`${baseUrl}/auth/login`, credentials);
   localStorage.setItem('token', response.data.token);
   localStorage.setItem('user', JSON.stringify(response.data.user));
-  return response.data;
+  const user = {
+    id: response.data.user.id,
+    name: `${response.data.user.first_name} ${response.data.user.last_name}`,
+    email: response.data.user.email
+  }
+  return { user };
 };
 
 export const register = async (data: RegisterData): Promise<AuthResponse> => {
@@ -62,7 +66,8 @@ export const logout = async (): Promise<void> => {
 
 export const getCurrentUser = async (): Promise<UserResponse> => {
   const response = await axios.get<UserResponse>(`${baseUrl}/auth/me`);
-  return response.data;
+  const user = response.data.user;
+  return { user };
 };
 
 export const isAuthenticated = (): boolean => {

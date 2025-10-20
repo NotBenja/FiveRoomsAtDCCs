@@ -28,6 +28,12 @@ export interface User {
     password: string;
 }
 
+export interface StoredUser {
+    id: number;
+    name: string;
+    email: string;
+}
+
 export interface ReservationDetails extends Reservation {
     room_name?: string;
     user_name?: string;

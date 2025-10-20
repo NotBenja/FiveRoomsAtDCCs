@@ -4,7 +4,7 @@ import crypto from 'crypto';
 
 import User from '../models/User';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'jws_secret_key';  // jwt secret key, should be in env variables
+const JWT_SECRET = process.env.JWT_SECRET || 'jwt_secret_key';  // jwt secret key, should be in env variables
 const JWT_EXPIRES_IN = '7d';    // token expiration time, should be in env variables
 
 /**
@@ -64,12 +64,12 @@ export const register = async (req: Request, res: Response): Promise<void> => {
             },
             csrfToken
         });
-      } catch (error) {
-            res.status(500).json({
-                  error: 'Error on register: could not register user',
-                  details: error instanceof Error ? error.message : 'Unknown error'
-            });
-      }
+    } catch (error) {
+        res.status(500).json({
+            error: 'Error on register: could not register user',
+            details: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
 };
 
 /**
@@ -83,7 +83,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
         // required fields check
         if (!email || !password) {
-             res.status(400).json({ error: 'Validation error on login: Email and password are required' });
+            res.status(400).json({ error: 'Validation error on login: Email and password are required' });
             return;
         }
 
@@ -101,7 +101,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        const csrfToken = crypto.randomBytes(32).toString('hex');
+        const csrfToken = crypto.randomUUID();
         // JWT management
         const token = jwt.sign(
             {
@@ -112,7 +112,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
             JWT_SECRET,
             { expiresIn: JWT_EXPIRES_IN }
         );
-
+        res.setHeader("X-CSRF-Token", csrfToken);
         // Sets a cookie with the token
         res.cookie('token', token, {
             httpOnly: true,
@@ -128,8 +128,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
                 first_name: user.first_name,
                 last_name: user.last_name,
                 email: user.email
-            },
-            csrfToken
+            }
         });
     } catch (error) {
         res.status(500).json({
