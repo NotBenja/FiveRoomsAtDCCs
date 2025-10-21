@@ -101,7 +101,7 @@ npm run install:all
 - Crear un archivo `.env` en la carpeta `frontend/` con las variables mencionadas anteriormente.
 - Ajustar las variables según sea necesario.
 
-4. Poblar la base de datos (opcional):
+4. Poblar la base de datos (opcional, recomendado):
 ```bash
 npm run initdb
 ```
@@ -147,35 +147,35 @@ En caso de haber cambiado los puertos, usar los correspondientes.
 
 #### Auth
 
-**Método** | **Ruta** | **Descripción** | **Requiere Auth**
---- | --- | --- | ---
-POST | /api/auth/register | Registrar un nuevo usuario | No
-POST | /api/auth/login | Iniciar sesión | No
-POST | /api/auth/logout | Cerrar sesión | Sí
-GET | /api/auth/me | Obtener información del usuario autenticado | Sí
+| **Método** | **Ruta**           | **Descripción**                             | **Requiere Auth** |
+|------------|--------------------|---------------------------------------------|-------------------|
+| POST       | /api/auth/register | Registrar un nuevo usuario                  | No                |
+| POST       | /api/auth/login    | Iniciar sesión                              | No                |
+| POST       | /api/auth/logout   | Cerrar sesión                               | Sí                |
+| GET        | /api/auth/me       | Obtener información del usuario autenticado | Sí                |
 
 #### Salas
-**Método** | **Ruta** | **Descripción**
---- | --- | ---
-GET | /api/rooms | Obtener todas las salas
-GET | /api/rooms/:id | Obtener detalles de una sala específica
-POST | /api/rooms | Crear una nueva sala
-PUT | /api/rooms/:id | Actualizar una sala existente
-DELETE | /api/rooms/:id | Eliminar una sala
+| **Método** | **Ruta**       | **Descripción**                         | **Requiere Auth** |
+|------------|----------------|-----------------------------------------|-------------------|
+| GET        | /api/rooms     | Obtener todas las salas                 | Sí                |
+| GET        | /api/rooms/:id | Obtener detalles de una sala específica | Sí                |
+| POST       | /api/rooms     | Crear una nueva sala                    | Sí                |
+| PUT        | /api/rooms/:id | Actualizar una sala existente           | Sí                |
+| DELETE     | /api/rooms/:id | Eliminar una sala                       | Sí                |
 
 #### Reservas
-**Método** | **Ruta** | **Descripción**
---- | --- | ---
-GET | /api/reservations | Obtener todas las reservas del usuario autenticado
-GET | /api/reservations/:id | Obtener detalles de una reserva específica
-POST | /api/reservations | Crear una nueva reserva
-PUT | /api/reservations/:id | Actualizar una reserva existente
-DELETE | /api/reservations/:id | Eliminar una reserva
+| **Método** | **Ruta**              | **Descripción**                                    | **Requiere Auth** |
+|------------|-----------------------|----------------------------------------------------|-------------------|
+| GET        | /api/reservations     | Obtener todas las reservas del usuario autenticado | Sí                |
+| GET        | /api/reservations/:id | Obtener detalles de una reserva específica         | Sí                |
+| POST       | /api/reservations     | Crear una nueva reserva                            | Sí                |
+| PUT        | /api/reservations/:id | Actualizar una reserva existente                   | Sí                |
+| DELETE     | /api/reservations/:id | Eliminar una reserva                               | Sí                |
 
 ### Usuarios
-**Método** | **Ruta** | **Descripción**
---- | --- | ---
-GET | /api/users | Obtener todos los usuarios
-GET | /api/users/:id | Obtener detalles de un usuario específico
-PUT | /api/users/:id | Actualizar un usuario existente
-DELETE | /api/users/:id | Eliminar un usuario
+| **Método** | **Ruta**       | **Descripción**                           | **Requiere Auth** |
+|------------|----------------|-------------------------------------------|-------------------|
+| GET        | /api/users     | Obtener todos los usuarios                | Sí                |
+| GET        | /api/users/:id | Obtener detalles de un usuario específico | Sí                |
+| PUT        | /api/users/:id | Actualizar un usuario existente           | Sí                |
+| DELETE     | /api/users/:id | Eliminar un usuario                       | Sí                |

@@ -65,7 +65,7 @@ export default function ReservationTable() {
 
   // This function allows changing the status of a reservation
   const handleStatusChange = async (
-    reservationId: number,
+    reservationId: string,
     newStatus: "aceptada" | "pendiente" | "rechazada"
   ) => {
     try {

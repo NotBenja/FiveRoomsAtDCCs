@@ -27,7 +27,7 @@ export const getUsers = () => {
   return axios.get(`${baseUrl}/users`).then(response => response.data);
 };
 
-export const updateReservationStatus = (reservationId: number, newStatus: "aceptada" | "pendiente" | "rechazada") => {
+export const updateReservationStatus = (reservationId: string, newStatus: "aceptada" | "pendiente" | "rechazada") => {
   return axios
     .get(`${baseUrl}/reservations/${reservationId}`)
     .then(response => {
