@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import { Button } from "@heroui/react";
+import { Button, Spinner } from "@heroui/react";
 
 import Navbar from "./components/common/NavBar";
 import LoginPage from "./pages/LoginPage";
@@ -72,12 +72,20 @@ function ProtectedRoute({ user, children }: { user: StoredUser | null; children:
 
 function AppContent() {
     const [user, setUser] = useState<StoredUser | null>(null);
+    const [loading, setLoading] = useState(true); 
     const navigate = useNavigate();
 
     useEffect(() => {
         void (async () => {
-            const restored = await getCurrentUser();
-            setUser(restored.user ?? null);
+            try {
+                const restored = await getCurrentUser();
+                setUser(restored.user ?? null);
+            } catch (error) {
+                console.error("Error al obtener usuario:", error);
+                setUser(null);
+            } finally {
+                setLoading(false); 
+            }
         })();
     }, []);
 
@@ -90,18 +98,30 @@ function AppContent() {
         }
     };
 
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-content1">
+                <Spinner size="lg" label="Cargando..." />
+            </div>
+        );
+    }
+
     return (
         <>
             <Navbar user={user} onLogout={handleLogout} />
             <Routes>
                 <Route
                     path="/login"
-                    element={<LoginPage onLoginSuccess={setUser} />}
+                    element={
+                        user ? <Navigate to="/" replace /> : <LoginPage onLoginSuccess={setUser} />
+                    }
                 />
 
                 <Route
                     path="/register"
-                    element={<RegisterPage onRegisterSuccess={setUser} />}
+                    element={
+                        user ? <Navigate to="/" replace /> : <RegisterPage onRegisterSuccess={setUser} />
+                    }
                 />
 
                 <Route
