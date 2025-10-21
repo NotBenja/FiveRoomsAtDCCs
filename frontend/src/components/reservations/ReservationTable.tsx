@@ -14,8 +14,8 @@ import {
   DropdownItem,
   Pagination,
 } from "@heroui/react";
-import reservationAPI from "../services/reservationAPI";
-import type { ReservationDetails } from "../types/models";
+import reservationAPI from "../../services/reservationAPI";
+import type { ReservationDetails } from "../../types/models";
 
 export default function ReservationTable() {
   const [reservations, setReservations] = useState<ReservationDetails[]>([]);
@@ -55,22 +55,22 @@ export default function ReservationTable() {
 
   const filteredReservations = getFilteredReservations();
   const pages = Math.max(1, Math.ceil(filteredReservations.length / 5));
-  
+
   const getPageItems = () => {
     const start = (page - 1) * 5;
     return filteredReservations.slice(start, start + 5);
   };
-  
+
   const pageItems = getPageItems();
 
   // This function allows changing the status of a reservation
   const handleStatusChange = async (
-    reservationId: number,
+    reservationId: string,
     newStatus: "aceptada" | "pendiente" | "rechazada"
   ) => {
     try {
       await reservationAPI.updateReservationStatus(reservationId, newStatus);
-      
+
       setReservations((prev) =>
         prev.map((reservation) =>
           reservation.id === reservationId ? { ...reservation, status: newStatus } : reservation

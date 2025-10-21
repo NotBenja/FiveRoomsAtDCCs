@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Input, Form } from "@heroui/react";
-import type { Room } from "../types/models";
-import "../App.css";
+import type { Room } from "../../types/models";
+import "../../App.css";
 
 export type ReserveFormValues = {
     firstName: string;
@@ -19,13 +19,13 @@ export type ReservationFormProps = {
 };
 
 export default function ReservationForm({
-                                            room,
-                                            selectedBlock,
-                                            onSubmit,
-                                            onCancel,
-                                            submitLabel = "Confirmar reserva",
-                                            submittingText = "Enviando...",
-                                        }: ReservationFormProps) {
+    room,
+    selectedBlock,
+    onSubmit,
+    onCancel,
+    submitLabel = "Confirmar reserva",
+    submittingText = "Enviando...",
+}: ReservationFormProps) {
     const [submitting, setSubmitting] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

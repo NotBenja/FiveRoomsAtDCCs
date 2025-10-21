@@ -1,6 +1,6 @@
 import { Card, CardBody, Chip, Button } from "@heroui/react";
-import type { Room, Reservation } from "../types/models";
-import "../App.css";
+import type { Room, Reservation } from "../../types/models";
+import "../../App.css";
 
 export type SalaCardProps = {
     room: Room;
@@ -17,7 +17,15 @@ function pickAccentFromId(id: number): string {
     return `hsl(${hue} 80% 85%)`;
 }
 
-export default function SalaCard({ room, reservations, onPress, className, accentColor, showReservasCount = false, handleReservePress }: SalaCardProps) {
+export default function SalaCard({
+    room,
+    reservations,
+    onPress,
+    className,
+    accentColor,
+    showReservasCount = false,
+    handleReservePress,
+}: SalaCardProps) {
     const { id, room_name, features } = room;
     const accent = accentColor ?? pickAccentFromId(id);
     const reservasCount = Array.isArray(reservations) ? reservations.length : 0;

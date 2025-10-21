@@ -13,11 +13,13 @@ export interface Room {
 }
 
 export interface Reservation {
-    id: number;
+    id: string;
     roomID: number;
     userID: number;
     time: string;
     status: "aceptada" | "pendiente" | "rechazada";
+    roomId?: number;
+    userId?: number;
 }
 
 export interface User {
@@ -26,6 +28,13 @@ export interface User {
     last_name: string;
     email: string;
     password: string;
+}
+
+export interface StoredUser {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
 }
 
 export interface ReservationDetails extends Reservation {

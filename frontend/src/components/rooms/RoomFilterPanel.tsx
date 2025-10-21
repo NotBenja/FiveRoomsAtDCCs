@@ -1,5 +1,7 @@
 import { Slider, Button, ButtonGroup, Card, CardHeader, Chip, CardBody, Accordion, AccordionItem, Tooltip } from "@heroui/react";
-import type { RoomFilters } from "../types/models.ts";
+import type { RoomFilters } from "../../types/models.ts";
+import '../../App.css';
+
 
 interface FilterProps {
     value: RoomFilters;
@@ -9,10 +11,10 @@ interface FilterProps {
 }
 
 const feats: { key: keyof RoomFilters; label: string }[] = [
-    { key: "hasProjector",  label: "Proyector" },
+    { key: "hasProjector", label: "Proyector" },
     { key: "hasWhiteboard", label: "Pizarra" },
-    { key: "hasAudio",   label: "Parlantes" },
-    { key: "hasVentilation",label: "Ventilación" },
+    { key: "hasAudio", label: "Parlantes" },
+    { key: "hasVentilation", label: "Ventilación" },
 ];
 
 function RoomFilterPanel({ value, onChange, minCapacity = 0, maxCapacity = 1000 }: FilterProps) {
@@ -39,11 +41,11 @@ function RoomFilterPanel({ value, onChange, minCapacity = 0, maxCapacity = 1000 
     };
 
     const Group = ({
-                       label,
-                       current,
-                       onYes,
-                       onNo,
-                   }: {
+        label,
+        current,
+        onYes,
+        onNo,
+    }: {
         label: string;
         current: boolean | null;
         onYes: () => void;
@@ -87,8 +89,8 @@ function RoomFilterPanel({ value, onChange, minCapacity = 0, maxCapacity = 1000 
                         }
                         subtitle={
                             <span className="text-default-500 text-small">
-                Capacidad: {capacityRange[0]} – {capacityRange[1]}
-              </span>
+                                Capacidad: {capacityRange[0]} – {capacityRange[1]}
+                            </span>
                         }
                     >
                         <div className="flex flex-col gap-6">
@@ -96,8 +98,8 @@ function RoomFilterPanel({ value, onChange, minCapacity = 0, maxCapacity = 1000 
                                 <div className="flex items-center justify-between">
                                     <span className="font-medium">Capacidad</span>
                                     <span className="text-default-500 text-small">
-                    {capacityRange[0]} – {capacityRange[1]}
-                  </span>
+                                        {capacityRange[0]} – {capacityRange[1]}
+                                    </span>
                                 </div>
                                 <Slider
                                     aria-label="Capacidad máxima de la sala"

@@ -1,6 +1,6 @@
-import type { Room, Reservation } from "../types/models";
-import RoomCard from "./RoomCard";
-import "../App.css";
+import type { Room, Reservation } from "../../types/models";
+import RoomCard from "./RoomCard.tsx";
+import "../../App.css";
 
 export type SalaListProps = {
     rooms: Room[];
@@ -11,7 +11,14 @@ export type SalaListProps = {
     onReservePress: (room: Room) => void;
 };
 
-export default function SalaList({ rooms, reservations, onRoomPress, className, showReservationsCount, onReservePress}: SalaListProps) {
+export default function SalaList({
+    rooms,
+    reservations,
+    onRoomPress,
+    className,
+    showReservationsCount,
+    onReservePress,
+}: SalaListProps) {
     if (!rooms?.length) {
         return (
             <div className={["room-list", className].filter(Boolean).join(" ")}>
@@ -25,7 +32,7 @@ export default function SalaList({ rooms, reservations, onRoomPress, className, 
             {rooms.map((s) => (
                 <RoomCard
                     key={s.id}
-                    reservations={reservations.filter(r => r.roomID === s.id)}
+                    reservations={reservations.filter((r) => r.roomID === s.id)}
                     room={s}
                     onPress={onRoomPress}
                     showReservasCount={showReservationsCount}

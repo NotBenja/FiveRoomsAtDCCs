@@ -1,19 +1,19 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import type React from "react";
 import {
   Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
   Input, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem,
   Chip, Pagination, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Checkbox
 } from "@heroui/react";
-import salas from "../services/salas";
-import type { Room } from "../types/models";
-import type {Selection} from "@react-types/shared";
-import '../App.css';
+import * as salas from "../../services/salas";
+import type { Room } from "../../types/models";
+import type { Selection } from "@react-types/shared";
+import '../../App.css';
 
 const FEATURE_FIELDS = [
-  { key: "proyector",   label: "Proyector",   get: (s: Room) => s.features.hasProjector },
-  { key: "pizarra",     label: "Pizarra",     get: (s: Room) => s.features.hasWhiteboard },
-  { key: "audio",       label: "Audio",       get: (s: Room) => s.features.hasAudio },
+  { key: "proyector", label: "Proyector", get: (s: Room) => s.features.hasProjector },
+  { key: "pizarra", label: "Pizarra", get: (s: Room) => s.features.hasWhiteboard },
+  { key: "audio", label: "Audio", get: (s: Room) => s.features.hasAudio },
   { key: "ventilacion", label: "Ventilación", get: (s: Room) => s.features.hasVentilation },
 ] as const;
 
@@ -110,11 +110,11 @@ function RoomsTable() {
         ...editing,
         room_name: formName.trim(),
         features: {
-            maxCapacity: formCap,
-            hasProjector: formProj,
-            hasWhiteboard: formBoard,
-            hasAudio: formAudio,
-            hasVentilation: formVent,
+          maxCapacity: formCap,
+          hasProjector: formProj,
+          hasWhiteboard: formBoard,
+          hasAudio: formAudio,
+          hasVentilation: formVent,
         }
       };
       try {
@@ -222,7 +222,7 @@ function RoomsTable() {
                     aria-label="Acciones de sala"
                     onAction={(key) => {
                       const action = String(key);
-                      if (action === "edit")  openEdit(s);
+                      if (action === "edit") openEdit(s);
                       if (action === "delete") handleDelete(s.id);
                     }}
                   >
@@ -253,15 +253,15 @@ function RoomsTable() {
       </div>
 
 
-      <Modal 
-        isOpen={open} 
+      <Modal
+        isOpen={open}
         onOpenChange={setOpen}
         backdrop="blur"
         placement="center"
         classNames={{
-            base: "dark text-foreground bg-background",
-            backdrop: "dark"
-          }}
+          base: "dark text-foreground bg-background",
+          backdrop: "dark"
+        }}
       >
         <ModalContent>
           {(onClose) => (
