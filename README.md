@@ -11,7 +11,7 @@ Sistema de reserva de salas del DCC.
 - Sebastián Bustos
 
 ### Equipo Kolog
-- Marcela Vega (QEPD)
+- Marcela Vega 
 - Benjamín Reyes
 
 ---
