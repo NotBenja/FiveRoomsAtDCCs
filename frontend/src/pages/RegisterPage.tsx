@@ -45,6 +45,7 @@ export default function RegisterPage({ onRegisterSuccess }: RegisterPageProps) {
             return;
         }
 
+        // todo hito3: rutValidator!
         const idNum = parseInt(formData.id);
         if (isNaN(idNum) || idNum <= 0) {
             setError("El RUT debe ser un número válido");
@@ -64,13 +65,9 @@ export default function RegisterPage({ onRegisterSuccess }: RegisterPageProps) {
 
             onRegisterSuccess(response.user);
             navigate("/reservar", { replace: true });
-        } catch (err: unknown) {
+        } catch (err) {
             console.error("Error en registro:", err);
-            if (err instanceof Error) {
-                setError(err.message);
-            } else {
-                setError("Error al crear la cuenta. Verifica que el RUT y correo no estén registrados.");
-            }
+            setError("Error al crear la cuenta. Verifica que el RUT y correo no estén registrados.");
             setTimeout(() => setError(""), 5000);
         } finally {
             setLoading(false);
