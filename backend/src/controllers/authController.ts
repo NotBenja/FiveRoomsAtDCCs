@@ -4,8 +4,15 @@ import crypto from 'crypto';
 
 import User from '../models/User';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'jwt_secret_key';  // jwt secret key, should be in env variables
-const JWT_EXPIRES_IN = '7d';    // token expiration time, should be in env variables
+const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN ?? '7d';
+
+const ensureJwtSecret = (): string | null => {
+    if (!JWT_SECRET) {
+        return null;
+    }
+    return JWT_SECRET;
+};
 
 /**
  * User Registration method
@@ -14,6 +21,12 @@ const JWT_EXPIRES_IN = '7d';    // token expiration time, should be in env varia
  */
 export const register = async (req: Request, res: Response): Promise<void> => {
     try {
+        const secret = ensureJwtSecret();
+        if (!secret) {
+            res.status(500).json({ error: 'Configuration error: JWT_SECRET is not set' });
+            return;
+        }
+
         const { id, first_name, last_name, email, password } = req.body;
 
         // required fields check
@@ -30,6 +43,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         }
 
         const csrfToken = crypto.randomBytes(32).toString('hex');
+        res.setHeader("X-CSRF-Token", csrfToken);
 
         // creation of new user (the password is hashed in src/models/User.ts)
         const newUser = new User({ id, first_name, last_name, email, password });
@@ -42,15 +56,15 @@ export const register = async (req: Request, res: Response): Promise<void> => {
                 email: newUser.email,
                 csrf: csrfToken
             },
-            JWT_SECRET,
-            { expiresIn: JWT_EXPIRES_IN }
+            secret,
+            { expiresIn: JWT_EXPIRES_IN } as jwt.SignOptions
         );
 
         // sets a cookie with the token
         res.cookie('token', token, {
             httpOnly: true,
             sameSite: 'strict',
-            maxAge: 7 * 24 * 60 * 60 * 1000 // se supone que 7 dias (todo: checkear si lo calcule bien xd)
+            maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
         // sends a response with the token
@@ -65,7 +79,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
             token,
             csrfToken
         });
-    } catch (error) {
+    } catch (error: unknown) {
         res.status(500).json({
             error: 'Error on register: could not register user',
             details: error instanceof Error ? error.message : 'Unknown error'
@@ -80,6 +94,12 @@ export const register = async (req: Request, res: Response): Promise<void> => {
  */
 export const login = async (req: Request, res: Response): Promise<void> => {
     try {
+        const secret = ensureJwtSecret();
+        if (!secret) {
+            res.status(500).json({ error: 'Configuration error: JWT_SECRET is not set' });
+            return;
+        }
+
         const { email, password } = req.body;
 
         // required fields check
@@ -91,14 +111,14 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         // checks if a user with that email exists
         const user = await User.findOne({ email });
         if (!user) {
-            res.status(401).json({ error: 'Error on login: Either the email and/or password is incorrect' });
+            res.status(401).json({ error: 'Error on login: Either the email or password is incorrect' });
             return;
         }
 
-        // checkd if the password is correct
+        // check if the password is correct
         const isPasswordValid = await user.comparePassword(password);
         if (!isPasswordValid) {
-            res.status(401).json({ error: 'Error on login: Either the email and/or password is incorrect' });
+            res.status(401).json({ error: 'Error on login: Either the email or password is incorrect' });
             return;
         }
 
@@ -110,15 +130,15 @@ export const login = async (req: Request, res: Response): Promise<void> => {
                 email: user.email,
                 csrf: csrfToken
             },
-            JWT_SECRET,
-            { expiresIn: JWT_EXPIRES_IN }
+            secret,
+            { expiresIn: JWT_EXPIRES_IN } as jwt.SignOptions
         );
         res.setHeader("X-CSRF-Token", csrfToken);
         // Sets a cookie with the token
         res.cookie('token', token, {
             httpOnly: true,
             sameSite: 'strict',
-            maxAge: 7 * 24 * 60 * 60 * 1000 // se supone que 7 dias (todo: checkear si lo calcule bien xd)
+            maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
         // Sends a response with the token
@@ -129,9 +149,11 @@ export const login = async (req: Request, res: Response): Promise<void> => {
                 first_name: user.first_name,
                 last_name: user.last_name,
                 email: user.email
-            }
+            },
+            token,
+            csrfToken
         });
-    } catch (error) {
+    } catch (error: unknown) {
         res.status(500).json({
             error: 'Error on login: could not log in user',
             details: error instanceof Error ? error.message : 'Unknown error'
@@ -141,17 +163,17 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
 /**
  * User Login method
- * @param req request in HTTP message
+ * @param _req request in HTTP message
  * @param res response in HTTP message
  */
-export const logout = async (req: Request, res: Response): Promise<void> => {
+export const logout = async (_req: Request, res: Response): Promise<void> => {
     try {
         res.clearCookie('token');           // the cookie is cleared in order to log out the user
         res.status(200).json({
             message: 'Successfully logged out',
             clearCSRF: true
         });
-    } catch (error) {
+    } catch (error: unknown) {
         res.status(500).json({
             error: 'Error on logout',
             details: error instanceof Error ? error.message : 'Unknown error'
@@ -182,7 +204,7 @@ export const me = async (req: Request, res: Response): Promise<void> => {
                 email: user.email
             }
         });
-    } catch (error) {
+    } catch (error: unknown) {
         res.status(500).json({
             error: 'Error on me: could not fetch user info',
             details: error instanceof Error ? error.message : 'Unknown error'

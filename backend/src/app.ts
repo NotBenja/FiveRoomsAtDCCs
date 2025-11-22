@@ -9,6 +9,7 @@ import authRoutes from './routes/authRoutes';
 import roomRoutes from './routes/roomRoutes';
 import userRoutes from './routes/userRoutes';
 import reservationRoutes from './routes/reservationRoutes';
+import testingRouter from './controllers/testingController';
 import { authMiddleware } from './middleware/authMiddleware';
 
 const app: Application = express();
@@ -55,6 +56,10 @@ app.get('/health', (req: Request, res: Response) => {
         }
     });
 });
+
+if (process.env.NODE_ENV === "test") {
+    app.use("/api/testing", testingRouter);
+}
 
 // Handler for unknown routes
 app.use((req: Request, res: Response) => {

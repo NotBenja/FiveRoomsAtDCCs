@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Button, Input, Card, CardBody, CardHeader } from "@heroui/react";
 import loginService from "../services/authAPI";
 import { useUserStore } from '../stores/userStore';
+import axios from "axios";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -30,11 +31,15 @@ export default function LoginPage() {
 
       navigate(from ?? fallback, { replace: true });
     } catch (err: unknown) {
-      if (err instanceof Error) setError(err.message);
-      else setError("Credenciales incorrectas");
-      setTimeout(() => setError(""), 5000);
+        if (axios.isAxiosError(err)) {
+            const apiMessage = err.response?.data?.error;
+            setError(apiMessage || "Correo o contraseña incorrectos");
+        } else {
+            setError("Correo o contraseña incorrectos");
+        }
+        setTimeout(() => setError(""), 5000);
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
   };
 

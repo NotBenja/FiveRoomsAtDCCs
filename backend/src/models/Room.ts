@@ -33,7 +33,7 @@ const RoomSchema = new Schema<IRoom>({
 {
     timestamps: true,
     toJSON: {
-        transform: (_doc, ret) => {
+        transform: (_doc, ret: Record<string, unknown>) => {
             const { _id, __v, ...rest } = ret;
             return rest;
         }

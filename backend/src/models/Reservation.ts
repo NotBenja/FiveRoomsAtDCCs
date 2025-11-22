@@ -19,11 +19,15 @@ const ReservationSchema: Schema = new Schema({
 }, {
     timestamps: true,
     toJSON: {
-        transform: (_doc, ret: any) => {
-            ret.id = ret._id.toString();
-            delete ret._id;
-            delete ret.__v;
-            return ret;
+        transform: (_doc, ret: Record<string, unknown>) => {
+            const mongoId = ret._id as { toString: () => string } | undefined;
+            const normalized = {
+                ...ret,
+                id: mongoId ? mongoId.toString() : undefined
+            };
+            delete (normalized as Record<string, unknown>)._id;
+            delete (normalized as Record<string, unknown>).__v;
+            return normalized;
         }
     }
 });

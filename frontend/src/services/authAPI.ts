@@ -1,9 +1,21 @@
-// todo: Borrar esto, supongo que el BenjaR hizo algo parecido
 import axios from "axios";
 
-const baseUrl = "http://localhost:3001/api";
+const baseUrl = import.meta.env.VITE_API_URL ?? "http://localhost:3001/api";
 
 axios.defaults.withCredentials = true;
+const storedCsrf = localStorage.getItem("csrfToken");
+if (storedCsrf) {
+  axios.defaults.headers.common["X-CSRF-Token"] = storedCsrf;
+}
+
+const persistSession = (token: string, user: AuthResponse["user"], csrfToken?: string) => {
+  localStorage.setItem("token", token);
+  localStorage.setItem("user", JSON.stringify(user));
+  if (csrfToken) {
+    localStorage.setItem("csrfToken", csrfToken);
+    axios.defaults.headers.common["X-CSRF-Token"] = csrfToken;
+  }
+};
 
 export interface LoginCredentials {
   email: string;
@@ -27,6 +39,7 @@ export interface AuthResponse {
     email: string;
   };
   token: string;
+  csrfToken?: string;
 }
 
 export interface UserResponse {
@@ -40,15 +53,15 @@ export interface UserResponse {
 
 export const login = async (credentials: LoginCredentials): Promise<AuthResponse> => {
   const response = await axios.post<AuthResponse>(`${baseUrl}/auth/login`, credentials);
-  localStorage.setItem('token', response.data.token);
-  localStorage.setItem('user', JSON.stringify(response.data.user));
+  const csrfHeader = response.headers["x-csrf-token"] as string | undefined;
+  persistSession(response.data.token, response.data.user, csrfHeader ?? response.data.csrfToken);
   return response.data;
 };
 
 export const register = async (data: RegisterData): Promise<AuthResponse> => {
   const response = await axios.post<AuthResponse>(`${baseUrl}/auth/register`, data);
-  localStorage.setItem('token', response.data.token);
-  localStorage.setItem('user', JSON.stringify(response.data.user));
+  const csrfHeader = response.headers["x-csrf-token"] as string | undefined;
+  persistSession(response.data.token, response.data.user, csrfHeader ?? response.data.csrfToken);
   return response.data;
 };
 
@@ -56,6 +69,8 @@ export const logout = async (): Promise<void> => {
   await axios.post(`${baseUrl}/auth/logout`);
   localStorage.removeItem('token');
   localStorage.removeItem('user');
+  localStorage.removeItem('csrfToken');
+  delete axios.defaults.headers.common["X-CSRF-Token"];
 };
 
 export const getCurrentUser = async (): Promise<UserResponse> => {

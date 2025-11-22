@@ -18,7 +18,7 @@ router.get(`/:id`, getUserById);
 /**
  * POST, PUT and DELETE routes for users
  */
-router.post(`/:id`, createUser);
+router.post(`/`, createUser);
 router.put(`/:id`, updateUser);
 router.delete(`/:id`, deleteUser);
 
