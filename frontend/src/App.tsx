@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
 import { Button, Spinner } from "@heroui/react";
 
 import Navbar from "./components/common/NavBar";
@@ -66,7 +66,11 @@ function Home({ user, onLogout }: { user: StoredUser | null; onLogout: () => voi
  * ProtectedRoute mantiene la lógica de protección: si no hay user -> /login
  */
 function ProtectedRoute({ user, children }: { user: StoredUser | null; children: React.ReactNode }) {
-    if (!user) return <Navigate to="/login" replace />;
+    const location = useLocation();
+
+    if (!user) {
+        return <Navigate to="/login" replace state={{ from: location }} />;
+    }
     return <>{children}</>;
 }
 

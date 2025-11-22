@@ -19,7 +19,7 @@ const UserSchema = new Schema<IUser>({
 }, {
     timestamps: true,
     toJSON: {
-        transform: (_doc, ret: any) => {
+        transform: (_doc, ret: Record<string, unknown>) => {
             const { _id, __v, password, ...rest } = ret;
             return rest;
         }
@@ -34,8 +34,8 @@ UserSchema.pre('save', async function(next) {
         const salt = await bcrypt.genSalt(10);
         this.password = await bcrypt.hash(this.password, salt);
         next();
-    } catch (error: any) {
-        next(error);
+    } catch (error: unknown) {
+        next(error as Error);
     }
 });
 
