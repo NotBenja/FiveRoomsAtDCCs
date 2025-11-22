@@ -95,7 +95,7 @@ function AppContent() {
                 setLoading(false); 
             }
         })();
-    }, []);
+    }, [login, logout]);
 
     const handleLogout = async () => {
         try {
