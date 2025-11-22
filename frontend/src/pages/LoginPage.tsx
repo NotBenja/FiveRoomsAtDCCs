@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button, Input, Card, CardBody, CardHeader } from "@heroui/react";
 import loginService from "../services/authAPI";
-import { useUserStore } from '../stores/userStore.ts';
+import { useUserStore } from '../stores/userStore';
 
 export default function LoginPage() {
   const navigate = useNavigate();
