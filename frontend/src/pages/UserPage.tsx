@@ -8,18 +8,20 @@ import UserReservationDashboard from "../components/reservations/UserReservation
 import ReservationBooking from "../components/reservations/ReservationBooking";
 import RoomSchedule from "../components/rooms/RoomSchedule.tsx";
 
+import { useRoomStore } from "../stores/roomStore";
+
 type Step = "schedule" | "confirm";
 
 export default function UserPage() {
-    const [rooms, setRooms] = useState<Room[]>([]);
     const [reservations, setReservations] = useState<Reservation[]>([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalContentReady, setModalContentReady] = useState(false);
-    const [currentRoom, setCurrentRoom] = useState<Room | null>(null);
     const [selectedBlock, setSelectedBlock] = useState<string | null>(null);
     const [step, setStep] = useState<Step>("schedule");
     const [activeTab, setActiveTab] = useState("reservar");
+
+    const { setRooms, selectedRoom, selectRoom } = useRoomStore();
 
     useEffect(() => {
         (async () => {
@@ -35,7 +37,7 @@ export default function UserPage() {
     }, []);
 
     const handleOpenReserve = (room: Room) => {
-        setCurrentRoom(room);
+        selectRoom(room);
         setSelectedBlock(null);
         setStep("schedule");
         setIsModalOpen(true);
@@ -52,14 +54,14 @@ export default function UserPage() {
         setIsModalOpen(false);
         setModalContentReady(false);
         setTimeout(() => {
-            setCurrentRoom(null);
+            selectRoom(null);
             setSelectedBlock(null);
             setStep("schedule");
         }, 200);
     };
 
     const handleReservationSubmit = async () => {
-        if (!currentRoom || !selectedBlock) return;
+        if (!selectedRoom || !selectedBlock) return;
 
         try {
             const resp = await getCurrentUser();
@@ -71,7 +73,7 @@ export default function UserPage() {
             }
 
             const newReservation = {
-                roomID: currentRoom.id,
+                roomID: selectedRoom.id,
                 userID: currentUser.id,
                 time: selectedBlock,
                 status: "pendiente"
@@ -131,7 +133,6 @@ export default function UserPage() {
                 >
                     <Tab key="reservar" title="Reservar Sala">
                         <ReservationBooking
-                            rooms={rooms}
                             reservations={reservations}
                             loading={loading}
                             onReservePress={handleOpenReserve}
@@ -146,7 +147,7 @@ export default function UserPage() {
                 </Tabs>
             </div>
 
-            {currentRoom && (
+            {selectedRoom && (
                 <Modal
                     isOpen={isModalOpen}
                     backdrop="blur"
@@ -186,7 +187,7 @@ export default function UserPage() {
                                     </nav>
 
                                     <div className="mt-6 text-sm text-foreground-500 space-y-1">
-                                        <div><span className="font-semibold">Sala:</span> {currentRoom.room_name}</div>
+                                        <div><span className="font-semibold">Sala:</span> {selectedRoom.room_name}</div>
                                         <div><span className="font-semibold">Fecha:</span> {formatDate(selectedBlock)}</div>
                                         <div><span className="font-semibold">Bloque:</span> {formatBlock(selectedBlock)}</div>
                                     </div>
@@ -197,7 +198,6 @@ export default function UserPage() {
                                         <div className="flex-1 h-[65vh] overflow-auto">
                                             <RoomSchedule
                                                 onClickBlock={(blockId: string) => { setSelectedBlock(blockId); }}
-                                                room={currentRoom}
                                             />
                                         </div>
                                     )}
@@ -206,7 +206,7 @@ export default function UserPage() {
                                         <div className="space-y-4">
                                             <h3 className="text-xl font-semibold">Revisa y confirma tu reserva</h3>
                                             <div className="rounded-lg border border-default-200 p-4 space-y-2">
-                                                <div><span className="font-semibold">Sala:</span> {currentRoom.room_name}</div>
+                                                <div><span className="font-semibold">Sala:</span> {selectedRoom.room_name}</div>
                                                 <div><span className="font-semibold">Fecha:</span> {formatDate(selectedBlock)}</div>
                                                 <div><span className="font-semibold">Horario:</span> {formatBlock(selectedBlock)}</div>
                                             </div>
@@ -238,7 +238,7 @@ export default function UserPage() {
                                     <Button
                                         color="primary"
                                         onPress={() => void handleReservationSubmit()}
-                                        isDisabled={!currentRoom || !selectedBlock}
+                                        isDisabled={!selectedRoom || !selectedBlock}
                                     >
                                         Confirmar reserva
                                     </Button>
