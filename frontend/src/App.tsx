@@ -7,13 +7,15 @@ import LoginPage from "./pages/LoginPage";
 import UserPage from "./pages/UserPage";
 import AdminPage from "./pages/AdminPage";
 
-import type { StoredUser } from "./types/models";
 import { getCurrentUser, logout as authLogout } from "./services/authAPI";
 import "./App.css";
 import RegisterPage from "./pages/RegisterPage";
 
-function Home({ user, onLogout }: { user: StoredUser | null; onLogout: () => void }) {
+import { useUserStore } from './stores/userStore.ts';
+
+function Home({ onLogout }: { onLogout: () => void }) {
     const navigate = useNavigate();
+    const { user } = useUserStore();
 
     return (
         <div className="p-6 w-max min-w-full min-h-screen bg-content1 flex flex-col items-center justify-center gap-6">
@@ -65,24 +67,30 @@ function Home({ user, onLogout }: { user: StoredUser | null; onLogout: () => voi
 /**
  * ProtectedRoute mantiene la lógica de protección: si no hay user -> /login
  */
-function ProtectedRoute({ user, children }: { user: StoredUser | null; children: React.ReactNode }) {
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+    const { user } = useUserStore();
     if (!user) return <Navigate to="/login" replace />;
     return <>{children}</>;
 }
 
 function AppContent() {
-    const [user, setUser] = useState<StoredUser | null>(null);
     const [loading, setLoading] = useState(true); 
     const navigate = useNavigate();
+
+    const {user, login, logout} = useUserStore();
 
     useEffect(() => {
         void (async () => {
             try {
                 const restored = await getCurrentUser();
-                setUser(restored.user ?? null);
+                if (restored.user){
+                    login(restored.user)
+                } else {
+                    logout();
+                }
             } catch (error) {
                 console.error("Error al obtener usuario:", error);
-                setUser(null);
+                logout();
             } finally {
                 setLoading(false); 
             }
@@ -93,7 +101,7 @@ function AppContent() {
         try {
             await authLogout();
         } finally {
-            setUser(null);
+            logout();
             navigate("/login");
         }
     };
@@ -113,22 +121,22 @@ function AppContent() {
                 <Route
                     path="/login"
                     element={
-                        user ? <Navigate to="/" replace /> : <LoginPage onLoginSuccess={setUser} />
+                        user ? <Navigate to="/" replace /> : <LoginPage />
                     }
                 />
 
                 <Route
                     path="/register"
                     element={
-                        user ? <Navigate to="/" replace /> : <RegisterPage onRegisterSuccess={setUser} />
+                        user ? <Navigate to="/" replace /> : <RegisterPage />
                     }
                 />
 
                 <Route
                     index
                     element={
-                        <ProtectedRoute user={user}>
-                            <Home user={user} onLogout={handleLogout} />
+                        <ProtectedRoute>
+                            <Home onLogout={handleLogout} />
                         </ProtectedRoute>
                     }
                 />
@@ -136,7 +144,7 @@ function AppContent() {
                 <Route
                     path="/reservar"
                     element={
-                        <ProtectedRoute user={user}>
+                        <ProtectedRoute>
                             <UserPage />
                         </ProtectedRoute>
                     }
@@ -145,7 +153,7 @@ function AppContent() {
                 <Route
                     path="/admin"
                     element={
-                        <ProtectedRoute user={user}>
+                        <ProtectedRoute>
                             <AdminPage />
                         </ProtectedRoute>
                     }
