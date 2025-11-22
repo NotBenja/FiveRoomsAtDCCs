@@ -1,13 +1,13 @@
-import type { Reservation, Room } from "../../types/models";
+import type { Reservation } from "../../types/models";
 import { useEffect, useState } from "react";
 import ScheduleBlock from "./ScheduleBlock";
 import reservationAPI from "../../services/reservationAPI";
 import { Button } from "@heroui/react";
 import "../../App.css";
+import {useRoomStore} from "../../stores/roomStore";
 
 interface ScheduleProps {
   onClickBlock: (blockID: string) => void;
-  room: Room;
 }
 
 const getWeekStart = (date: Date) => {
@@ -41,12 +41,18 @@ const HOURS = Array.from({ length: 12 }, (_, i) => 8 + i).map((h) => {
   return startHour + "-" + endHour;
 });
 
-export default function RoomSchedule({ onClickBlock, room }: ScheduleProps) {
+export default function RoomSchedule({ onClickBlock }: ScheduleProps) {
   const [currentWeek, setCurrentWeek] = useState(getWeekStart(new Date()));
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [selectedBlock, setSelectedBlock] = useState<string | null>(null);
 
+  const { selectedRoom } = useRoomStore();
+
   useEffect(() => {
+    if (!selectedRoom){
+      setReservations([]);
+      return;
+    }
     const fetchReservations = async () => {
       try {
         const all = await reservationAPI.getReservations();
@@ -57,7 +63,7 @@ export default function RoomSchedule({ onClickBlock, room }: ScheduleProps) {
           const t = r.time ? new Date(r.time) : null;
           if (!t) return false;
           // compatibilidad roomID / roomId
-          const roomIdMatch = (r.roomID ?? r.roomID) === room.id;
+          const roomIdMatch = (r.roomID ?? r.roomID) === selectedRoom.id;
           return t >= weekStart && t < weekEnd && roomIdMatch;
         });
 
@@ -69,7 +75,7 @@ export default function RoomSchedule({ onClickBlock, room }: ScheduleProps) {
     };
 
     void fetchReservations();
-  }, [currentWeek, room.id]);
+  }, [currentWeek, selectedRoom]);
 
   const handleBlockClick = (blockId: string) => {
     setSelectedBlock(blockId);
@@ -89,13 +95,16 @@ export default function RoomSchedule({ onClickBlock, room }: ScheduleProps) {
     n.setDate(n.getDate() + 7);
     setCurrentWeek(n);
   };
+  if(!selectedRoom){
+    return <p className="text-foreground-500">No hay sala seleccionada.</p>;
+  }
 
   return (
     <div className="room-schedule">
       <div className="table-head w-full flex items-center justify-between mb-6">
         <Button onPress={prevWeek}>← Semana anterior</Button>
         <div className="flex flex-col items-center">
-          <h2 className="text-xl font-bold mb-1">Sala: {room.room_name}</h2>
+          <h2 className="text-xl font-bold mb-1">Sala: {selectedRoom.room_name}</h2>
           <h3 className="text-lg font-semibold">
             Semana del {currentWeek.toLocaleDateString("es-CL", { day: "2-digit", month: "2-digit", year: "numeric" })}
           </h3>
