@@ -61,19 +61,19 @@ function Home({ onLogout }: HomeProps) {
                     <article className="home-card">
                         <div className="card-badge">Acceso rapido</div>
                         <h3>Reserva en segundos</h3>
-                        <p>Selecciona sala, horario y confirma. La sesion se mantiene al navegar o recargar.</p>
+                        <p>Selecciona sala, horario y confirma. Además, puedes ver tus reservas.</p>
                         <div className="card-actions">
-                            <Button color="primary" onPress={() => navigate("/reservar")} size="md">
+                            <Button color="primary" onPress={() => navigate("/reservar", { state: { tab: "reservar" } })} size="md">
                                 Abrir agenda
                             </Button>
-                            <Button variant="light" onPress={() => navigate("/reservar")} size="md">
+                            <Button variant="light" onPress={() => navigate("/reservar", { state: { tab: "mis-reservas" } })} size="md">
                                 Ver mis reservas
                             </Button>
                         </div>
                     </article>
 
                     <article className="home-card">
-                        <div className="card-badge secondary">Equipo admin</div>
+                        <div className="card-badge secondary">Panel de admin</div>
                         <h3>Control de salas</h3>
                         <p>Gestiona salas, acepta o rechaza solicitudes y monitorea disponibilidad.</p>
                         <div className="card-actions">
@@ -86,7 +86,7 @@ function Home({ onLogout }: HomeProps) {
                     <article className="home-card">
                         <div className="card-badge subtle">Sesion y seguridad</div>
                         <h3>Navegacion estable</h3>
-                        <p>Back, forward y F5 preservan tu sesion gracias a rutas protegidas y validacion de usuario.</p>
+                        <p>No se me ocurrió que poner aquí, así que otro botón para cerrar la sesión..</p>
                         <div className="card-actions">
                             <Button variant="flat" color="danger" onPress={onLogout} size="md">
                                 Cerrar sesion
@@ -112,16 +112,16 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 function AppContent() {
-    const [loading, setLoading] = useState(true); 
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
-    const {user, login, logout} = useUserStore();
+    const { user, login, logout } = useUserStore();
 
     useEffect(() => {
         void (async () => {
             try {
                 const restored = await getCurrentUser();
-                if (restored.user){
+                if (restored.user) {
                     login(restored.user)
                 } else {
                     logout();

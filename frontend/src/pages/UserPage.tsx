@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import reservationAPI from "../services/reservationAPI";
 import { getCurrentUser } from "../services/authAPI";
 import { Button, Modal, ModalContent, ModalFooter, addToast, Tabs, Tab, Spinner } from "@heroui/react";
@@ -19,7 +20,8 @@ export default function UserPage() {
     const [modalContentReady, setModalContentReady] = useState(false);
     const [selectedBlock, setSelectedBlock] = useState<string | null>(null);
     const [step, setStep] = useState<Step>("schedule");
-    const [activeTab, setActiveTab] = useState("reservar");
+    const location = useLocation();
+    const [activeTab, setActiveTab] = useState(location.state?.tab || "reservar");
 
     const { setRooms, selectedRoom, selectRoom } = useRoomStore();
 
