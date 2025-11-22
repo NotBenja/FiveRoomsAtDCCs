@@ -2,13 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Input, Card, CardBody, CardHeader } from "@heroui/react";
 import authService from "../services/authAPI";
-import type { StoredUser } from "../types/models";
 
-interface RegisterPageProps {
-    onRegisterSuccess: (user: StoredUser) => void;
-}
+import { useUserStore } from '../stores/userStore';
 
-export default function RegisterPage({ onRegisterSuccess }: RegisterPageProps) {
+export default function RegisterPage() {
+    const { login } = useUserStore();
+
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         id: "",
@@ -63,7 +62,7 @@ export default function RegisterPage({ onRegisterSuccess }: RegisterPageProps) {
                 password: formData.password
             });
 
-            onRegisterSuccess(response.user);
+            login(response.user);
             navigate("/reservar", { replace: true });
         } catch (err) {
             console.error("Error en registro:", err);
