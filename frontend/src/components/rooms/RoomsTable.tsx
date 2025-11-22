@@ -10,6 +10,8 @@ import type { Room } from "../../types/models";
 import type { Selection } from "@react-types/shared";
 import '../../App.css';
 
+import { useRoomStore } from "../../stores/roomStore";
+
 const FEATURE_FIELDS = [
   { key: "proyector", label: "Proyector", get: (s: Room) => s.features.hasProjector },
   { key: "pizarra", label: "Pizarra", get: (s: Room) => s.features.hasWhiteboard },
@@ -26,7 +28,7 @@ const boolChip = (v: boolean) => (
 );
 
 function RoomsTable() {
-  const [rooms, setRooms] = useState<Room[]>([]);
+  const { rooms, setRooms, createRoom, deleteRoom, updateRoom } = useRoomStore();
   const [loading, setLoading] = useState(true);
 
   // toolbar
@@ -57,7 +59,7 @@ function RoomsTable() {
     };
 
     fetchSalas();
-  }, []);
+  }, [setRooms]);
 
   // filtrado
   let filtered: Room[] = rooms;
@@ -119,7 +121,7 @@ function RoomsTable() {
       };
       try {
         const saved = await salas.updateRoom(updated);
-        setRooms((prev) => prev.map((s) => (s.id === saved.id ? saved : s)));
+        updateRoom(saved);
         setOpen(false);
       } catch (e) {
         console.error("Error actualizando sala:", e);
@@ -138,14 +140,14 @@ function RoomsTable() {
       };
 
       const creada = await salas.createRoom(nueva);
-      setRooms((prev) => [...prev, creada]);
+      createRoom(creada);
       setOpen(false);
     }
   };
 
   const handleDelete = async (id: number) => {
     await salas.deleteRoom(id);
-    setRooms((prev) => prev.filter((s) => s.id !== id));
+    deleteRoom(id);
   };
 
   if (loading) return <div className="p-8 text-center">Cargando salas…</div>;

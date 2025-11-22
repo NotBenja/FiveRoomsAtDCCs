@@ -7,8 +7,9 @@ import { Pagination } from "@heroui/react";
 import type { Room, Reservation, RoomFilters } from "../../types/models.ts";
 import "../../App.css";
 
+import {useRoomStore} from "../../stores/roomStore";
+
 interface ReservationBookingProps {
-    rooms: Room[];
     reservations: Reservation[];
     loading: boolean;
     onReservePress: (room: Room) => void;
@@ -17,12 +18,13 @@ interface ReservationBookingProps {
 const ROOMS_PER_PAGE = 6;
 
 export default function ReservationBooking({
-    rooms,
     reservations,
     loading,
     onReservePress
 }: ReservationBookingProps) {
     const [currentPage, setCurrentPage] = useState(1);
+
+    const {rooms} = useRoomStore();
 
     const caps = rooms.map((r) => r.features?.maxCapacity).filter((n): n is number => Number.isFinite(n as number));
     const MIN_CAP = caps.length ? Math.min(...caps) : 0;
