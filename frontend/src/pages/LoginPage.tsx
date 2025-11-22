@@ -2,19 +2,17 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button, Input, Card, CardBody, CardHeader } from "@heroui/react";
 import loginService from "../services/authAPI";
-import type { StoredUser } from "../types/models";
+import { useUserStore } from '../stores/userStore.ts';
 
-interface LoginPageProps {
-  onLoginSuccess: (user: StoredUser) => void;
-}
-
-export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
+export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const { login } = useUserStore();
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -23,7 +21,7 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
 
     try {
       const response = await loginService.login({ email, password });
-      onLoginSuccess(response.user);
+      login(response.user);
 
       const state = location.state as { from?: { pathname?: string } } | null;
       const from = state?.from?.pathname;
