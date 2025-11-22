@@ -8,14 +8,15 @@ import UserPage from "./pages/UserPage";
 import AdminPage from "./pages/AdminPage";
 import RegisterPage from "./pages/RegisterPage";
 
-import type { StoredUser } from "./types/models";
 import { getCurrentUser, logout as authLogout } from "./services/authAPI";
 import "./App.css";
 
-type HomeProps = { user: StoredUser | null; onLogout: () => void };
+import { useUserStore } from './stores/userStore.ts';
+type HomeProps = { onLogout: () => void };
 
-function Home({ user, onLogout }: HomeProps) {
+function Home({ onLogout }: HomeProps) {
     const navigate = useNavigate();
+    const { user } = useUserStore();
 
     return (
         <div className="home-shell">
@@ -101,9 +102,9 @@ function Home({ user, onLogout }: HomeProps) {
 /**
  * ProtectedRoute mantiene la logica de proteccion: si no hay user -> /login
  */
-function ProtectedRoute({ user, children }: { user: StoredUser | null; children: React.ReactNode }) {
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
     const location = useLocation();
-
+    const { user } = useUserStore();
     if (!user) {
         return <Navigate to="/login" replace state={{ from: location }} />;
     }
@@ -111,29 +112,34 @@ function ProtectedRoute({ user, children }: { user: StoredUser | null; children:
 }
 
 function AppContent() {
-    const [user, setUser] = useState<StoredUser | null>(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true); 
     const navigate = useNavigate();
+
+    const {user, login, logout} = useUserStore();
 
     useEffect(() => {
         void (async () => {
             try {
                 const restored = await getCurrentUser();
-                setUser(restored.user ?? null);
+                if (restored.user){
+                    login(restored.user)
+                } else {
+                    logout();
+                }
             } catch (error) {
                 console.error("Error al obtener usuario:", error);
-                setUser(null);
+                logout();
             } finally {
                 setLoading(false);
             }
         })();
-    }, []);
+    }, [login, logout]);
 
     const handleLogout = async () => {
         try {
             await authLogout();
         } finally {
-            setUser(null);
+            logout();
             navigate("/login");
         }
     };
@@ -153,22 +159,22 @@ function AppContent() {
                 <Route
                     path="/login"
                     element={
-                        user ? <Navigate to="/home" replace /> : <LoginPage onLoginSuccess={setUser} />
+                        user ? <Navigate to="/home" replace /> : <LoginPage />
                     }
                 />
 
                 <Route
                     path="/register"
                     element={
-                        user ? <Navigate to="/home" replace /> : <RegisterPage onRegisterSuccess={setUser} />
+                        user ? <Navigate to="/home" replace /> : <RegisterPage />
                     }
                 />
 
                 <Route
                     path="/home"
                     element={
-                        <ProtectedRoute user={user}>
-                            <Home user={user} onLogout={handleLogout} />
+                        <ProtectedRoute>
+                            <Home onLogout={handleLogout} />
                         </ProtectedRoute>
                     }
                 />
@@ -178,7 +184,7 @@ function AppContent() {
                 <Route
                     path="/reservar"
                     element={
-                        <ProtectedRoute user={user}>
+                        <ProtectedRoute>
                             <UserPage />
                         </ProtectedRoute>
                     }
@@ -187,7 +193,7 @@ function AppContent() {
                 <Route
                     path="/admin"
                     element={
-                        <ProtectedRoute user={user}>
+                        <ProtectedRoute>
                             <AdminPage />
                         </ProtectedRoute>
                     }
