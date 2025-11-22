@@ -6,64 +6,100 @@ import Navbar from "./components/common/NavBar";
 import LoginPage from "./pages/LoginPage";
 import UserPage from "./pages/UserPage";
 import AdminPage from "./pages/AdminPage";
+import RegisterPage from "./pages/RegisterPage";
 
 import type { StoredUser } from "./types/models";
 import { getCurrentUser, logout as authLogout } from "./services/authAPI";
 import "./App.css";
-import RegisterPage from "./pages/RegisterPage";
 
-function Home({ user, onLogout }: { user: StoredUser | null; onLogout: () => void }) {
+type HomeProps = { user: StoredUser | null; onLogout: () => void };
+
+function Home({ user, onLogout }: HomeProps) {
     const navigate = useNavigate();
 
     return (
-        <div className="p-6 w-max min-w-full min-h-screen bg-content1 flex flex-col items-center justify-center gap-6">
-            <header className="text-center space-y-2">
-                <h1 className="text-3xl font-bold title-conf">Salas DCC</h1>
-                <p className="subtitle-conf">Reserva salas del DCC online.</p>
-                {user && (
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Bienvenido, {user.first_name} {user.last_name}
+        <div className="home-shell">
+            <div className="home-glow" aria-hidden />
+
+            <main className="home-layout">
+                <section className="home-hero">
+                    <div className="home-pill">Salas DCC · Disponibles 24/7</div>
+                    <h1 className="home-title">Reserva salas del DCC sin friccion</h1>
+                    <p className="home-lead">
+                        Elige sala, confirma horario y comparte con tu equipo. Recargas, back y forward funcionan sin perder tu contexto.
                     </p>
-                )}
-            </header>
+                    <div className="home-actions">
+                        <Button
+                            size="lg"
+                            color="primary"
+                            radius="full"
+                            className="home-btn"
+                            onPress={() => navigate("/reservar")}
+                        >
+                            Reservar ahora
+                        </Button>
+                        <Button
+                            size="lg"
+                            variant="bordered"
+                            radius="full"
+                            className="home-btn-alt"
+                            onPress={() => navigate("/admin")}
+                        >
+                            Panel admin
+                        </Button>
+                    </div>
+                    {user && (
+                        <div className="home-user-chip">
+                            <span className="chip-dot" aria-hidden />
+                            Sesion activa: {user.first_name} {user.last_name} · ID {user.id}
+                        </div>
+                    )}
+                </section>
 
-            <div className="flex flex-col items-center gap-3">
-                <Button
-                    size="lg"
-                    color="primary"
-                    radius="full"
-                    className="h-14 px-12 text-xl font-semibold"
-                    onPress={() => navigate("/reservar")}
-                >
-                    Reservar
-                </Button>
+                <section className="home-grid">
+                    <article className="home-card">
+                        <div className="card-badge">Acceso rapido</div>
+                        <h3>Reserva en segundos</h3>
+                        <p>Selecciona sala, horario y confirma. La sesion se mantiene al navegar o recargar.</p>
+                        <div className="card-actions">
+                            <Button color="primary" onPress={() => navigate("/reservar")} size="md">
+                                Abrir agenda
+                            </Button>
+                            <Button variant="light" onPress={() => navigate("/reservar")} size="md">
+                                Ver mis reservas
+                            </Button>
+                        </div>
+                    </article>
 
-                <Button
-                    size="lg"
-                    color="secondary"
-                    radius="full"
-                    className="h-12 px-10 text-lg font-medium"
-                    onPress={() => navigate("/admin")}
-                >
-                    Ingresar como Admin
-                </Button>
+                    <article className="home-card">
+                        <div className="card-badge secondary">Equipo admin</div>
+                        <h3>Control de salas</h3>
+                        <p>Gestiona salas, acepta o rechaza solicitudes y monitorea disponibilidad.</p>
+                        <div className="card-actions">
+                            <Button color="secondary" onPress={() => navigate("/admin")} size="md">
+                                Ir al panel
+                            </Button>
+                        </div>
+                    </article>
 
-                <Button
-                    size="md"
-                    color="danger"
-                    variant="light"
-                    className="mt-4"
-                    onPress={onLogout}
-                >
-                    Cerrar Sesión
-                </Button>
-            </div>
+                    <article className="home-card">
+                        <div className="card-badge subtle">Sesion y seguridad</div>
+                        <h3>Navegacion estable</h3>
+                        <p>Back, forward y F5 preservan tu sesion gracias a rutas protegidas y validacion de usuario.</p>
+                        <div className="card-actions">
+                            <Button variant="flat" color="danger" onPress={onLogout} size="md">
+                                Cerrar sesion
+                            </Button>
+                        </div>
+                    </article>
+                </section>
+            </main>
         </div>
     );
 }
 
 /**
- * ProtectedRoute mantiene la lógica de protección: si no hay user -> /login
+ * ProtectedRoute mantiene la logica de proteccion: si no hay user -> /login
  */
 function ProtectedRoute({ user, children }: { user: StoredUser | null; children: React.ReactNode }) {
     const location = useLocation();
@@ -76,7 +112,7 @@ function ProtectedRoute({ user, children }: { user: StoredUser | null; children:
 
 function AppContent() {
     const [user, setUser] = useState<StoredUser | null>(null);
-    const [loading, setLoading] = useState(true); 
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -88,7 +124,7 @@ function AppContent() {
                 console.error("Error al obtener usuario:", error);
                 setUser(null);
             } finally {
-                setLoading(false); 
+                setLoading(false);
             }
         })();
     }, []);
@@ -117,25 +153,27 @@ function AppContent() {
                 <Route
                     path="/login"
                     element={
-                        user ? <Navigate to="/" replace /> : <LoginPage onLoginSuccess={setUser} />
+                        user ? <Navigate to="/home" replace /> : <LoginPage onLoginSuccess={setUser} />
                     }
                 />
 
                 <Route
                     path="/register"
                     element={
-                        user ? <Navigate to="/" replace /> : <RegisterPage onRegisterSuccess={setUser} />
+                        user ? <Navigate to="/home" replace /> : <RegisterPage onRegisterSuccess={setUser} />
                     }
                 />
 
                 <Route
-                    index
+                    path="/home"
                     element={
                         <ProtectedRoute user={user}>
                             <Home user={user} onLogout={handleLogout} />
                         </ProtectedRoute>
                     }
                 />
+
+                <Route path="/" element={<Navigate to="/home" replace />} />
 
                 <Route
                     path="/reservar"
@@ -155,7 +193,7 @@ function AppContent() {
                     }
                 />
 
-                <Route path="*" element={<Navigate to="/" replace />} />
+                <Route path="*" element={<Navigate to="/home" replace />} />
             </Routes>
         </>
     );

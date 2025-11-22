@@ -19,10 +19,10 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
             <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
                 <div
                     className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
-                    onClick={() => navigate("/")}
+                    onClick={() => navigate("/home")}
                     role="button"
                     tabIndex={0}
-                    onKeyDown={(e) => e.key === "Enter" && navigate("/")}
+                    onKeyDown={(e) => e.key === "Enter" && navigate("/home")}
                 >
                     <h1 className="text-lg font-semibold">Salas DCC</h1>
                     <span className="text-sm text-foreground-500 hidden sm:inline">

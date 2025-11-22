@@ -25,7 +25,8 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
 
         const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
 
-        const csrfToken = req.headers['x-csrf-token'];
+        const rawCsrfHeader = req.headers['x-csrf-token'];
+        const csrfToken = Array.isArray(rawCsrfHeader) ? rawCsrfHeader[0] : rawCsrfHeader;
 
         if (typeof decoded === "object" && decoded.userId && decoded.csrf !== csrfToken) {
             res.status(401).json({ error: 'Invalid CSRF token' });

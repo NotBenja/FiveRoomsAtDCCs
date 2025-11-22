@@ -43,6 +43,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         }
 
         const csrfToken = crypto.randomBytes(32).toString('hex');
+        res.setHeader("X-CSRF-Token", csrfToken);
 
         // creation of new user (the password is hashed in src/models/User.ts)
         const newUser = new User({ id, first_name, last_name, email, password });
@@ -63,7 +64,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         res.cookie('token', token, {
             httpOnly: true,
             sameSite: 'strict',
-            maxAge: JWT_EXPIRES_IN as unknown as number
+            maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
         // sends a response with the token
@@ -110,14 +111,14 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         // checks if a user with that email exists
         const user = await User.findOne({ email });
         if (!user) {
-            res.status(401).json({ error: 'Error on login: Either the email and/or password is incorrect' });
+            res.status(401).json({ error: 'Error on login: Either the email or password is incorrect' });
             return;
         }
 
         // check if the password is correct
         const isPasswordValid = await user.comparePassword(password);
         if (!isPasswordValid) {
-            res.status(401).json({ error: 'Error on login: Either the email and/or password is incorrect' });
+            res.status(401).json({ error: 'Error on login: Either the email or password is incorrect' });
             return;
         }
 
@@ -137,7 +138,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         res.cookie('token', token, {
             httpOnly: true,
             sameSite: 'strict',
-            maxAge: JWT_EXPIRES_IN as unknown as number
+            maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
         // Sends a response with the token
@@ -148,7 +149,9 @@ export const login = async (req: Request, res: Response): Promise<void> => {
                 first_name: user.first_name,
                 last_name: user.last_name,
                 email: user.email
-            }
+            },
+            token,
+            csrfToken
         });
     } catch (error: unknown) {
         res.status(500).json({
