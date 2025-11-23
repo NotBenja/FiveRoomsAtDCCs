@@ -21,10 +21,13 @@ const reservationPrefix = '/api/reservations';
 const roomPrefix = '/api/rooms';
 const userPrefix = '/api/users';
 
-app.use(cors({
+if (config.nodeEnv === 'development') {
+    app.use(cors({
     origin: config.frontendUrl,
     credentials: true
-}));
+    }));
+}
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

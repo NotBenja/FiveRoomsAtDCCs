@@ -1,8 +1,11 @@
 import * as dotenv from "dotenv";
-dotenv.config();
+// Here you can change the environment file to load
+// For example, for production use 'environments/production.env'
+dotenv.config({ path: 'environments/development.env' });
 
 export const config = {
     nodeEnv: process.env.NODE_ENV || 'development',
+    host: process.env.HOST || 'localhost',
     port: process.env.PORT || 3001,
     mongoUri: process.env.MONGODB_URI || 'mongodb://localhost:27017',
     mongoDbName: process.env.MONGODB_DBNAME || 'reservasalasdcc',
