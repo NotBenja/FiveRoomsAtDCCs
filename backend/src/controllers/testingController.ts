@@ -1,5 +1,6 @@
 // typescript
 import express from "express";
+import { config } from "../config/env";
 import Reservation from "../models/Reservation";
 import Room from "../models/Room";
 import User from "../models/User";
@@ -7,7 +8,7 @@ import User from "../models/User";
 const router = express.Router();
 
 router.post("/reset", async (req, res) => {
-    if (process.env.NODE_ENV !== "test") {
+    if (config.nodeEnv !== "test") {
         return res.status(403).json({ error: "Route allowed only in test environment" });
     }
 

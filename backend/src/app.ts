@@ -1,8 +1,8 @@
 import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import * as dotenv from "dotenv";
-dotenv.config();
+import { config } from './config/env';
+
 
 import { connectDB } from './config/database';
 import authRoutes from './routes/authRoutes';
@@ -20,7 +20,7 @@ const roomPrefix = '/api/rooms';
 const userPrefix = '/api/users';
 
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    origin: config.frontendUrl,
     credentials: true
 }));
 
@@ -57,7 +57,7 @@ app.get('/health', (req: Request, res: Response) => {
     });
 });
 
-if (process.env.NODE_ENV === "test") {
+if (config.nodeEnv === "test") {
     app.use("/api/testing", testingRouter);
 }
 

@@ -1,3 +1,4 @@
+import { config } from './env';
 import mongoose from 'mongoose';
 
 /**
@@ -7,7 +8,7 @@ import mongoose from 'mongoose';
  */
 export const connectDB = async (): Promise<void> => {
   try {
-    const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/reservasalasdcc';
+    const mongoUri = config.mongoUri;
 
     await mongoose.connect(mongoUri);
 

@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import crypto from 'crypto';
+import crypto from 'node:crypto';
+import { config } from '../config/env';
 
 import User from '../models/User';
 
-const JWT_SECRET = process.env.JWT_SECRET;
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN ?? '7d';
+const JWT_SECRET = config.jwtSecret;
+const JWT_EXPIRES_IN = config.jwtExpiresIn;
 
 const ensureJwtSecret = (): string | null => {
     if (!JWT_SECRET) {
