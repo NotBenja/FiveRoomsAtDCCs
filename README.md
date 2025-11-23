@@ -69,11 +69,24 @@ El proyecto está dividido en dos partes principales: backend y frontend.
 
 ```env
 PORT=3001
-MONGODB_URI=mongodb://localhost:27017/reservas-salas-dcc
-JWT_SECRET=cambiar_este_secret_en_produccion_por_uno_seguro
 NODE_ENV=development
+MONGODB_URI=mongodb://localhost:27017/reservasalasdcc
 FRONTEND_URL=http://localhost:5173
+JWT_SECRET=jwt_secret_key
+JWT_EXPIRES_IN=7d
 ```
+
+### Frontend (`frontend/.env`)
+```ts
+VITE_API_URL=http://localhost:3001/api
+```
+
+### E2E Tests (`e2e-tests/.env`)
+```ts
+VITE_API_URL=http://localhost:3001/api
+```
+
+---
 
 ## Instrucciones de inicialización y ejecución
 
