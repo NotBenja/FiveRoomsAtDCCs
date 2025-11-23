@@ -3,13 +3,14 @@
   "private": true,
   "version": "1.0.0",
   "description": "Backend para sistema de reserva de salas DCC",
-  "main": "dist/server.js",
+  "main": "out/server.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc -p tsconfig.json",
-    "start": "node dist/server.js",
+    "start": "cross-env NODE_ENV=production node out/server.js",
     "seed": "ts-node src/utils/seedDatabase.ts",
-    "update-passwords": "ts-node src/utils/updatePasswords.ts"
+    "update-passwords": "ts-node src/utils/updatePasswords.ts",
+    "build:ui": "rimraf dist && cd ../frontend && npm run build && cpx \"dist/**\" ../backend/dist"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -27,7 +28,10 @@
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.10.6",
+    "cpx": "^1.5.0",
+    "cross-env": "^10.1.0",
     "json-server": "^0.17.4",
+    "rimraf": "^6.1.2",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.3.3"

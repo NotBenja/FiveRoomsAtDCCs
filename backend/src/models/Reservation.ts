@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import { config } from '../config/env';
 
 export interface IReservation extends Document {
     roomID: number;
@@ -18,6 +19,7 @@ const ReservationSchema: Schema = new Schema({
     }
 }, {
     timestamps: true,
+    collection: `${config.mongodbCollectionPrefix}reservations`,
     toJSON: {
         transform: (_doc, ret: Record<string, unknown>) => {
             const mongoId = ret._id as { toString: () => string } | undefined;

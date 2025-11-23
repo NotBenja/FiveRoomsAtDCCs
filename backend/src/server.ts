@@ -1,10 +1,17 @@
 import { app, connectDB } from './app';
 import mongoose from 'mongoose';
+import { config } from './config/env';
 
-const PORT = process.env.PORT || 3001;
+const HOST = config.host;
+const PORT = config.port;
 
 const startServer = async (): Promise<void> => {
     try {
+        if (!config.jwtSecret) {
+                console.error('FATAL ERROR: JWT_SECRET is not defined.');
+                process.exit(1);
+            }
+
         await connectDB();
 
         mongoose.connection.on('error', (err) => {
@@ -22,10 +29,10 @@ const startServer = async (): Promise<void> => {
             }, 5000);
         });
 
-        app.listen(PORT, () => {
+        app.listen({ port: PORT, host: HOST }, () => {
             console.log(`Server running on port: ${PORT}`);
-            console.log(`Server running on environment: ${process.env.NODE_ENV || 'non defined environment'}`);
-            console.log(`URL: http://localhost:${PORT}`);
+            console.log(`Server running on environment: ${config.nodeEnv || 'non defined environment'}`);
+            console.log(`URL: http://${HOST}:${PORT}`);
         });
     } catch (error) {
         console.error('Error on startServer, could not start the server::', error);

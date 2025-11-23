@@ -1,17 +1,21 @@
+import { config } from './env';
 import mongoose from 'mongoose';
 
 /**
  * Connects to the MongoDB database using Mongoose.
  * The connection URI is retrieved from the MONGODB_URI environment variable.
- * If the variable is not set, it defaults to 'mongodb://localhost:27017/reservasalasdcc'.
+ * If the variable is not set, it defaults to 'mongodb://localhost:27017/reservasalasdcc (check config/env.ts)'.
  */
 export const connectDB = async (): Promise<void> => {
   try {
-    const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/reservasalasdcc';
+    const mongoUri = config.mongoUri;
+    const dbName = config.mongoDbName;
 
-    await mongoose.connect(mongoUri);
+    await mongoose.connect(mongoUri, {
+          dbName: dbName
+        });
 
-    console.log('Connected successfully to MongoDB');
+    console.log(`Connected successfully to MongoDB (DB: ${dbName})`);
   } catch (error) {
     console.error('Error while connecting to MongoDB:', error);
     process.exit(1);

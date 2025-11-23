@@ -25,7 +25,7 @@ function Home({ onLogout }: HomeProps) {
             <main className="home-layout">
                 <section className="home-hero">
                     <div className="home-pill">Salas DCC · Disponibles 24/7</div>
-                    <h1 className="home-title">Reserva salas del DCC sin friccion</h1>
+                    <h1 className="home-title">Reserva salas del DCC sin fricción</h1>
                     <p className="home-lead">
                         Elige sala, confirma horario y comparte con tu equipo. Recargas, back y forward funcionan sin perder tu contexto.
                     </p>
@@ -117,6 +117,13 @@ function AppContent() {
 
     const { user, login, logout } = useUserStore();
 
+    // Helper para decidir a dónde mandar al usuario si intenta entrar al login estando logueado
+    const getRedirectPath = () => {
+        if (!user) return "/login";
+        // Si es admin, lo mandamos al admin page, si no, al home
+        return user.email.includes("admin") ? "/admin" : "/home";
+    };
+
     useEffect(() => {
         void (async () => {
             try {
@@ -159,14 +166,14 @@ function AppContent() {
                 <Route
                     path="/login"
                     element={
-                        user ? <Navigate to="/home" replace /> : <LoginPage />
+                        user ? <Navigate to={getRedirectPath()} replace /> : <LoginPage />
                     }
                 />
 
                 <Route
                     path="/register"
                     element={
-                        user ? <Navigate to="/home" replace /> : <RegisterPage />
+                        user ? <Navigate to={getRedirectPath()} replace /> : <RegisterPage />
                     }
                 />
 

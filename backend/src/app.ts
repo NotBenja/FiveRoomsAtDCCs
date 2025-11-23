@@ -1,8 +1,9 @@
 import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import * as dotenv from "dotenv";
-dotenv.config();
+import path from 'path';
+import { config } from './config/env';
+
 
 import { connectDB } from './config/database';
 import authRoutes from './routes/authRoutes';
@@ -19,10 +20,13 @@ const reservationPrefix = '/api/reservations';
 const roomPrefix = '/api/rooms';
 const userPrefix = '/api/users';
 
-app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+if (config.nodeEnv === 'development') {
+    app.use(cors({
+    origin: config.frontendUrl,
     credentials: true
-}));
+    }));
+}
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -38,12 +42,11 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use(authPrefix, authRoutes);
 
 // Routes that require authentication by using an auth middleware.
-// It uses prefixes in order to redirect to the corresponding routes.
 app.use(reservationPrefix, authMiddleware, reservationRoutes);
 app.use(roomPrefix, authMiddleware, roomRoutes);
 app.use(userPrefix, authMiddleware, userRoutes);
 
-// Health check endpoint. For testing purposes, we could erase it later.
+// Health check endpoint.
 app.get('/health', (req: Request, res: Response) => {
     res.json({
         message: 'API de Reserva de Salas DCC',
@@ -57,21 +60,33 @@ app.get('/health', (req: Request, res: Response) => {
     });
 });
 
-if (process.env.NODE_ENV === "test") {
+// Testing routes (development and test only)
+if (config.nodeEnv === "test" || config.nodeEnv === "development") {
     app.use("/api/testing", testingRouter);
 }
 
-// Handler for unknown routes
-app.use((req: Request, res: Response) => {
-  res.status(404).json({ error: 'Route not found' });
-});
+// Servir archivos estáticos del frontend (solo en producción)
+if (config.nodeEnv === 'production') {
+  app.use(express.static(path.join(__dirname, '..', 'dist')));
+  
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'dist', 'index.html'));
+  });
+}
+
+// Handler for unknown routes (solo en desarrollo/test)
+if (config.nodeEnv !== 'production') {
+  app.use((req: Request, res: Response) => {
+    res.status(404).json({ error: 'Route not found' });
+  });
+}
 
 // Error handler middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error('Error:', err);
   res.status(500).json({
     error: 'Internal Server Error',
-    details: err.message
+    details: config.nodeEnv === 'development' ? err.message : undefined
   });
 });
 

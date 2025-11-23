@@ -1,8 +1,7 @@
 import mongoose from 'mongoose';
-import * as fs from 'fs';
-import * as path from 'path';
-import * as dotenv from "dotenv";
-dotenv.config();
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+import { config } from '../config/env';
 
 import Room from '../models/Room';
 import User from '../models/User';
@@ -40,9 +39,12 @@ interface DbData {
  */
 const seedDatabase = async (): Promise<void> => {
     try {
-        const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/reservasalasdcc';
-        await mongoose.connect(mongoUri);
-        console.log('1.   Connected to MongoDB');
+        const mongoUri = config.mongoUri;
+        const dbName = config.mongoDbName;
+        await mongoose.connect(mongoUri, {
+            dbName: dbName
+        });
+        console.log(`1.   Connected to MongoDB (DB: ${dbName})`);
 
         const dbJsonPath = path.join(__dirname, '../../seedDB.json');
         const dbData: DbData = JSON.parse(fs.readFileSync(dbJsonPath, 'utf-8'));
