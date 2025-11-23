@@ -15,8 +15,6 @@ import { authMiddleware } from './middleware/authMiddleware';
 
 const app: Application = express();
 
-
-
 const authPrefix = '/api/auth';
 const reservationPrefix = '/api/reservations';
 const roomPrefix = '/api/rooms';
@@ -44,14 +42,11 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use(authPrefix, authRoutes);
 
 // Routes that require authentication by using an auth middleware.
-// It uses prefixes in order to redirect to the corresponding routes.
 app.use(reservationPrefix, authMiddleware, reservationRoutes);
 app.use(roomPrefix, authMiddleware, roomRoutes);
 app.use(userPrefix, authMiddleware, userRoutes);
 
-
-
-// Health check endpoint. For testing purposes, we could erase it later.
+// Health check endpoint.
 app.get('/health', (req: Request, res: Response) => {
     res.json({
         message: 'API de Reserva de Salas DCC',
@@ -65,17 +60,15 @@ app.get('/health', (req: Request, res: Response) => {
     });
 });
 
-if (config.nodeEnv === "test") {
+// Testing routes (development and test only)
+if (config.nodeEnv === "test" || config.nodeEnv === "development") {
     app.use("/api/testing", testingRouter);
 }
 
 // Servir archivos estáticos del frontend (solo en producción)
 if (config.nodeEnv === 'production') {
-  // El frontend está en backend/dist, el backend compilado está en backend/out
-  // Desde out/server.js, dist está en ../dist
   app.use(express.static(path.join(__dirname, '..', 'dist')));
   
-  // Todas las rutas que NO sean API deben servir index.html (para React Router)
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'dist', 'index.html'));
   });
@@ -96,7 +89,5 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     details: config.nodeEnv === 'development' ? err.message : undefined
   });
 });
-
-
 
 export { app, connectDB };

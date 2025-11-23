@@ -8,17 +8,20 @@ import User from "../models/User";
 const router = express.Router();
 
 router.post("/reset", async (req, res) => {
-    if (config.nodeEnv !== "test") {
-        return res.status(403).json({ error: "Route allowed only in test environment" });
+    // Permite test Y development (para e2e)
+    if (config.nodeEnv === "production") {
+        return res.status(403).json({ error: "Route not allowed in production" });
     }
 
     try {
         await Promise.all([
-            Reservation.deleteMany({}),
+            User.deleteMany({}),
             Room.deleteMany({}),
-            User.deleteMany({})
+            Reservation.deleteMany({})
         ]);
-        return res.status(200).json({ message: "Database reset successful" });
+        
+        console.log('✓ Database reset successful');
+        return res.status(204).end(); // 204 No Content (más apropiado)
     } catch (error) {
         console.error("Failed to reset database:", error);
         return res.status(500).json({ error: "Failed to reset database" });
