@@ -9,10 +9,13 @@ import mongoose from 'mongoose';
 export const connectDB = async (): Promise<void> => {
   try {
     const mongoUri = config.mongoUri;
+    const dbName = config.mongoDbName;
 
-    await mongoose.connect(mongoUri);
+    await mongoose.connect(mongoUri, {
+          dbName: dbName
+        });
 
-    console.log('Connected successfully to MongoDB');
+    console.log(`Connected successfully to MongoDB (DB: ${dbName})`);
   } catch (error) {
     console.error('Error while connecting to MongoDB:', error);
     process.exit(1);

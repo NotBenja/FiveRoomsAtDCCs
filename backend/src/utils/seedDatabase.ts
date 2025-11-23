@@ -40,8 +40,11 @@ interface DbData {
 const seedDatabase = async (): Promise<void> => {
     try {
         const mongoUri = config.mongoUri;
-        await mongoose.connect(mongoUri);
-        console.log('1.   Connected to MongoDB');
+        const dbName = config.mongoDbName;
+        await mongoose.connect(mongoUri, {
+            dbName: dbName
+        });
+        console.log(`1.   Connected to MongoDB (DB: ${dbName})`);
 
         const dbJsonPath = path.join(__dirname, '../../seedDB.json');
         const dbData: DbData = JSON.parse(fs.readFileSync(dbJsonPath, 'utf-8'));
