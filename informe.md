@@ -86,75 +86,47 @@ La vista para reservar horas permite que el usuario pueda navegar dentro de un l
 
 
 ### Estado Global utilizando Zustand
-Para este hito se implementó un sistema de estado global utilizando Zustand con el objetivo principal de evitar la sobrecarga de la aplicación al manejar estados duplicados y simplificar el uso de props entre componentes.
 
-Para esto se definieron dos stores, uno para el usuario (UserStore) y otro para las salas (RoomStore). Evitando manejar estados separados para elementos como la barra de navegación, el sistema de reservas, la página principal y otros componentes que dependen tanto de la información del usuario como del listado de salas actuales o la sala seleccionada actualmente.
+Para este hito se implementó un sistema de estado global utilizando Zustand, con el objetivo de evitar estados duplicados y reducir el uso de props innecesarias entre componentes.
 
-El almacenamiento global implementado permitiría mantener información compartida del usuario autenticado y las salas disponibles actualizada y accesible desde cualquier parte de la aplicación.
+Se definieron dos stores principales:
+
+- UserStore: maneja la información del usuario autenticado.
+
+- RoomStore: almacena la lista de salas y la sala seleccionada.
+
+De esta manera, componentes como la barra de navegación, la página de usuario, el sistema de reservas y la página principal pueden acceder a esta información sin depender de estados locales ni de props.
+
+Ambos se pueden encontrar en la carpeta `frontend/src/stores/`.
 
 #### UserStore
-Para el store del user se creó el tipo UserState, el cual simplemente contiene el usuario atentificado de tipo StoredUser (Usuario obtenido de la base de datos), además de funciones para login y logout.
+Encontrado en `frontend/src/stores/UserStore.ts`
 
-En el UserStore se inicializa el usuario en null, y se definen las funciones login y logout, las cuales simplemente cambian el usuario actual a un nuevo usuario entregado para login o a null para logout.
+El estado contiene:
+- ```user```: El usuario autentificado obtenido con los tipos correspondientes de obtenerlo desde la base de datos o null en caso de que no haya usuario.
+- Los metodos login y logout para modificar el usuario actual
+  - ```login: (user)```: Modifica el usuario actual del estado para que sea este nuevo user.
+  - ```logout()```: Cambia el valor de user a null
 
-```ts
-import { create } from "zustand";
-import type { StoredUser } from "../types/models";
+Anteriormente el usuario se manejaba con un estado local:
 
-type UserState = {
-    user: StoredUser | null;
+```const [user, setUser] = useState<StoredUser | null>(null);```
 
-    login(user: StoredUser): void;
-    logout(): void;
-};
+Esto obligaba a pasar user y setUser como props a distintas páginas y componentes.
 
-export const useUserStore = create<UserState>((set) => ({
-    user: null,
-    login: (newUser: StoredUser) => set(() => ({ user: newUser})),
-    logout: () => set(() => ({user: null})),
-}));
-```
-
-Luego este estado nuevo se utiliza en todos los componentes que mantienen un estado user usando useState. Por ejemplo.
-
-En App se utilizaba:
-```
-const [user, setUser] = useState<StoredUser | null>(null);
-```
-El usuario se obtenía de la api de autentificación y luego se extendía a la home page, user page, y admin page.
-Además, para login y register se le entregaba el metodo setUser, para que estos pudieran cambiar el estado del user una vez que este se autentificara correctamente.
-
-Al cambiarlo por un estado global, ya no es necesario pasarle el user o setUser a cada uno de estos componentes, sino que estos pueden modificarlos por si mismos ya que esta disponible desde cualquier punto de la aplicación.
-
-Ejemplo de utilización del store:
-
-- En la figura 2 se puede observar como user deja de manejarse con useState pasando a ser manejado por useUserStore.
-
-Luego cada vez que se utilice set se utilizan login y logout en reemplazo dependiendo si era un set de usuario nuevo o set de null.
-```ts
-function AppContent() {
-    const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
-    
-    const { user, login, logout } = useUserStore();
-}
-```
-
-- Otro observable en la figura 3, antes Home utilizaba user como prop, obtenido de AppContent, sin embargo con el estado global esto ya no es necesario.
-```ts
-import {useUserStore} from "../stores/UserStore";
-type HomeProps = { onLogout: () => void };
-
-function Home() {
-    const navidate = useNavigate();
-    const { user } = useUserStore();
-}
-```
-
-- Esto se realizó en cada componente que utilizaba el usuario manejado por useState u obtenido de un prop por parte del componente padre.
 
 #### RoomStore
+Encontrado en `frontend/src/stores/RoomStore.ts`
 
+Similar a user, el estado del store contiene:
+- ```rooms```: El listado actual de salas.
+- ```selectedRoom```: La sala actual seleccionada o null en caso de no haber.
+  Metodos:
+- ```setRooms: (rooms)```: Modifica el listado de salas actuales por uno nuevo.
+- ``` selectRoom: (room)```: Modifica la sala seleccionada por \```room\``` esta puede ser de tipo sala o null en caso de que se quiera deseleccionar una sala.
+- ``` createRoom: (room) ```: Crea una copia del listado de salas actuales y añade la nueva sala.
+- ``` deleteRoom: (roomId)```: Toma el Id de una sala y aplica un filter a el listado actual dejando solamente las salas que no contengan tal Id.
+- ``` updateRoom: (updatedRoom)```: Toma una sala nueva y aplica un map sobre el listado actual, modificando la sala que se encuentra dentro del listado por esta nueva.
 
 
 ### 4. Ruteo (React Router)
