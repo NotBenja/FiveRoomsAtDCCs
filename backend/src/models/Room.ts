@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import { config } from '../config/env';
 
 export interface IRoomFeatures {
     maxCapacity: number;
@@ -32,6 +33,7 @@ const RoomSchema = new Schema<IRoom>({
 },
 {
     timestamps: true,
+    collection: `${config.mongodbCollectionPrefix}rooms`, 
     toJSON: {
         transform: (_doc, ret: Record<string, unknown>) => {
             const { _id, __v, ...rest } = ret;

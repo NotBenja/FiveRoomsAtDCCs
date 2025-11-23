@@ -3,11 +3,11 @@
   "private": true,
   "version": "1.0.0",
   "description": "Backend para sistema de reserva de salas DCC",
-  "main": "dist/server.js",
+  "main": "out/server.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc -p tsconfig.json",
-    "start": "node out/server.js",
+    "start": "cross-env NODE_ENV=production node out/server.js",
     "seed": "ts-node src/utils/seedDatabase.ts",
     "update-passwords": "ts-node src/utils/updatePasswords.ts",
     "build:ui": "rimraf dist && cd ../frontend && npm run build && cpx \"dist/**\" ../backend/dist"

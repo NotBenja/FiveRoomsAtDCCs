@@ -1,6 +1,7 @@
 import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import path from 'path';
 import { config } from './config/env';
 
 
@@ -14,7 +15,7 @@ import { authMiddleware } from './middleware/authMiddleware';
 
 const app: Application = express();
 
-app.use(express.static("dist"));
+
 
 const authPrefix = '/api/auth';
 const reservationPrefix = '/api/reservations';
@@ -48,6 +49,8 @@ app.use(reservationPrefix, authMiddleware, reservationRoutes);
 app.use(roomPrefix, authMiddleware, roomRoutes);
 app.use(userPrefix, authMiddleware, userRoutes);
 
+
+
 // Health check endpoint. For testing purposes, we could erase it later.
 app.get('/health', (req: Request, res: Response) => {
     res.json({
@@ -66,18 +69,34 @@ if (config.nodeEnv === "test") {
     app.use("/api/testing", testingRouter);
 }
 
-// Handler for unknown routes
-app.use((req: Request, res: Response) => {
-  res.status(404).json({ error: 'Route not found' });
-});
+// Servir archivos estáticos del frontend (solo en producción)
+if (config.nodeEnv === 'production') {
+  // El frontend está en backend/dist, el backend compilado está en backend/out
+  // Desde out/server.js, dist está en ../dist
+  app.use(express.static(path.join(__dirname, '..', 'dist')));
+  
+  // Todas las rutas que NO sean API deben servir index.html (para React Router)
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'dist', 'index.html'));
+  });
+}
+
+// Handler for unknown routes (solo en desarrollo/test)
+if (config.nodeEnv !== 'production') {
+  app.use((req: Request, res: Response) => {
+    res.status(404).json({ error: 'Route not found' });
+  });
+}
 
 // Error handler middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error('Error:', err);
   res.status(500).json({
     error: 'Internal Server Error',
-    details: err.message
+    details: config.nodeEnv === 'development' ? err.message : undefined
   });
 });
+
+
 
 export { app, connectDB };

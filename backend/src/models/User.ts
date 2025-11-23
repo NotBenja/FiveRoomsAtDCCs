@@ -1,5 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import bcrypt from 'bcrypt';
+import { config } from '../config/env';
 
 export interface IUser extends Document {
     id: number;
@@ -18,6 +19,7 @@ const UserSchema = new Schema<IUser>({
     password: { type: String, required: true }
 }, {
     timestamps: true,
+    collection: `${config.mongodbCollectionPrefix}users`, 
     toJSON: {
         transform: (_doc, ret: Record<string, unknown>) => {
             const { _id, __v, password, ...rest } = ret;
@@ -44,4 +46,4 @@ UserSchema.methods.comparePassword = async function(inputPass: string): Promise<
     return bcrypt.compare(inputPass, this.password);
 };
 
-export default mongoose.model<IUser>('User', UserSchema);
+export default mongoose.model<IUser>('User', UserSchema); 

@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { Room } from "../types/models";
 
-const baseUrl = import.meta.env.VITE_API_URL ?? "http://localhost:3001/api";
+const baseUrl = import.meta.env.VITE_API_URL ?? "/api";
 
 // Configurar axios para enviar cookies y token
 axios.defaults.withCredentials = true;

@@ -4,14 +4,15 @@
   "version": "0.0.0",
   "workspaces": [
     "frontend",
-    "backend"
+    "backend",
+    "e2e-tests"
   ],
   "scripts": {
     "dev": "concurrently -k -n BACK,FRONT -c magenta,cyan \"npm -w backend run dev\" \"npm -w frontend run dev\"",
     "start": "npm run build && concurrently -k -n BACK,FRONT -c magenta,cyan \"npm -w backend run start\" \"npm -w frontend run start\"",
     "build": "npm -w backend run build && npm -w frontend run build",
     "preview": "npm -w frontend run preview",
-    "install:all": "npm -w frontend install && npm -w backend install",
+    "install:all": "npm -w frontend install && npm -w backend install && npm -w e2e-tests install",
     "seed": "npm -w backend run seed",
     "update-passwords": "npm -w backend run update-passwords",
     "initdb": "npm run seed && npm run update-passwords",

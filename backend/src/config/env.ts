@@ -9,6 +9,7 @@ export const config = {
     port: process.env.PORT || 3001,
     mongoUri: process.env.MONGODB_URI || 'mongodb://localhost:27017',
     mongoDbName: process.env.MONGODB_DBNAME || 'reservasalasdcc',
+    mongodbCollectionPrefix: process.env.MONGODB_COLLECTION_PREFIX || '',
     jwtSecret: process.env.JWT_SECRET,
     jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
     frontendUrl: process.env.FRONTEND_URL || 'http://localhost:5173',
