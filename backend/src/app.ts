@@ -14,6 +14,8 @@ import { authMiddleware } from './middleware/authMiddleware';
 
 const app: Application = express();
 
+app.use(express.static("dist"));
+
 const authPrefix = '/api/auth';
 const reservationPrefix = '/api/reservations';
 const roomPrefix = '/api/rooms';

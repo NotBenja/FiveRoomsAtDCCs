@@ -14,7 +14,8 @@
     "install:all": "npm -w frontend install && npm -w backend install",
     "seed": "npm -w backend run seed",
     "update-passwords": "npm -w backend run update-passwords",
-    "initdb": "npm run seed && npm run update-passwords"
+    "initdb": "npm run seed && npm run update-passwords",
+    "build:ui": "npm -w backend run build:ui"
   },
   "devDependencies": {
     "concurrently": "^9.0.0"
