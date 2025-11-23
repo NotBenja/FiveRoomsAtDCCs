@@ -49,22 +49,18 @@ export const getRoomById = async (req: Request, res: Response): Promise<void> =>
 */
 export const createRoom = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { id, room_name, features } = req.body;
+        const { room_name, features } = req.body;
 
         // required fields check
-        if (!id || !room_name || !features) {
+        if (!room_name || !features) {
             res.status(400).json({ error: 'Validation error on createRoom: Some required fields are not present' });
             return;
         }
 
-        // check for existing room with the same id
-        const existingRoom = await Room.findOne({ id });
-        if (existingRoom) {
-            res.status(409).json({ error: 'Error on createRoom: There is already a room with the provided id' });
-            return;
-        }
+        const lastRoom = await Room.findOne().sort({ id: -1 });
+        const newId = lastRoom && lastRoom.id ? lastRoom.id + 1 : 1;
 
-        const newRoom = new Room({ id, room_name, features });
+        const newRoom = new Room({ id: newId, room_name, features });
         await newRoom.save();
 
         res.status(201).json(newRoom);
