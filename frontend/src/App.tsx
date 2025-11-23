@@ -25,7 +25,7 @@ function Home({ onLogout }: HomeProps) {
             <main className="home-layout">
                 <section className="home-hero">
                     <div className="home-pill">Salas DCC · Disponibles 24/7</div>
-                    <h1 className="home-title">Reserva salas del DCC sin friccion</h1>
+                    <h1 className="home-title">Reserva salas del DCC sin fricción</h1>
                     <p className="home-lead">
                         Elige sala, confirma horario y comparte con tu equipo. Recargas, back y forward funcionan sin perder tu contexto.
                     </p>
