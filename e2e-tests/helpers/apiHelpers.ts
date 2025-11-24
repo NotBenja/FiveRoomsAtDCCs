@@ -38,19 +38,19 @@ export class ApiClient {
     if (!cookies) throw new Error("No se recibió cookie en el setup");
     const tokenCookie = cookies.split(';')[0];
 
-    // 2. Capturar CSRF Token (Si tu backend lo pide en headers)
+    // 2. Capturar CSRF Token 
     const csrfToken = response.headers()['x-csrf-token'];
 
     // 3. Guardar headers
     this.headers = {
       'Cookie': tokenCookie,
-      ...(csrfToken && { 'X-CSRF-Token': csrfToken }) // Solo lo agrega si existe
+      ...(csrfToken && { 'X-CSRF-Token': csrfToken }) 
     };
   }
 
   async createRoom(name: string) {
     const response = await this.request.post(`${apiBase}/rooms`, {
-      headers: this.headers, // <--- ¡AQUÍ ESTÁ LA CLAVE! Enviamos credenciales
+      headers: this.headers, 
       data: {
         room_name: name,
         features: {
@@ -67,12 +67,12 @@ export class ApiClient {
         throw new Error(`Error creando sala: ${response.status()} ${await response.text()}`);
     }
     
-    return await response.json(); // Retornamos la sala creada (con su ID real)
+    return await response.json(); // Retornamos la sala creada 
   }
 
   async createReservation(reservationObj: any) {
     const response = await this.request.post(`${apiBase}/reservations`, {
-      headers: this.headers, // <--- ¡AQUÍ TAMBIÉN!
+      headers: this.headers, 
       data: reservationObj
     });
 

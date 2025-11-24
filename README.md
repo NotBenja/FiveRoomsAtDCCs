@@ -1,194 +1,293 @@
-# Five Rooms at DCC's 🐻
+# Informe Hito 3: Manejo de estados, tests e2e y deploy de la aplicación
 
-Sistema de reserva de salas del DCC.
+## Información del hito:
 
----
+### Integrantes del equipo:
+- Integrante 1: Sebastián Bustos Andrade
+- Integrante 2: Benjamín Madrid Fuenzalida
+- Integrante 3: Benjamín Reyes Bravo
+- Integrante 4: Marcela Vega Magliarelli (QEPD)
 
-## Integrantes
+### Equipo docente:
+- Profesor de cátedra: Matías Toro
+- Profesores auxiliares: Ignacio Cornejo, Carlos Ruiz
 
-### Equipo Peppa Git
-- Benjamín Madrid
-- Sebastián Bustos
+### Ayudantes:
+- Ayudante: Bastián Corrales, Javier Kauer, Juan I. Valdivia, Martín Pinochet
 
-### Equipo Kolog
-- Marcela Vega 
-- Benjamín Reyes
+### Fecha de entrega:
+- 23 de noviembre de 2025
 
----
 
-## Estructura del Proyecto
-El proyecto está dividido en dos partes principales: backend y frontend.
-- **Backend**: Maneja la lógica del servidor, la base de datos y las APIs.
-- - **src**
-- - - **config**: Configuraciones del servidor y base de datos.
-- - - **controllers**: Controladores para manejar las solicitudes HTTP.
-- - - **models**: Modelos de datos para MongoDB.
-- - - **routes**: Definición de rutas y endpoints.
-- - - **middlewares**: Funciones intermedias para manejo de autenticación y errores.
-- - - **utils**: Utilidades y funciones auxiliares.
-- - - **app.ts**: Archivo principal para iniciar el servidor.
-- - - **server.ts**: Configuración del servidor y conexión a la base de datos.
-- - **.env**: Variables de entorno para configuración.
-- - **package.json**: Dependencias y scripts del proyecto.
-- - **tsconfig.json**: Configuración de TypeScript.
-- - **seedDB.json**: Datos iniciales para poblar la base de datos.
-- **Frontend**: Interfaz de usuario para interactuar con el sistema de reservas.
-- - **src**
-- - - **components**: Componentes reutilizables de React.
-- - - **pages**: Páginas principales de la aplicación.
-- - - **services**: Servicios para interactuar con el backend.
-- - - **App.tsx**: Componente raíz de la aplicación.
-- - - **main.tsx**: Punto de entrada de la aplicación.
-- - **public**: Archivos estáticos públicos.
-- - **package.json**: Dependencias y scripts del proyecto.
-- - **tsconfig.json**: Configuración de TypeScript.
+## Descripción del hito
+Actualmente, el sistema de reserva de horas en las salas del DCC se realiza de manera manual, lo que lo convierte en un proceso poco eficiente y engorroso, dependiente en gran medida de la disponibilidad de los administradores. En muchas ocasiones, los estudiantes deben esperar varias horas para recibir la confirmación de su solicitud y la asignación de sala, y si el horario ya estaba ocupado por otras solicitudes, recién entonces se les informa, obligándolos a reiniciar el proceso con una nueva propuesta de horario.
 
----
+Este sistema también presenta limitaciones en cuanto a la asignación de salas: aunque los usuarios pueden expresar preferencias, con frecuencia no es posible reservar la sala deseada, y en general solo se pide una sala, dejando en manos del administrador la elección de esta. Además, no existe un acceso inmediato a la información sobre las características y capacidades de cada sala, y en algunos casos las solicitudes incluso se pierden entre mensajes.
 
-## Tecnologías Utilizadas
+Nuestro proyecto consiste en el desarrollo de una aplicación web para la gestión de salas y reservas de horas. El objetivo principal es ofrecer una plataforma centralizada donde estudiantes y administradores puedan interactuar de forma eficiente: los estudiantes revisan la disponibilidad de horarios y realizan sus reservas, mientras que los administradores gestionan las salas y supervisan las solicitudes.
 
-### Backend
-- **TypeScript** - Tipado estático
-- **Express.js** - Framework web
-- **MongoDB + Mongoose** - Base de datos NoSQL
-- **JWT** - Autenticación con tokens
-- **bcrypt** - Encriptación de contraseñas
-- **cookie-parser** - Manejo de cookies
+La aplicación integrará herramientas de filtrado y visualización que permitirán acceder rápidamente a la información relevante de las salas. Así, los usuarios podrán seleccionar la sala más adecuada a sus necesidades, mientras que los administradores contarán con un sistema ordenado para gestionar solicitudes, actualizar estados de reserva y mantener un registro claro del uso de los espacios.
 
-### Frontend
-- **React** - Librería de UI
-- **TypeScript** - Tipado estático
-- **Axios** - Cliente HTTP
-- **React Router** - Navegación SPA
+De esta forma, buscamos mejorar la experiencia de los usuarios y facilitar el trabajo de administración, asegurando el uso óptimo de espacios.
 
----
 
-## Variables de Entorno Requeridas
+## Listado de funcionalidades
 
-### Backend (`backend/.env`)
+### Vista Login/Register
+Esta vista fue desarrollada para la creación y autenticación de usuarios en nuestra plataforma. De esta manera, las demás vistas solo pueden ser accedidas por usuarios registrados en la aplicación. Esta vista cuenta con las siguientes funcionalidades y su estado de avance:
+- Hito 2:
+    - Registro/Creación de usuarios con RUT **(Realizada)**.
+    - Autenticación de usuario mediante correo y contraseña **(Realizada)**.
 
-```env
-PORT=3001
-NODE_ENV=development
-MONGODB_URI=mongodb://localhost:27017/reservasalasdcc
-FRONTEND_URL=http://localhost:5173
-JWT_SECRET=jwt_secret_key
-JWT_EXPIRES_IN=7d
-```
+### Navbar
+Se agregó una barra de navegación que permite:
+- Hito 2:
+    - Ver el usuario autenticado actualmente **(Realizada)**.
+    - Volver a la página de inicio **(Realizada)**.
+    - Cerrar sesión del usuario actual **(Realizada)**.
 
-### Frontend (`frontend/.env`)
-```ts
-VITE_API_URL=http://localhost:3001/api
-```
+### Vista Administrador
+La vista de administrador está pensada como un panel de gestión para la persona encargada de administrar las salas y las reservas. En esta sección se incluyen las siguientes funcionalidades, junto con su estado de avance:
+- Hito 1:
+    - Visualización de una tabla con todas las salas disponibles y sus características (capacidad, proyector, pizarra, audio y ventilación) **(Realizada)**.
 
-### E2E Tests (`e2e-tests/.env`)
-```ts
-VITE_API_URL=http://localhost:3001/api
-```
+    - Visualización de una tabla con las reservas realizadas, incluyendo atributos como sala, usuario, fecha y estado. **(Realizada)**.
 
----
+    - Actualización del estado de una reserva, pudiendo marcarla como aceptada, pendiente o rechazada **(Realizada)**.
 
-## Instrucciones de inicialización y ejecución
+    - Edición y eliminación de salas previamente creadas **(Realizada)**.
 
-Prerrequisitos:
-- Tener instalada la última versión de Node.js
-- Tener MongoDB corriendo localmente o una URI de MongoDB accesible
-- npm instalado
-- Git instalado
+    - Aplicación de filtros para mostrar únicamente las reservas según su estado. **(Realizada)**.
 
-1. Clonar el repositorio:
+    - Aplicación de filtros sobre las salas según sus características (proyector, pizarra, audio y ventilación) **(Realizada)**.
+
+    - Creación de nuevas salas desde el panel **(Realizada)**.
+
+    - Búsqueda de salas por nombre **(Realizada)**.
+
+
+### Vista para Reservar Horas
+La vista para reservar horas permite que el usuario pueda navegar dentro de un listado de salas del DCC y seleccionar una para poder reservarla en un horario específico. En esta sección se incluyen las siguientes funcionalidades, junto con su estado de avance:
+
+- Hito 1:
+
+    - Visualización del listado de salas del DCC con sus características **(Realizada)**.
+
+    - Visualización de bloques de horarios en una sala seleccionada. Los bloques se muestran de forma semanal y señalan si han sido ocupados o no **(Realizada)**.
+
+    - Envío de reserva mediante formulario seleccionando el horario especificado **(Realizada)**.
+
+    - Aplicación de filtros sobre el listado de salas según sus características (capacidad, proyector, pizarra, audio y ventilación) **(Realizada)**.
+
+- Hito 2:
+    - Visualización de tabla resumen de reservas del usuario activo **(Realizada)**.
+    - Paginación de listado de salas para reservar **(Realizada)**.
+    - Tabulación de página de reservas de hora en funcionalidades: "Reservar Sala" y "Mis Reservas" **(Realizada)**.
+
+
+### Estado Global utilizando Zustand
+
+Para este hito se implementó un sistema de estado global utilizando Zustand, con el objetivo de evitar estados duplicados y reducir el uso de props innecesarias entre componentes.
+
+Se definieron dos stores principales:
+
+- UserStore: maneja la información del usuario autenticado.
+
+- RoomStore: almacena la lista de salas y la sala seleccionada.
+
+De esta manera, componentes como la barra de navegación, la página de usuario, el sistema de reservas y la página principal pueden acceder a esta información sin depender de estados locales ni de props.
+
+Ambos se pueden encontrar en la carpeta `frontend/src/stores/`.
+
+#### UserStore
+Encontrado en `frontend/src/stores/UserStore.ts`
+
+El estado contiene:
+- ```user```: El usuario autentificado obtenido con los tipos correspondientes de obtenerlo desde la base de datos o null en caso de que no haya usuario.
+- Los metodos login y logout para modificar el usuario actual
+  - ```login: (user)```: Modifica el usuario actual del estado para que sea este nuevo user.
+  - ```logout()```: Cambia el valor de user a null
+
+Anteriormente el usuario se manejaba con un estado local:
+
+```const [user, setUser] = useState<StoredUser | null>(null);```
+
+Esto obligaba a pasar user y setUser como props a distintas páginas y componentes.
+
+
+#### RoomStore
+Encontrado en `frontend/src/stores/RoomStore.ts`
+
+Similar a user, el estado del store contiene:
+- ```rooms```: El listado actual de salas.
+- ```selectedRoom```: La sala actual seleccionada o null en caso de no haber.
+  Metodos:
+- ```setRooms: (rooms)```: Modifica el listado de salas actuales por uno nuevo.
+- ``` selectRoom: (room)```: Modifica la sala seleccionada por \```room\``` esta puede ser de tipo sala o null en caso de que se quiera deseleccionar una sala.
+- ``` createRoom: (room) ```: Crea una copia del listado de salas actuales y añade la nueva sala.
+- ``` deleteRoom: (roomId)```: Toma el Id de una sala y aplica un filter a el listado actual dejando solamente las salas que no contengan tal Id.
+- ``` updateRoom: (updatedRoom)```: Toma una sala nueva y aplica un map sobre el listado actual, modificando la sala que se encuentra dentro del listado por esta nueva.
+
+
+### 4. Ruteo (React Router)
+
+#### 4.1 Implementación de rutas privadas y públicas
+
+Para la navegación dentro de la aplicación, se utilizó la librería `react-router-dom`, que permite manejar el enrutamiento del lado del cliente en aplicaciones web React. La estructura principal de navegación se define en el componente `App`, donde se utiliza `BrowserRouter` para envolver la aplicación y `Routes` para definir las distintas rutas disponibles.
+
+Se implementó un componente llamado `ProtectedRoute` para manejar el acceso a las rutas privadas. Este componente verifica si existe un usuario autenticado en el estado global (`UserStore`). Si no hay un usuario activo, redirige automáticamente a la página de inicio de sesión (`/login`).
+
+Las rutas definidas en la aplicación son:
+
+- **/login**: Página de inicio de sesión. Si el usuario ya está autenticado, redirige a `/home`.
+- **register**: Página de registro de nuevos usuarios. También redirige a `/home` si ya hay sesión activa.
+- **home**: Página principal de la aplicación (Ruta protegida).
+- **reservar**: Vista para buscar y reservar salas (Ruta protegida).
+- **admin**: Panel de administración para gestión de salas y reservas (Ruta protegida).
+- **/**: Ruta raíz que redirige automáticamente a `/home`.
+
+Además, se configuró una ruta que actua como un else (`*`), pues captura cualquier URL no definida y redirige al usuario a la página principal, de esta forma, el usuario nunca es dirigido a una página de error 404.
+
+#### 4.2 Consideraciones
+Dicho esto, creemos que es necesario mencionar que gran parte de los ruteos presentes en el proyecto llevan implementados desde el Hito 2, sin embargo, en este hito se implementaron manejos de estado que permitieron un ruteo más profundo entre las rutas. Por ejemplo, aprovechando la incorporación de un manejo de estado para el usuario, se mejoro la redirección hacia la ruta #strong[/]*reservar*, lo que habilitó redirecciones especificas a cualquiera de los dos tabs presentes en dicha ruta ("Reservar sala y "Mis reservas").
+
+
+### Flujo de autenticación
+
+El sistema de autenticación implementado en el proyecto sigue el esquema visto en clases, combinando JWT con tokens CSRF almacenados en el cliente. Este enfoque permite una autenticación segura y protegida contra ataques comunes como XSS y CSRF, asegurando que solo los usuarios registrados puedan acceder a las rutas protegidas del backend. Para más detalle:
+[Ver Diagrama](./documents/diagramaauth.png.pdf).
+
+
+### Pruebas E2E
+Para asegurar la calidad y el correcto funcionamiento de los flujos críticos de la aplicación, se implementaron pruebas de extremo a extremo (e2e) utilizando Playwright. Estas pruebas simulan la interacción de un usuario real con la aplicación en navegadores especificos, verificando que los procesos y flujos funcionen como se espera.
+
+Los tests se encuentran en el directorio `e2e-tests` y se enfocan principalmente en dos (?) procesos de la aplicación:
+- Los flujos de autenticación, cuyas pruebas están en `e2e-tests/tests/auth.spec.ts`
+- El ciclo de vida de las reservas (`e2e-tests/tests/reservation.spec.ts`).
+
+A continuación se detallan las pruebas que ejecutan cada uno de estos archivos:
+
+#### `e2e-tests/tests/auth.spec.ts`
+
+##### Login
+- **Flujo exitoso**: Se verifica que un usuario registrado pueda iniciar sesión correctamente, siendo redirigido a la página de inicio y visualizando su sesión activa.
+- **Credenciales incorrectas**: Se valida que el sistema muestre un mensaje de error adecuado cuando se ingresan correos o contraseñas inválidas.
+- **Validación de campos**: Se comprueba que el botón de "Ingresar" permanezca deshabilitado si los campos obligatorios están vacíos, lo que implica que no se puede enviar el formulario de inicio de sesión si no están llenos todos los campos obligatorios.
+- **Navegación**: Se testea el enlace para redirigir a la página de registro.
+
+##### Registro
+- **Creación de cuenta**: Se simula el registro de un usuario nuevo con RUT, nombre, apellido, correo y contraseña, verificando la redirección exitosa y la visualización del ID de usuario generado.
+- **Validación de contraseñas**: Se asegura que el sistema detecte y notifique si la contraseña y su confirmación no coinciden.
+- **Campos obligatorios**: Se verifica que no se pueda enviar el formulario si falta algún dato requerido.
+
+Para garantizar la independencia y correctitud de las pruebas, se utiliza un `beforeEach` que resetea el estado de la base de datos de prueba antes de cada ejecución.
+
+#### `e2e-tests/tests/reservation.spec.ts`
+
+##### Reserva de Sala (Estudiante)
+- **Flujo de reserva exitoso**: Simula el viaje completo de un estudiante, desde el inicio de sesión y la selección de una sala disponible hasta la confirmación de un bloque horario específico en el calendario. Se valida que la solicitud se cree correctamente y aparezca listada en "Mis Reservas" con estado inicial "pendiente".
+
+##### Gestión Administrativa (Admin)
+- **Aprobación de solicitudes**: Verifica que un usuario con rol de administrador pueda acceder al panel de gestión, localizar una solicitud pendiente y aceptarla, confirmando que el estado visual en la tabla cambie a "aceptada".
+- **Rechazo de solicitudes**: Evalúa la capacidad del administrador para rechazar una reserva existente, asegurando que el sistema actualice y refleje correctamente el estado como "rechazada" en la interfaz de administración.
+
+**Nota:** Para garantizar la independencia y correctitud de las pruebas, se utiliza un `beforeEach` que resetea el estado de la base de datos de prueba antes de cada ejecución.
+
+
+### Diseño y Estilo
+El diseño de la interfaz de usuario se construyó con la intención de lograr una estética moderna, limpia y responsiva. Para ello, se utilizó una combinación de Tailwind CSS para utilidades de estilo y HeroUI para componentes de interfaz preconstruidos.
+
+#### Uso de HeroUI y Tailwind CSS
+Para facilitar la implementación de componentes interactivos como botones, inputs, modales, tarjetas, spinners, entre otros; se utilizó HeroUI, que es una librería de componentes creados con Tailwind CSS. De esta forma, fue posible personalizar facilmente el aspecto visual de los componentes según las necesidades del proyecto.
+
+#### Estilos Personalizados en App.css
+Se definieron estilos globales y específicos en `App.css` para lograr los efectos visuales deseados.
+
+- Se implementaron efectos de desenfoque y transparencia en componentes clave como el `home-hero` y las tarjetas de información (`home-card`).
+- Se utilizaron gradientes radiales y lineales suaves para el fondo de la aplicación (`home-shell`), evitando así interfaces con colores planos.
+- Se añadieron transiciones suaves (`transition`) para interacciones de hover en las tarjetas de salas, mejorando la respuesta visual ante las acciones del usuario.
+
+#### Modo Oscuro
+La aplicación soporta modo oscuro. Mediante el uso de variables CSS y modificadores de Tailwind (`dark:`), todos los componentes y colores de fondo se adaptan automáticamente. Por ejemplo, los fondos blancos (`bg-content1`) cambian a tonos oscuros de azul/gris, y los textos se ajustan para mantener un contraste óptimo y reducir la fatiga visual.
+
+#### Consideraciones
+Cabe mencionar que la mayoría de estas implementaciones de diseño estuvieron asentadas desde el Hito 1, sin embargo, en este tercer Hito se corrigieron algunas inconsistencias. Por ejemplo, se rediseñó la página de inicio mediante la incorporación de grids y cards para que tuviera un aspecto visual más consistente con el del resto de la aplicación web.
+
+### Proceso de Despliegue
+
+A continuación se detallan los pasos realizados para desplegar la aplicación en el servidor de producción del curso:
+
+#### 1. Configuración y Preparación del Entorno
+Debido a las restricciones del servidor (imposibilidad de crear nuevas bases de datos), se realizaron ajustes en la configuración de datos y entorno:
+
+- **Prefijo en Colecciones:** Se modificaron los schemas de Mongoose en el backend para incluir el prefijo `reservasalas_`, permitiendo aislar los datos en la base de datos compartida.
+- **Gestión de Configuración:** Se implementó un archivo `config.ts` para la inyección centralizada de variables de entorno.
+- **Variables de Producción:** Se configuró el archivo `environments/production.env` con los siguientes valores:
+
+    ```properties
+    PORT=7115
+    HOST=0.0.0.0
+    NODE_ENV=production
+    MONGODB_URI=mongodb://fulls:fulls@fullstack.dcc.uchile.cl:27019
+    MONGODB_DBNAME=fullstack
+    MONGODB_COLLECTION_PREFIX=reservasalas_
+    JWT_SECRET=jwt_secret_key
+    ```
+#### 2. Adaptación de Arquitectura (Backend Serving Frontend)
+Para optimizar el despliegue en un solo puerto:
+
+Se eliminó la configuración de proxy en el frontend (Vite).
+
+Se configuró el archivo app.ts en el backend para servir los archivos estáticos generados por el frontend, eliminando la necesidad de un servidor web adicional.
+
+#### 3. Compilación y Subida de Archivos
+Se generaron los artefactos de producción y se transfirieron al servidor:
+
+Compilación de UI: Se ejecutó npm run build:ui, que compila el frontend y mueve los archivos resultantes a la carpeta /backend/dist.
+
+Compilación de Backend: Se transpiló el código TypeScript del servidor a la carpeta out.
+
+Transferencia (SCP): Se subió la carpeta completa del backend al servidor remoto mediante el siguiente comando:
+
 ```bash
-git clone https://github.com/NotBenja/FiveRoomsAtDCCs.git
-cd ProyectoReservaSalasDCC
+scp -P219 -r backend fullstack@fullstack.dcc.uchile.cl:FiveRoomsAtDCCs/
 ```
 
-2. Instalar dependencias:
+#### 4. Ejecución en el Servidor
+Una vez transferidos los archivos, se estableció conexión vía SSH y se ejecutaron los siguientes pasos para poner el servicio en marcha en segundo plano:
+
 ```bash
-npm run install
-# Y si no funciona probar con:
-npm run install:all
+cd FiveRoomsAtDCCs/backend
+
+# Instalación de dependencias de producción
+npm install
+
+# 3. Ejecución en segundo plano
+screen -S FiveRoomsAtDCCs
+npm run start
+# 4. Salida (Detach)
+
+# Presionar: Ctrl+A, luego D
 ```
 
-3. Configurar variables de entorno:
-- Crear un archivo `.env` en la carpeta `backend/` con las variables mencionadas anteriormente.
-- Crear un archivo `.env` en la carpeta `frontend/` con las variables mencionadas anteriormente.
-- Ajustar las variables según sea necesario.
 
-4. Poblar la base de datos (opcional, recomendado):
-```bash
-npm run initdb
-```
+#### 5. Estado del Despliegue
+La aplicación se encuentra actualmente desplegada y accesible en: 🔗 https://fullstack.dcc.uchile.cl:7115
 
-5. Iniciar la aplicación:
-```bash
-# Desde la raíz del proyecto
-npm run dev
-```
 
-Si no funciona, iniciar backend y frontend por separado:
-- En una terminal, iniciar el backend:
-```bash
-# Desde la raíz del proyecto
-cd backend
-npm run dev
-```
-- En otra terminal, iniciar el frontend:
-```bash
-# Desde la raíz del proyecto
-cd frontend
-npm run dev
-```
+#### Mockups de las vistas no desarrolladas
 
-6. Acceder a la aplicación:
-- Cliente: [http://localhost:5173](http://localhost:5173)
-- Servidor: [http://localhost:3001](http://localhost:3001)
+Para el próximo hito, además de enfocarnos en pulir y optimizar lo implementado en los hitos anteriores, planeamos implementar las siguientes vistas:
 
-En caso de haber cambiado los puertos, usar los correspondientes.
+1. **Vista de perfil de usuario:**
+Esta vista permitirá a los usuarios visualizar y editar su información personal, incluyendo foto de perfil, datos de contacto y otros elementos por definir. Además, los usuarios podrán consultar su historial de reservas, con detalles sobre el estado de cada una, facilitando el seguimiento de sus actividades dentro de la plataforma.
+...
 
----
+2. *Vista de estadísticas para el usuario administrador:*
+Esta vista permitirá al administrador visualizar gráficos y estadísticas relacionados con las distintas reservas. Entre los posibles datos a mostrar se incluyen reservas pendientes, días con mayor cantidad de reservas, bloques horarios más utilizados y salas más reservadas. Los tipos de gráficos y la información exacta que se presentará se definirán y discutirán en el siguiente hito, por lo que los mostrados en el siguiente mockup son temporales.
+...
 
-## Rutas principales
 
-### Frontend
-- Home: ["/"](http://localhost:5173)
-- Portal de reservas: ["/reservar"](http://localhost:5173/reservar)
-- Portal de administración: ["/admin"](http://localhost:5173/admin)
-- Login: ["/login"](http://localhost:5173/login)
-- Registro: ["/register"](http://localhost:5173/register)
+### Link al repositorio
 
-### Backend
-
-#### Auth
-
-| **Método** | **Ruta**           | **Descripción**                             | **Requiere Auth** |
-|------------|--------------------|---------------------------------------------|-------------------|
-| POST       | /api/auth/register | Registrar un nuevo usuario                  | No                |
-| POST       | /api/auth/login    | Iniciar sesión                              | No                |
-| POST       | /api/auth/logout   | Cerrar sesión                               | Sí                |
-| GET        | /api/auth/me       | Obtener información del usuario autenticado | Sí                |
-
-#### Salas
-| **Método** | **Ruta**       | **Descripción**                         | **Requiere Auth** |
-|------------|----------------|-----------------------------------------|-------------------|
-| GET        | /api/rooms     | Obtener todas las salas                 | Sí                |
-| GET        | /api/rooms/:id | Obtener detalles de una sala específica | Sí                |
-| POST       | /api/rooms     | Crear una nueva sala                    | Sí                |
-| PUT        | /api/rooms/:id | Actualizar una sala existente           | Sí                |
-| DELETE     | /api/rooms/:id | Eliminar una sala                       | Sí                |
-
-#### Reservas
-| **Método** | **Ruta**              | **Descripción**                                    | **Requiere Auth** |
-|------------|-----------------------|----------------------------------------------------|-------------------|
-| GET        | /api/reservations     | Obtener todas las reservas del usuario autenticado | Sí                |
-| GET        | /api/reservations/:id | Obtener detalles de una reserva específica         | Sí                |
-| POST       | /api/reservations     | Crear una nueva reserva                            | Sí                |
-| PUT        | /api/reservations/:id | Actualizar una reserva existente                   | Sí                |
-| DELETE     | /api/reservations/:id | Eliminar una reserva                               | Sí                |
-
-### Usuarios
-| **Método** | **Ruta**       | **Descripción**                           | **Requiere Auth** |
-|------------|----------------|-------------------------------------------|-------------------|
-| GET        | /api/users     | Obtener todos los usuarios                | Sí                |
-| GET        | /api/users/:id | Obtener detalles de un usuario específico | Sí                |
-| PUT        | /api/users/:id | Actualizar un usuario existente           | Sí                |
-| DELETE     | /api/users/:id | Eliminar un usuario                       | Sí                |
+[Link al repositorio](https://github.com/NotBenja/FiveRoomsAtDCCs.git) (https://github.com/NotBenja/FiveRoomsAtDCCs.git)
