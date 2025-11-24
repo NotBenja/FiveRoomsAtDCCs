@@ -1,6 +1,5 @@
 # Informe Hito 3: Manejo de estados, tests e2e y deploy de la aplicación
 
-## Información del hito:
 
 ### Integrantes del equipo:
 - Integrante 1: Sebastián Bustos Andrade
@@ -17,6 +16,10 @@
 
 ### Fecha de entrega:
 - 23 de noviembre de 2025
+
+
+### Url de despliegue:
+- https://fullstack.dcc.uchile.cl:7115
 
 
 ## Descripción del hito
@@ -275,19 +278,6 @@ npm run start
 La aplicación se encuentra actualmente desplegada y accesible en: 🔗 https://fullstack.dcc.uchile.cl:7115
 
 
-#### Mockups de las vistas no desarrolladas
-
-Para el próximo hito, además de enfocarnos en pulir y optimizar lo implementado en los hitos anteriores, planeamos implementar las siguientes vistas:
-
-1. **Vista de perfil de usuario:**
-Esta vista permitirá a los usuarios visualizar y editar su información personal, incluyendo foto de perfil, datos de contacto y otros elementos por definir. Además, los usuarios podrán consultar su historial de reservas, con detalles sobre el estado de cada una, facilitando el seguimiento de sus actividades dentro de la plataforma.
-...
-
-2. *Vista de estadísticas para el usuario administrador:*
-Esta vista permitirá al administrador visualizar gráficos y estadísticas relacionados con las distintas reservas. Entre los posibles datos a mostrar se incluyen reservas pendientes, días con mayor cantidad de reservas, bloques horarios más utilizados y salas más reservadas. Los tipos de gráficos y la información exacta que se presentará se definirán y discutirán en el siguiente hito, por lo que los mostrados en el siguiente mockup son temporales.
-...
-
-
 ### Link al repositorio
 
-[Link al repositorio](https://github.com/NotBenja/FiveRoomsAtDCCs.git) (https://github.com/NotBenja/FiveRoomsAtDCCs.git)
+- [FiveRoomsAtDCCs](https://github.com/NotBenja/FiveRoomsAtDCCs.git) 
